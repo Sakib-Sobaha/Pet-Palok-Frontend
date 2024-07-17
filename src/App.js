@@ -3,6 +3,8 @@ import "./App.css";
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
 
+
+
 import Home from "./pages/home.js";
 import Login from "./pages/login.js";
 import About from "./pages/about.js";
