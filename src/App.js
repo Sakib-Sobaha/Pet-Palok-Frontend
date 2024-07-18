@@ -11,6 +11,8 @@ import About from "./pages/about.js";
 import UserHome from "./pages/user/user-home.js";
 import UserPets from "./pages/user/pets.js";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
+import PetProfile from "./pages/user/pet-profile.js";
+
 export default function App() {
   return (
     // <div>
@@ -87,6 +89,7 @@ export default function App() {
       <Routes>
         <Route path="/user/home" element={<UserHome />} />
         <Route path="/user/pets" element={<UserPets />} />
+        <Route path="/user/pets/:id" element={<PetProfile />} />
 
         <Route exact path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
