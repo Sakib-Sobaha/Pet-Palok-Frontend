@@ -8,6 +8,8 @@ import Footer from "./components/Footer.js";
 import Home from "./pages/home.js";
 import Login from "./pages/login.js";
 import About from "./pages/about.js";
+import UserHome from "./pages/user/user-home.js";
+import UserPets from "./pages/user/pets.js";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 export default function App() {
   return (
@@ -83,6 +85,9 @@ export default function App() {
       <Navbar />
 
       <Routes>
+        <Route path="/user/home" element={<UserHome />} />
+        <Route path="/user/pets" element={<UserPets />} />
+
         <Route exact path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
