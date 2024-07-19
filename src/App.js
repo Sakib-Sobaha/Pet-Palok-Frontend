@@ -12,6 +12,10 @@ import UserHome from "./pages/user/user-home.js";
 import UserPets from "./pages/user/pets.js";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import PetProfile from "./pages/user/pet-profile.js";
+import VetVisit from "./pages/user/vet-visit.js";
+import UserProfile from "./pages/user/user-profile.js"
+import VetProfile from "./pages/vet/vet-profile.js";
+
 
 export default function App() {
   return (
@@ -90,6 +94,10 @@ export default function App() {
         <Route path="/user/home" element={<UserHome />} />
         <Route path="/user/pets" element={<UserPets />} />
         <Route path="/user/pets/:id" element={<PetProfile />} />
+        <Route path="/user/vetvisit/:id" element={<VetVisit/>} />
+        <Route path="/user/profile/:userId" element={<UserProfile/>}/>
+
+        <Route path="/vet/profile/:vetId" element={<VetProfile />} />
 
         <Route exact path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
