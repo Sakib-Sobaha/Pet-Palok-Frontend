@@ -1,0 +1,7 @@
+Pages:
+1. login/signup
+2. user/profile
+3. user/pets
+4. user/home --> not done
+5. vet/profile
+6. vet/pet/petprofile

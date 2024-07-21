@@ -1,8 +1,7 @@
 import React from "react";
-import Menu from "./Menu-LeftSidebar";
 const LeftLayoutPets = ({ type }) => {
   return (
-    <div className="flex-1 bg-base-300 p-4 h-screen rounded-lg border border-gray-300">
+    <div className="flex-1 bg-base-200 p-4 min-h-screen h-full rounded-lg">
       {/* Your content for LeftLayout */}
       <br />
       <button className="btn btn-primary w-full mb-4">
@@ -21,6 +20,8 @@ const LeftLayoutPets = ({ type }) => {
         />
         <button className="btn btn-primary flex-auto w-4 mb-4">Search</button>
       </div>
+
+      Sort by select tag diye korte hobe
 
       <p className="font-extrabold text-xl">
         <img

@@ -1,38 +1,37 @@
 import { useState } from "react";
 import React from "react";
 import SectionDivider from "./Section-Divider";
-import Timeline from "./Timeline";
 import Rating from "./Rating";
 
-const timelineData = [
-  {
-    id: 1,
-    date: "2017-01-01",
-    event: "Was Born",
-  },
-  {
-    id: 2,
-    date: "2018-02-18",
-    event: "Had Constipation",
-  },
-  {
-    id: 3,
-    date: "2020-03-17",
-    event: "Haga problem",
-  },
-  {
-    id: 4,
-    date: "2023-04-01",
-    event: "Shonay Somossha",
-  },
-  {
-    id: 5,
-    date: "2023-07-04",
-    event: "Matha betha",
-  },
-];
+// const timelineData = [
+//   {
+//     id: 1,
+//     date: "2017-01-01",
+//     event: "Was Born",
+//   },
+//   {
+//     id: 2,
+//     date: "2018-02-18",
+//     event: "Had Constipation",
+//   },
+//   {
+//     id: 3,
+//     date: "2020-03-17",
+//     event: "Haga problem",
+//   },
+//   {
+//     id: 4,
+//     date: "2023-04-01",
+//     event: "Shonay Somossha",
+//   },
+//   {
+//     id: 5,
+//     date: "2023-07-04",
+//     event: "Matha betha",
+//   },
+// ];
 
-const vet = {
+const seller = {
   firstname: "Sakib",
   lastname: "Sobaha",
 
@@ -41,8 +40,8 @@ const vet = {
 
   password: "pasword",
 
-  clinic_name: "Bird Lovers Hostpital",
-  clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
+  store_name: "Sakibs Pet Shop",
+  store_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
 
   address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
   postOffice: "Mirpur-2",
@@ -66,7 +65,7 @@ const images = [
   "https://hips.hearstapps.com/del.h-cdn.co/assets/cm/15/10/54f94e3f42698_-_dog-stick-del-blog.jpg?crop=1xw:0.7309644670050761xh;center,top&resize=1200:*",
 ];
 
-const MiddleLayoutVetProfile = ({ vet_ }) => {
+const MiddleLayoutSellerProfile = ({ vet_ }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleabout = () => {
@@ -79,19 +78,19 @@ const MiddleLayoutVetProfile = ({ vet_ }) => {
 
       <div className="avatar float-right mb-5 mr-10 mt-2">
         <div className="ring-primary ring-offset-base-100 w-40 h-40 rounded-full aspect-square ring ring-offset-2">
-          <img src={images[0]} />
+          <img src={images[0]} alt="img" />
         </div>
       </div>
 
       <h1 className="text-xl font-bold m-3">
-        Name: <b className="text-4xl">{vet.firstname + " " + vet.lastname} </b>
+        Name: <b className="text-4xl">{seller.firstname + " " + seller.lastname} </b>
       </h1>
       <div className="text-lg m-3 grid-cols-2 grid mb-5">
         <p>
-          <span className="font-bold">DOB:</span> {vet.DOB}
+          <span className="font-bold">DOB:</span> {seller.DOB}
         </p>
         <p>
-          <span className="font-bold">Gender:</span> {vet.gender}
+          <span className="font-bold">Gender:</span> {seller.gender}
         </p>
 
         {/* <p>
@@ -106,17 +105,17 @@ const MiddleLayoutVetProfile = ({ vet_ }) => {
 
       <div className="text-lg m-1 ml-3 grid-cols-2 grid mb-5">
         <p>
-          <span className="font-bold">Phone:</span> {vet.phone}
+          <span className="font-bold">Phone:</span> {seller.phone}
         </p>
         <p>
-          <span className="font-bold">Email:</span> {vet.email}
+          <span className="font-bold">Email:</span> {seller.email}
         </p>
         <p>
-          <span className="font-bold">Clinic Name:</span> {vet.clinic_name}
+          <span className="font-bold">Store Name:</span> {seller.store_name}
         </p>
         <p>
-          <span className="font-bold">Clinic Address:</span>{" "}
-          {vet.clinic_address}
+          <span className="font-bold">Store Address:</span>{" "}
+          {seller.store_address}
         </p>
       </div>
 
@@ -124,25 +123,25 @@ const MiddleLayoutVetProfile = ({ vet_ }) => {
 
       <div className="text-lg ml-3 m-1 grid-cols-2 grid mb-5">
         <p>
-          <span className="font-bold">Address:</span> {vet.address}
+          <span className="font-bold">Address:</span> {seller.address}
         </p>
         <p>
-          <span className="font-bold">Post-Office:</span> {vet.postOffice}
+          <span className="font-bold">Post-Office:</span> {seller.postOffice}
         </p>
         <p>
-          <span className="font-bold">District:</span> {vet.district}
+          <span className="font-bold">District:</span> {seller.district}
         </p>
         <p>
-          <span className="font-bold">Country:</span> {vet.country}
+          <span className="font-bold">Country:</span> {seller.country}
         </p>
       </div>
 
       <div className=" font-serif italic m-4">
         <b className="font-bold not-italic font-sans">About: {"   "}</b>
-        {isExpanded || vet.about.split(" ").length <= 30
-          ? vet.about
-          : `${vet.about.split(" ").slice(0, 30).join(" ")}...`}
-        {vet.about.split(" ").length > 30 && (
+        {isExpanded || seller.about.split(" ").length <= 30
+          ? seller.about
+          : `${seller.about.split(" ").slice(0, 30).join(" ")}...`}
+        {seller.about.split(" ").length > 30 && (
           <button onClick={toggleabout} className="text-blue-600 text-xs ml-0">
             {isExpanded ? " See Less" : " See More"}
           </button>
@@ -239,4 +238,4 @@ const MiddleLayoutVetProfile = ({ vet_ }) => {
   );
 };
 
-export default MiddleLayoutVetProfile;
+export default MiddleLayoutSellerProfile;

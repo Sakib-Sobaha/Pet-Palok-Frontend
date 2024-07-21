@@ -15,6 +15,9 @@ import PetProfile from "./pages/user/pet-profile.js";
 import VetVisit from "./pages/user/vet-visit.js";
 import UserProfile from "./pages/user/user-profile.js"
 import VetProfile from "./pages/vet/vet-profile.js";
+import SellerProfile from "./pages/seller/seller-profile.js"
+import SellerHome from "./pages/seller/seller-home.js"
+import Marketplace from "./pages/marketplace/marketplace.js"
 
 
 export default function App() {
@@ -98,6 +101,11 @@ export default function App() {
         <Route path="/user/profile/:userId" element={<UserProfile/>}/>
 
         <Route path="/vet/profile/:vetId" element={<VetProfile />} />
+
+        <Route path="/seller/profile/:vetId" element={<SellerProfile />} />
+        <Route path="/seller/home" element={<SellerHome />} />
+
+        <Route path="/marketplace" element={<Marketplace />} />
 
         <Route exact path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

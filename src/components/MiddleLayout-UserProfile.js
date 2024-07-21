@@ -136,7 +136,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
         )}
       </div>
       <div className="justify-center">
-        <button className="btn btn-accent w-28 rounded-lg p-2 justify-center m-3">
+        <button className="btn btn-primary w-28 rounded-lg p-2 justify-center m-3">
           Edit Profile
         </button>
         <br />
@@ -170,8 +170,8 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
       </div>
 
       <SectionDivider title="Change Password" />
-      <div className="justify-center w-full">
-        <div className="w-3/5 mb-4 ml-3">
+      <div className="justify-center w-full grid place-items-center">
+        <div className="w-80 mb-4 ml-3">
           <p className="mr-4 ml-4 font-mono">Current Password:</p>
           <label className="input input-bordered flex items-center gap-2">
             <svg
@@ -191,7 +191,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
           </label>
         </div>
 
-        <div className="w-3/5 mb-4 ml-3">
+        <div className="w-80 mb-4 ml-3">
           <p className="mr-4 ml-4 font-mono">New Password:</p>
           <label className="input input-bordered flex items-center gap-2">
             <svg
@@ -211,7 +211,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
           </label>
         </div>
 
-        <div className="w-3/5 mb-4 ml-3">
+        <div className="w-80 mb-4 ml-3">
           <p className="mr-4 ml-4 font-mono">Confirm New Password:</p>
           <label className="input input-bordered flex items-center gap-2">
             <svg
@@ -231,23 +231,17 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
           </label>
         </div>
 
-        <button className="btn btn-accent w-56 rounded-lg p-4 justify-center m-3 float-left">
-          {" "}
-          Confirm New Password{" "}
-        </button>
-        <button className="btn btn-error w-56 rounded-lg p-4 justify-center m-3 float-left">
-          {" "}
-          Reset{" "}
-        </button>
+        <div className="w-full">
+          <button className="btn btn-accent w-56 rounded-lg p-4 justify-center m-3">
+            {" "}
+            Confirm New Password{" "}
+          </button>
+          <button className="btn btn-error w-56 rounded-lg p-4 justify-center m-3">
+            {" "}
+            Reset{" "}
+          </button>
+        </div>
       </div>
-
-      <SectionDivider
-        title="Medical History"
-        icon="https://cdn-icons-png.flaticon.com/512/2937/2937409.png"
-      />
-      <Timeline timelineData={timelineData} />
-
-      <SectionDivider title="Vaccination History" />
     </div>
   );
 };
