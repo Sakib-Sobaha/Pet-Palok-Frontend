@@ -11,7 +11,13 @@ const LeftLayoutMarketPlace = ({ type }) => {
         </b>
         Create New Pet-Profile
       </button> */}
-      <div className="p-3 mb-3">Sort by select tag diye korte hobe</div>
+      <div className="p-3 mb-3">Sort by select tag diye korte hobe
+        <select className="primary w-32">
+            <option>a</option>
+            <option>a</option>
+            <option>a</option>
+        </select>
+      </div>
       <div className="flex flex-auto">
         <input
           type="text"

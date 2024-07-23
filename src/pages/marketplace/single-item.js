@@ -1,12 +1,12 @@
 import React from "react";
 
-import LeftLayout from "../../components/LeftLayout-Marketplace";
-import MiddleLayout from "../../components/MiddleLayout-MarketPlace";
+import LeftLayout from "../../components/LeftLayoutSellerProfile";
+import MiddleLayout from "../../components/MiddleLayout-SingleItem";
 import RightLayout from "../../components/RightLayout";
 import LayoutLRM from "../../components/LayoutLRM";
 
 
-function MarketPlace() {
+function SingleItem() {
   return (
     <div>
       <LayoutLRM
@@ -18,4 +18,4 @@ function MarketPlace() {
   );
 }
 
-export default MarketPlace;
+export default SingleItem;
