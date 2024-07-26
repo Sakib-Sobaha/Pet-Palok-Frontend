@@ -25,7 +25,7 @@ function MiddleLayoutChatbox() {
       <ChatRight text="ki koros sharadin" time="12.45pm"/>
       
       
-
+      <ChatLeft text="shour" time = "1.20pm"/>
 
       </div>
       <div className="w-full flex bottom-0">

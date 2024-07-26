@@ -8,11 +8,11 @@ function ChatLeft({ sender, text, time, image }) {
     <div className="chat chat-start">
       <div className="avatar online placeholder chat-image pl-2">
         <div className="bg-neutral ring ring-blue-600 text-neutral-content w-10 rounded-full">
-          {!image || image==""? (
-            <span className="text-xl">{sender.slice(0, 2)}</span>
-          ) : (
+          {/* {!image || image==""? (
+            // <span className="text-xl">{sender.slice(0, 2)}</span>
+          ) : ( */}
             <img src={image} alt="img"/>
-          )}
+          {/* )} */}
         </div>
       </div>
       <div className="chat-header">
