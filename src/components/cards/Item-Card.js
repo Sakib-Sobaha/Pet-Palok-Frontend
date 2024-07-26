@@ -3,13 +3,12 @@ import React from "react";
 
 function ItemCard({ item }) {
   return (
-    <div className="card bg-base-100 w-64 h-80 shadow-xl m-1">
+    <div className="card rounded-none bg-base-100 w-64 h-80 shadow-xl m-1">
       <figure>
         <img
           src={item.image}
           alt={item.name}
           className=" h-72 w-52 object-cover rounded-lg"
-          
         />
       </figure>
       <div className="card-body p-1">
@@ -41,7 +40,7 @@ function ItemCard({ item }) {
 
         {/* <p className="text-justify">{item.description}</p> */}
         <div className="card-actions grid">
-          <button className="btn btn-primary rounded-box">Add to Cart</button>
+          <button className="btn btn-primary rounded-none">Add to Cart</button>
           {/* <button className="btn btn-error rounded-lg"></button> */}
         </div>
       </div>

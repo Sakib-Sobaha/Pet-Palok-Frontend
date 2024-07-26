@@ -63,7 +63,7 @@ function MarketItemContainer({text}) {
     return (
         <div className="bg bg-base-200 m-0 mb-4 rounded-xl">
         <h1 className="text-3xl font-bold ml-3">{text}</h1>
-        <div className="grid grid-cols-3 gap-2 align-middle mr-1">
+        <div className="grid grid-cols-3 gap-1 align-middle mr-1">
             {itemData.map((item, index) => (
                 <ItemCard key={index} item={item} />
             ))}

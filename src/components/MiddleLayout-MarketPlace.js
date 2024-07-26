@@ -1,5 +1,6 @@
 import React from 'react';
 import MarketItemContainer from './containers/MarketItemContainer';
+import Categories from './marketplace/categories.js'
 
 const MiddleLayoutSellerHome = () => {
   return (
@@ -7,7 +8,7 @@ const MiddleLayoutSellerHome = () => {
       {/* Your content for MiddleLayout */}
         <MarketItemContainer text="Popular Items"/>
         <MarketItemContainer text="Most Visited" />
-
+        <Categories />
     </div>
   );
 };

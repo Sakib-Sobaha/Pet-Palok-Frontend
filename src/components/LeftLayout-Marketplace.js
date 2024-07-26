@@ -1,7 +1,7 @@
 import React from "react";
 const LeftLayoutMarketPlace = ({ type }) => {
   return (
-    <div className="flex-1 bg-base-200 p-4 min-h-screen h-auto rounded-lg">
+    <div className="flex-1 bg-base-200 p-3 pt-0 min-h-screen h-auto rounded-lg">
       {/* Your content for LeftLayout */}
       <br />
       {/* <button className="btn btn-primary w-full mb-4">
@@ -11,20 +11,26 @@ const LeftLayoutMarketPlace = ({ type }) => {
         </b>
         Create New Pet-Profile
       </button> */}
-      <div className="p-3 mb-3">Sort by select tag diye korte hobe
-        <select className="primary w-32">
-            <option>a</option>
-            <option>a</option>
-            <option>a</option>
+      <div className="p-1 pt-0 mt-0 mb-3 flex flex-auto">
+        <select className="select select-primary w-full h-10 rounded-md">
+          <option disabled selected>
+            Sort by...
+          </option>
+          <option>Price Low to High</option>
+          <option>Price High to Low</option>
+          <option>Rating Low to High</option>
+          <option>Rating High to Low</option>
+          
         </select>
+        {/* <button className="btn btn-primary flex-auto w-4 mb-4 rounded-md">Sort</button> */}
       </div>
-      <div className="flex flex-auto">
+      <div className="flex flex-auto p-1">
         <input
           type="text"
           placeholder="Type here"
-          className="input input-bordered input-primary max-w-36 mb-4 mr-2"
+          className="input input-bordered input-primary rounded-md w-3/4 mb-4 mr-1"
         />
-        <button className="btn btn-primary flex-auto w-4 mb-4">Search</button>
+        <button className="btn btn-primary w-16 rounded-md mb-4">Search</button>
       </div>
       <p className="font-extrabold text-xl">
         <img

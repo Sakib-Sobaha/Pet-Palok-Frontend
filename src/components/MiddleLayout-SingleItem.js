@@ -3,6 +3,36 @@ import React from "react";
 import SectionDivider from "./Section-Divider";
 import Rating from "./Rating";
 
+import ReviewContainer from "./ReviewContainer";
+import QuestionContainer from "./QuestionContainer.js"
+
+// const comments = [
+//     {
+//         id:122,
+//         reviewer: "Niloy",
+//         rating: 4,
+//         date: "22-03-2024",
+//         review_text: "Nice product, my doggy loves it",
+//         anonymouse: false,
+//     },
+//     {
+//         id:123,
+//         reviewer: "Suvro",
+//         rating: 5,
+//         time: "22-03-2024",
+//         review_text: "bai product ta onek helpful silo",
+//         anonymouse: true,
+//     },
+//     {
+//         id:122,
+//         reviewer: "Niloy",
+//         rating: 1,
+//         time: "22-01-2024",
+//         review_text: "Baje product, keu kinben na",
+//         anonymouse: true,
+//     },
+// ]
+
 const item = {
   name: "Odomos Doggy",
   price_per_unit: 90,
@@ -45,55 +75,59 @@ const MiddleLayoutPetProfile = ({ item_ }) => {
         </div>
         
       </div> */}
-
-      {/* images */}
-      <div className="carousel carousel-center object-cover rounded-box h-96">
-        {images.map((image, index) => (
-          <div key={index} className=" carousel-item">
-            <img
-              src={image}
-              alt={`bal ${index + 1}`}
-              className="object-cover object-center h-40 max-w-full rounded-lg md:h-96"
-            />
+      <div className="grid grid-cols-2 m-1 p-1">
+        {/* images */}
+        <div className="grid place-items-center w-full mb-3">
+          <div className="carousel carousel-center object-cover rounded-box h-72 w-72">
+            {images.map((image, index) => (
+              <div key={index} className=" carousel-item">
+                <img
+                  src={image}
+                  alt={`bal ${index + 1}`}
+                  className="object-cover object-center h-40 max-w-full rounded-lg md:h-72"
+                />
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+        <div className="w-full place-items-center">
+          <h1 className="text-4xl font-bold m-3 pl-3">{item.name}</h1>
+          <div className="text-lg m-3 grid-cols-2 grid mb-5 rounded-lg p-2 pl-3">
+            <p>
+              <span className="font-bold">Quantity:</span> {item.quantity}
+            </p>
+            <p>
+              <span className="font-bold"></span>{" "}
+              <b className="font-mono text-green-700 text-xl">
+                {" "}
+                {item.price_per_unit + " taka"}
+              </b>
+            </p>
+            <p>
+              <span className="font-bold">Type:</span> {item.type}
+            </p>
+
+            <p>
+              <span className="font-bold">
+                {item && item.total_available_count > 5 ? (
+                  <h1 className="text-accent">Available</h1>
+                ) : (
+                  <h1 className="text-warning">Few Items Left</h1>
+                )}
+              </span>
+            </p>
+
+            <p>
+              <span className="">for </span> <b>{item.pet_type}s</b>
+            </p>
+            <p>
+              <span className="font-semibold text-info">
+                {item.sell_count} sold
+              </span>
+            </p>
+          </div>
+        </div>
       </div>
-
-      <h1 className="text-4xl font-bold m-3">{item.name}</h1>
-      <div className="text-lg m-3 grid-cols-3 grid mb-5">
-        <p>
-          <span className="font-bold">Price:</span>{" "}
-          <b className="font-mono text-green-700 text-xl">
-            {" "}
-            {item.price_per_unit + " taka"}
-          </b>
-        </p>
-        <p>
-          <span className="font-bold">Type:</span> {item.type}
-        </p>
-        <p>
-          <span className="font-bold">Quantity:</span> {item.quantity}
-        </p>
-        <p>
-          <span className="font-bold">
-            {item && item.total_available_count > 5 ? (
-              <h1 className="text-accent">Available</h1>
-            ) : (
-              <h1 className="text-warning">Few Items Left</h1>
-            )}
-          </span>
-        </p>
-
-        <p>
-          <span className="font-bold">Pet-type:</span> {item.pet_type}
-        </p>
-        <p>
-          <span className="font-semibold text-info">
-            {item.sell_count} sold
-          </span>
-        </p>
-      </div>
-
       <div className="font-serif italic">
         {isExpanded || item.description.split(" ").length <= 30
           ? item.description
@@ -113,6 +147,12 @@ const MiddleLayoutPetProfile = ({ item_ }) => {
         </p>
         <Rating className="" />
       </div>
+      <SectionDivider title="Ratings and Reviews" icon="**" />
+
+      <ReviewContainer />
+
+      <SectionDivider title="Ask a Question?" icon="**"/>
+      <QuestionContainer />
     </div>
   );
 };
