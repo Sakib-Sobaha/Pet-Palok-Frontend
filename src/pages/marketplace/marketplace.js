@@ -2,7 +2,7 @@ import React from "react";
 
 import LeftLayout from "../../components/LeftLayout-Marketplace";
 import MiddleLayout from "../../components/MiddleLayout-MarketPlace";
-import RightLayout from "../../components/RightLayout";
+import RightLayout from "../../components/RightLayout-Marketplace";
 import LayoutLRM from "../../components/LayoutLRM";
 
 

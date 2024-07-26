@@ -20,6 +20,7 @@ import SellerHome from "./pages/seller/seller-home.js"
 import Marketplace from "./pages/marketplace/marketplace.js"
 import SingleItem from "./pages/marketplace/single-item.js"
 import ChatBox from "./pages/messaging/chat-box.js";
+import Cart from "./pages/cart/cart.js";
 
 
 export default function App() {
@@ -111,6 +112,8 @@ export default function App() {
         <Route path="/marketplace/item" element={<SingleItem />}/>
 
         <Route path="/chatbox" element={<ChatBox/>}/>
+
+        <Route path="/cart" element={<Cart />} />
 
         <Route exact path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
