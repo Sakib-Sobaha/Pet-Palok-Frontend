@@ -1,11 +1,11 @@
 import React from "react";
 import LeftLayout from "../../components/LeftLayoutEmpty.js"
-import MiddleLayout from "../../components/MiddleLayout-Cart.js"
+import MiddleLayout from "../../components/MiddleLayout-Checkout.js"
 import RightLayout from "../../components/RightLayout"
 import LayoutLRM from "../../components/LayoutLRM";
 
 
-function Cart() {
+function Checkout() {
   return (
     <div>
       <LayoutLRM
@@ -17,4 +17,4 @@ function Cart() {
   );
 }
 
-export default Cart;
+export default Checkout;
