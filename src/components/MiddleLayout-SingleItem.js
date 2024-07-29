@@ -4,7 +4,7 @@ import SectionDivider from "./Section-Divider";
 import Rating from "./Rating";
 
 import ReviewContainer from "./ReviewContainer";
-import QuestionContainer from "./QuestionContainer.js"
+import QuestionContainer from "./QuestionContainer.js";
 
 // const comments = [
 //     {
@@ -60,6 +60,10 @@ const MiddleLayoutPetProfile = ({ item_ }) => {
 
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleBack = () => {
+    window.location.href = "/marketplace";
   };
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
@@ -126,6 +130,16 @@ const MiddleLayoutPetProfile = ({ item_ }) => {
               </span>
             </p>
           </div>
+          <div className="flex">
+            <button className="btn btn-primary w-40 rounded-lg p-2 justify-center m-1 ml-4">
+              Add to Cart
+            </button>
+            <button className="btn btn-warning w-32 rounded-lg p-2 justify-center m-1"
+              onClick={handleBack}
+            >
+              Back
+            </button>
+          </div>
         </div>
       </div>
       <div className="font-serif italic">
@@ -145,13 +159,13 @@ const MiddleLayoutPetProfile = ({ item_ }) => {
         <p>
           <span className=" font-bold">Rating:</span>
         </p>
-        <Rating className="" />
+        <Rating className="" rating={2.4} />
       </div>
       <SectionDivider title="Ratings and Reviews" icon="**" />
 
       <ReviewContainer />
 
-      <SectionDivider title="Ask a Question?" icon="**"/>
+      <SectionDivider title="Ask a Question?" icon="**" />
       <QuestionContainer />
     </div>
   );

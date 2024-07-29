@@ -60,7 +60,13 @@ function SingleQuestion({ anonymous = true }) {
         </div>
       </div>
       <div className="flex">
-        <div className="w-1/12"></div>
+        <div className="w-1/12">
+          <div className="avatar ">
+            <div className="w-full max-h-16 mt-1 rounded-full">
+              <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+            </div>
+          </div>
+        </div>
         <div className="flex border border-content bg-secondary rounded-lg p-1 w-11/12">
           <svg
             xmlns="http://www.w3.org/2000/svg"

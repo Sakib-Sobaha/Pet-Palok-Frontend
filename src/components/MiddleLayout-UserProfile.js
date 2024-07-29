@@ -3,6 +3,7 @@ import React from "react";
 import SectionDivider from "./Section-Divider";
 import Timeline from "./Timeline";
 import Rating from "./Rating";
+import SendMessage from "./buttons/SendMessage";
 
 const timelineData = [
   {
@@ -41,7 +42,7 @@ const user = {
   address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
   postOffice: "Mirpur-2",
   district: "Dhaka",
-  country:"Bangladesh",
+  country: "Bangladesh",
   DOB: "2020-01-01",
   gender: "male",
   about:
@@ -65,6 +66,11 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
   const toggleabout = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const handleEdit = () => {
+    window.location.href = "/user/profile/edit";
+  };
+
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
       {/* Your content for MiddleLayout */}
@@ -103,9 +109,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
         <p>
           <span className="font-bold">Email:</span> {user.email}
         </p>
-        
       </div>
-
 
       <h1 className="pl-3 font-bold text-xl">Address:</h1>
 
@@ -135,11 +139,39 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
           </button>
         )}
       </div>
-      <div className="justify-center">
-        <button className="btn btn-primary w-28 rounded-lg p-2 justify-center m-3">
-          Edit Profile
+      <div className="flex">
+        <button className="btn btn-primary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
+          onClick={handleEdit}
+        >
+          <svg
+            class="feather feather-edit"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+          <span>Edit Profile</span>
         </button>
-        <br />
+
+        <button className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2">
+          <svg
+            viewBox="0 0 512 512"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            className="h-6 w-6"
+          >
+            <path d="M256 352c-16.53 0-33.06-5.422-47.16-16.41L0 173.2V400C0 426.5 21.49 448 48 448h416c26.51 0 48-21.49 48-48V173.2l-208.8 162.5C289.1 346.6 272.5 352 256 352zM16.29 145.3l212.2 165.1c16.19 12.6 38.87 12.6 55.06 0l212.2-165.1C505.1 137.3 512 125 512 112C512 85.49 490.5 64 464 64h-416C21.49 64 0 85.49 0 112C0 125 6.01 137.3 16.29 145.3z" />
+          </svg>
+          <span>Send Message</span>
+        </button>
       </div>
 
       <div className="flex w-full m-4 mt-5">
@@ -147,7 +179,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
           <p>
             <span className=" font-bold">Buy/Sell/Exchange Rating:</span>
           </p>
-          <Rating className="" />
+          <Rating className="" rating={4.5} />
         </div>
 
         <div className="divider divider-horizontal"></div>
@@ -156,7 +188,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
           <p>
             <span className=" font-bold">Vet's Rating:</span>
           </p>
-          <Rating className="" />
+          <Rating className="" rating={1.4} />
         </div>
 
         <div className="divider divider-horizontal"></div>
@@ -165,81 +197,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
           <p>
             <span className="font-bold">PetKeeper's Rating:</span>
           </p>
-          <Rating className="" />
-        </div>
-      </div>
-
-      <SectionDivider title="Change Password" />
-      <div className="justify-center w-full grid place-items-center">
-        <div className="w-80 mb-4 ml-3">
-          <p className="mr-4 ml-4 font-mono">Current Password:</p>
-          <label className="input input-bordered flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 opacity-70"
-            >
-              <path
-                fillRule="evenodd"
-                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                clipRule="evenodd"
-              />
-            </svg>
-
-            <input type="password" className="grow" value="password" />
-          </label>
-        </div>
-
-        <div className="w-80 mb-4 ml-3">
-          <p className="mr-4 ml-4 font-mono">New Password:</p>
-          <label className="input input-bordered flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 opacity-70"
-            >
-              <path
-                fillRule="evenodd"
-                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                clipRule="evenodd"
-              />
-            </svg>
-
-            <input type="password" className="grow" value="password" />
-          </label>
-        </div>
-
-        <div className="w-80 mb-4 ml-3">
-          <p className="mr-4 ml-4 font-mono">Confirm New Password:</p>
-          <label className="input input-bordered flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 opacity-70"
-            >
-              <path
-                fillRule="evenodd"
-                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                clipRule="evenodd"
-              />
-            </svg>
-
-            <input type="password" className="grow" value="password" />
-          </label>
-        </div>
-
-        <div className="w-full">
-          <button className="btn btn-accent w-56 rounded-lg p-4 justify-center m-3">
-            {" "}
-            Confirm New Password{" "}
-          </button>
-          <button className="btn btn-error w-56 rounded-lg p-4 justify-center m-3">
-            {" "}
-            Reset{" "}
-          </button>
+          <Rating className="" rating={3.5}  />
         </div>
       </div>
     </div>

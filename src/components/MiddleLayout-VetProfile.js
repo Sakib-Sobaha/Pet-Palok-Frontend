@@ -159,7 +159,7 @@ const MiddleLayoutVetProfile = ({ vet_ }) => {
         <p>
           <span className=" font-bold">Vet's Rating:</span>
         </p>
-        <Rating className="" />
+        <Rating className="" rating={4.1}/>
       </div>
 
       <SectionDivider title="Change Password" />

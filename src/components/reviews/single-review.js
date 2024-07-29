@@ -1,10 +1,10 @@
 import React from "react";
-import Rating from "../Rating-orange";
+import Rating from "../Rating";
 
 const review = {
   id: 122,
   reviewer: "Niloy Faiaz",
-  rating: 1,
+  rating: 4,
   time: "22-01-2024",
   review_text: "Baje product, keu kinben na",
   anonymous: true,
@@ -34,7 +34,7 @@ function SingleReivew({ anonymous = true }) {
 
       <div className="w-full">
         <div className="float-right">
-          <Rating className="bg-orange-500"/>
+          <Rating rating={review.rating} className="h-20"/>
         </div>
         <div className="">
           {anonymous ? (

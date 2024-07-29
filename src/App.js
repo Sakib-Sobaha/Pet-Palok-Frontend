@@ -22,6 +22,7 @@ import SingleItem from "./pages/marketplace/single-item.js"
 import ChatBox from "./pages/messaging/chat-box.js";
 import Cart from "./pages/cart/cart.js";
 import Checkout from "./pages/cart/checkout.js";
+import EditUserProfile from "./pages/user/edit-user-profile.js";
 
 
 export default function App() {
@@ -103,6 +104,7 @@ export default function App() {
         <Route path="/user/pets/:id" element={<PetProfile />} />
         <Route path="/user/vetvisit/:id" element={<VetVisit/>} />
         <Route path="/user/profile/:userId" element={<UserProfile/>}/>
+        <Route path="/user/profile/edit" element={<EditUserProfile  />}/>
 
         <Route path="/vet/profile/:vetId" element={<VetProfile />} />
 
