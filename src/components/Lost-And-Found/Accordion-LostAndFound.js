@@ -3,7 +3,7 @@ import LostContainer from "./LostContainer";
 import FoundContainer from "./FoundContainer";
 
 function AccordionLnF() {
-  const [openSection, setOpenSection] = useState("found");
+  const [openSection, setOpenSection] = useState("lost");
 
   const toggleSection = (sectionName) => {
     // If the section clicked is already open, close it

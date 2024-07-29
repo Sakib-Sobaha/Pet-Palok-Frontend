@@ -13,7 +13,11 @@ function SingleComment({ anonymous = false }) {
   return (
     <div className="border border-black bg-base-200 rounded-lg mb-2 p-1 items-center">
       <div className="border border-black bg-base-300 rounded-lg p-1 items-center mb-1 flex">
-        <img src="https://cdn3.iconfinder.com/data/icons/aami-web-internet/64/aami5-59-512.png" alt="user" className="w-8 h-8 m-2 border border-base-content  "/>
+        <img
+          src="https://cdn3.iconfinder.com/data/icons/aami-web-internet/64/aami5-59-512.png"
+          alt="user"
+          className="w-8 h-8 m-2 border border-base-content  "
+        />
         <div className="w-full">
           <div className="">
             <h1 className="font-bold text-content">{review.reviewer}</h1>
@@ -40,6 +44,27 @@ function SingleComment({ anonymous = false }) {
 
       <Reply />
       <Reply />
+      <div>
+        <div className="mb-1">
+          <div className="flex">
+            <div className="w-1/12">
+              <div className="avatar ">
+                <div className="w-full max-h-16 mt-1 mr-1 rounded-full"></div>
+              </div>
+            </div>
+            <div className="bg-base-200 mb-2 p-1 rounded-md w-11/12">
+              <input
+                type="text"
+                placeholder="Reply to comment here..."
+                className="input input-bordered rounded-md pr-1 input-primary w-4/5"
+              />
+              <button className="btn btn-primary rounded-md text-center w-1/5">
+                Reply
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
