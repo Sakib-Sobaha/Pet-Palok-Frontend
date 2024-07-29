@@ -23,6 +23,7 @@ import ChatBox from "./pages/messaging/chat-box.js";
 import Cart from "./pages/cart/cart.js";
 import Checkout from "./pages/cart/checkout.js";
 import EditUserProfile from "./pages/user/edit-user-profile.js";
+import LostAndFound from "./pages/user/lost-and-found.js";
 
 
 export default function App() {
@@ -105,6 +106,8 @@ export default function App() {
         <Route path="/user/vetvisit/:id" element={<VetVisit/>} />
         <Route path="/user/profile/:userId" element={<UserProfile/>}/>
         <Route path="/user/profile/edit" element={<EditUserProfile  />}/>
+
+        <Route path="/user/lost-and-found" element={<LostAndFound />} />
 
         <Route path="/vet/profile/:vetId" element={<VetProfile />} />
 

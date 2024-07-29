@@ -1,17 +1,15 @@
 import React from "react";
 
 import LeftLayout from "../../components/LeftLayoutPets";
-import MiddleLayout from "../../components/MiddleLayoutPets";
+import MiddleLayout from "../../components/MiddleLayout-LostandFound.js";
 import RightLayout from "../../components/RightLayout";
 import LayoutLRM from "../../components/LayoutLRM";
-// import Menu from "../../components/Menu-LeftSidebar";
 
-
-function Pets() {
+function LostAndFound() {
   return (
     <div>
       <LayoutLRM
-        left={<LeftLayout type="user"/>}
+        left={<LeftLayout/>}
         middle={<MiddleLayout />}
         right={<RightLayout />}
       />
@@ -19,4 +17,4 @@ function Pets() {
   );
 }
 
-export default Pets;
+export default LostAndFound;

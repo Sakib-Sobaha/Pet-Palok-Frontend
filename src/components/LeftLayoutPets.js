@@ -21,7 +21,18 @@ const LeftLayoutPets = ({ type }) => {
         <button className="btn btn-primary flex-auto w-4 mb-4">Search</button>
       </div>
 
-      Sort by select tag diye korte hobe
+      <div className="p-1 pt-0 mt-0 mb-3 flex flex-auto">
+        <select className="select select-primary w-full h-10 rounded-md">
+          <option disabled selected>
+            Sort by...
+          </option>
+          <option>Age Low to High</option>
+          <option>Age High to Low</option>
+          {/* <option>Rating Low to High</option>
+          <option>Rating High to Low</option> */}
+        </select>
+        {/* <button className="btn btn-primary flex-auto w-4 mb-4 rounded-md">Sort</button> */}
+      </div>
 
       <p className="font-extrabold text-xl">
         <img
@@ -55,16 +66,15 @@ const LeftLayoutPets = ({ type }) => {
         </label>
 
         <div className="flex">
-        <button className="btn btn-primary w-28 mt-4 mr-1 align-middle"> 
+          <button className="btn btn-primary w-28 mt-4 mr-1 align-middle">
             {/* <img src="https://cdn4.iconfinder.com/data/icons/essentials-73/24/040_-_Tick-512.png" alt="filter" className="w-6 h-6 float-left mr-3" /> */}
-            Apply 
-            </button>
-            <button className="btn btn-secondary w-28 mt-4 align-middle">
-                Reset
-            </button>
-            </div>
+            Apply
+          </button>
+          <button className="btn btn-secondary w-28 mt-4 align-middle">
+            Reset
+          </button>
+        </div>
       </div>
-
     </div>
   );
 };
