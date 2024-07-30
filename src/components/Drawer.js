@@ -5,7 +5,6 @@ function Drawer({type}) {
         <div className="drawer">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
-          {/* Page content here */}
           <label htmlFor="my-drawer" className="btn btn-ghost drawer-button btn-square rounded-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -21,8 +20,9 @@ function Drawer({type}) {
               ></path>
             </svg>
           </label>
+          
         </div>
-        <div className="drawer-side">
+        <div className="drawer-side opacity-100">
           <label
             htmlFor="my-drawer"
             aria-label="close sidebar"
@@ -31,10 +31,10 @@ function Drawer({type}) {
           <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
             {/* Sidebar content here */}
             <li>
-              <a>Dashboard</a>
+              <a href="/user/home">Dashboard</a>
             </li>
             <li>
-              <a>Login/Signup</a>
+              <a href="/login">Login/Signup</a>
             </li>
             <li>
               <a>Profile</a>
