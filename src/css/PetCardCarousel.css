@@ -1,0 +1,25 @@
+/* Styling for the carousel */
+.carousel-container {
+    display: flex;
+    overflow-x: hidden; /* Hide overflow for clean scrolling */
+    width: 100%; /* Full width of the container */
+    position: relative;
+  }
+  
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s ease; /* Smooth transition */
+  }
+  
+  .carousel-item {
+    flex: 0 0 auto; /* Prevent flex items from shrinking or growing */
+    width: 300px; /* Width of each item */
+    margin-right: 16px; /* Space between items */
+  }
+  
+  @media (max-width: 768px) {
+    .carousel-item {
+      width: 80%; /* Responsive width for smaller screens */
+    }
+  }
+  

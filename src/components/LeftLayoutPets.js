@@ -1,5 +1,12 @@
 import React from "react";
+import { useState } from "react";
 const LeftLayoutPets = ({ type }) => {
+  const [age, setAge] = useState(0);
+
+  // Handler function to update state when range input changes
+  const handleRangeChange = (event) => {
+    setAge(event.target.value);
+  };
   return (
     <div className="flex-1 bg-base-200 p-4 min-h-screen h-full rounded-lg">
       {/* Your content for LeftLayout */}
@@ -39,12 +46,24 @@ const LeftLayoutPets = ({ type }) => {
           src="https://img.icons8.com/ios/452/filter.png"
           alt="filter"
           className="w-6 h-6 float-left mr-3"
+          color=""
         />
         Filters:
       </p>
 
       <p className="font-bold pb-2 pl-1 pt-3">Age</p>
-      <input type="range" min={0} max="100" value="30" className="range" />
+      <input
+        type="range"
+        min={1}
+        max={20}
+        value={age} // Set the current value of the input
+        className="range"
+        onChange={handleRangeChange} // Update state on change
+      />
+      <div className="pl-0 mt-2">
+        <kbd className="text-lg kbd font-medium">{age}</kbd>{" "}
+        {/* Display the current value */}
+      </div>
 
       <p className="font-bold pb-2 pl-1 pt-3">Type</p>
       <div className="flex flex-col">

@@ -22,6 +22,7 @@ import Cart from "./pages/cart/cart.js";
 import Checkout from "./pages/cart/checkout.js";
 import EditUserProfile from "./pages/user/edit-user-profile.js";
 import LostAndFound from "./pages/user/lost-and-found.js";
+import LandingPage from "./pages/Landing-Page.js";
 
 export default function App() {
   return (
@@ -54,6 +55,8 @@ export default function App() {
           <Route exact path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
+
+          <Route path="/landing" element={<LandingPage />} />
         </Routes>
         <Footer />
       </Router>
