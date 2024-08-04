@@ -1,9 +1,9 @@
 import { useState } from "react";
 import React from "react";
 import SectionDivider from "./Section-Divider";
-import Timeline from "./Timeline";
-import Rating from "./Rating";
-import ChangePassword from "./ChangePassword";
+// import Timeline from "./Timeline";
+// import Rating from "./Rating";
+// import ChangePassword from "./ChangePassword";
 
 
 const initialUser = {

@@ -13,6 +13,7 @@ import PetProfile from "./pages/user/pet-profile.js";
 import VetVisit from "./pages/user/vet-visit.js";
 import UserProfile from "./pages/user/user-profile.js";
 import VetProfile from "./pages/vet/vet-profile.js";
+import VetDirectory from "./pages/vet-directory/vet-directory.js";
 import SellerProfile from "./pages/seller/seller-profile.js";
 import SellerHome from "./pages/seller/seller-home.js";
 import SellerMyProducts from "./pages/seller/seller-my-products.js";
@@ -48,6 +49,8 @@ export default function App() {
 
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/marketplace/item" element={<SingleItem />} />
+
+          <Route path="/vetDirectory" element={<VetDirectory />} />
 
           <Route path="/chatbox" element={<ChatBox />} />
 

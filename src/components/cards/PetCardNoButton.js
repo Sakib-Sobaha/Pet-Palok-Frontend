@@ -1,5 +1,4 @@
 import React from "react";
-import { Route, useHref } from "react-router-dom";
 
 function PetCardNoButton({ pet }) {
   const visitProfile = () => {
