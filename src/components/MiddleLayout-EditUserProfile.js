@@ -5,33 +5,6 @@ import Timeline from "./Timeline";
 import Rating from "./Rating";
 import ChangePassword from "./ChangePassword";
 
-const timelineData = [
-  {
-    id: 1,
-    date: "2017-01-01",
-    event: "Was Born",
-  },
-  {
-    id: 2,
-    date: "2018-02-18",
-    event: "Had Constipation",
-  },
-  {
-    id: 3,
-    date: "2020-03-17",
-    event: "Haga problem",
-  },
-  {
-    id: 4,
-    date: "2023-04-01",
-    event: "Shonay Somossha",
-  },
-  {
-    id: 5,
-    date: "2023-07-04",
-    event: "Matha betha",
-  },
-];
 
 const initialUser = {
   firstname: "Niloy",
@@ -233,8 +206,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
         </button>
       </div>
 
-      <SectionDivider title="Change Password" />
-        <ChangePassword />
+      
     </div>
   );
 };

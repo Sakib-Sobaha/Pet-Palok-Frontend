@@ -1,13 +1,20 @@
 import React from "react";
-import { Route, useHref } from "react-router-dom";
+import { useState } from "react";
 
 function PetCard({ pet }) {
+  const lenMax = 12;
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleDescription = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   const visitProfile = () => {
     window.location.href = `/user/pets/${pet.id}`;
-  }
+  };
 
   return (
-    <div className="card bg-base-100 w-64 shadow-xl m-1">
+    <div className="card card-compact bg-base-100 w-64 shadow-xl m-1 hover:scale-105 transition-transform duration-300 hover:shadow-lg">
       <figure>
         <img
           src={pet.image}
@@ -27,11 +34,18 @@ function PetCard({ pet }) {
           </p>
         </div>
 
-        <p className="text-justify">{pet.description}</p>
+        <p className="text-justify">
+          {isExpanded || pet.description.split(" ").length <= lenMax
+            ? pet.description
+            : `${pet.description.split(" ").slice(0, lenMax).join(" ")}...`}
+          {pet.description.split(" ").length > lenMax && (
+            <button onClick={toggleDescription} className="text-primary ">
+              {isExpanded ? "See Less" : "See More"}
+            </button>
+          )}
+        </p>
         <div className="card-actions grid-cols-2 grid">
-          <button className="btn btn-primary rounded-lg" 
-            onClick={visitProfile}
-          >
+          <button className="btn btn-primary rounded-lg" onClick={visitProfile}>
             Visit Profile
           </button>
           <button className="btn btn-error rounded-lg">Delete Pet</button>

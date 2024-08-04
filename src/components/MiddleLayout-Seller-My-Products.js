@@ -5,7 +5,7 @@ const MiddleLayoutSellerMyProducts = () => {
   return (
     <div className="flex-1 bg-base-100 rounded-lg min-h-screen">
       {/* Your content for MiddleLayout */}
-        <MarketItemContainer text="Popular Items"/>
+        <MarketItemContainer text="Store Items"/>
         {/* <MarketItemContainer text="Most Visited" /> */}
     </div>
   );

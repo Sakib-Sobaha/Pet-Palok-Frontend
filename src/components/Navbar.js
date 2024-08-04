@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import Drawer from "./Drawer";
 import { ThemeContext } from "../components/ThemeContext"; // Import ThemeContext
 import Dropdown from "./Dropdown";
+import logo from "../images/logo_cropped.png";
 // const menuItems = [
 //   { name: "Dashboard", url: "/dashboard" },
 //   { name: "Login/Signup", url: "/login" },
@@ -18,7 +19,13 @@ function Navbar() {
       {/* <Drawer /> */}
       <Dropdown />
       <div className="flex-1 pr-2 justify-start" >
-        <a className="btn btn-ghost text-xl" href="/user/home">PetPalok</a>
+      <img src={logo} alt="PetPalok" className="h-12 rounded-lg hover:shadow hover:scale-105 cursor-pointer" 
+        onClick={() => {
+          window.location.href = "/landing";
+
+        }}
+      />
+
       </div>
       <div className="flex-1 pr-4 justify-end">
         <label className="swap swap-rotate">

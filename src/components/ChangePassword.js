@@ -130,7 +130,7 @@ function ChangePassword() {
         </label>
       </div>
 
-      <div className="w-full">
+      <div className="w-full grid grid-cols-2">
         <button
           className="btn btn-accent w-56 rounded-lg p-4 justify-center m-3"
           onClick={handleConfirm}

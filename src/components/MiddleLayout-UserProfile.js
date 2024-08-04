@@ -4,6 +4,8 @@ import SectionDivider from "./Section-Divider";
 import Timeline from "./Timeline";
 import Rating from "./Rating";
 import SendMessage from "./buttons/SendMessage";
+import EditPasswordModal from "./modals/edit-password";
+import EditProfileModal from "./modals/edit-profile-user";
 
 const timelineData = [
   {
@@ -53,7 +55,7 @@ const user = {
 };
 
 const images = [
-  "https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_640.jpg",
+  "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
   "https://www.bhmpics.com/downloads/beautiful-pictures-of-dogs/56.golden_puppy_dog_pictures.jpg",
   "https://static.toiimg.com/photo/109692764/109692764.jpg",
   "https://www.userbarn.com.au/userspot/app/uploads/2016/03/HYG9.2-Blog-Genral-In-Post-800x533px.png",
@@ -67,12 +69,12 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleEdit = () => {
-    window.location.href = "/user/profile/edit";
-  };
+  
 
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
+      <EditProfileModal element_id="edit_profile" />
+      <EditPasswordModal element_id="edit_password" />
       {/* Your content for MiddleLayout */}
       <SectionDivider title="Profile Details" icon="" />
 
@@ -140,8 +142,11 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
         )}
       </div>
       <div className="flex">
-        <button className="btn btn-primary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
-          onClick={handleEdit}
+        <button
+          className="btn btn-primary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
+          onClick={() =>
+            document.getElementById("edit_profile").showModal()
+          }
         >
           <svg
             class="feather feather-edit"
@@ -159,6 +164,30 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
           </svg>
           <span>Edit Profile</span>
+        </button>
+
+        <button
+          className="btn btn-accent mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
+          onClick={() =>
+            document.getElementById("edit_password").showModal()
+          }
+        >
+          <svg
+            class="feather feather-edit"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+          <span>Change Password</span>
         </button>
 
         <button className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2">
@@ -197,7 +226,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
           <p>
             <span className="font-bold">PetKeeper's Rating:</span>
           </p>
-          <Rating className="" rating={3.5}  />
+          <Rating className="" rating={3.5} />
         </div>
       </div>
     </div>

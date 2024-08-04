@@ -42,7 +42,7 @@ export default function App() {
 
           <Route path="/vet/profile/:vetId" element={<VetProfile />} />
 
-          <Route path="/seller/profile/:vetId" element={<SellerProfile />} />
+          <Route path="/seller/profile/:sellerId" element={<SellerProfile />} />
           <Route path="/seller/home" element={<SellerHome />} />
           <Route path="/seller/my-products" element={<SellerMyProducts />} />
 

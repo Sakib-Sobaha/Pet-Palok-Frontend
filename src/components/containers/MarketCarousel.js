@@ -1,5 +1,5 @@
 import React from "react";
-import ItemCard from "../cards/Item-card-no-button";
+import ItemCard from "../cards/Item-card-landing";
 
 const itemData = [
     {

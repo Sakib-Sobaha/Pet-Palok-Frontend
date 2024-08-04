@@ -1,75 +1,159 @@
-import React from "react";
+import React, { useState } from "react";
 import ItemCard from "../cards/Item-Card";
 
 const itemData = [
-    {
-        name: "Odomos Doggy",
-        price_per_unit: 90,
-        quantity: "250g",
-        count: 0,
-        total_available_count: 4,
-        pet_type: "Animal",
-        type:"medicine",
-        description: "If a dog chews shoes whose shoes does he choose?",
-        image: "https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_640.jpg"
-    },
-    {
-        name: "Cat Food",
-        price_per_unit: 59,
-        quantity: "100g",
-        count: 0,
-        total_available_count: 4,
-        pet_type: "Animal",
-        type:"food",
-        description: "If a dog chews shoes whose shoes does he choose?",
-        image: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D"
-    },
-    {
-        name: "Seed Mix",
-        price_per_unit: 290,
-        quantity: "500g",
-        count: 0,
-        total_available_count: 4,
-        pet_type: "Animal",
-        type:"food",
-        description: "If a dog chews shoes whose shoes does he choose?",
-        image: "https://t3.ftcdn.net/jpg/00/95/29/28/360_F_95292880_GfqmxNb4u8ZxG18i2jkLt6gkAvl8xdz3.jpg"
-    },
-    {
-        name: "Cattlefish Bone",
-        price_per_unit: 125,
-        quantity: "200g",
-        count: 0,
-        total_available_count: 4,
-        pet_type: "Animal",
-        type:"food",
-        description: "If a dog chews shoes whose shoes does he choose?",
-        image: "https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcRHc-hn-wtBtKuCnyl_aQo3bp6Sqx8G2oIadx2-T3svIVieizMMDT-me2CBv8oksfsn"
-    },
-    {
-        name: "Dog Water Pot",
-        price_per_unit: 90,
-        quantity: "3 pieces",
-        count: 0,
-        total_available_count: 4,
-        pet_type: "Animal",
-        type:"accessories",
-        description: "If a dog chews shoes whose shoes does he choose?",
-        image: "https://www.treehugger.com/thmb/Ocxi8FYaubDwjOwria6FNpGjJjo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-953005498-4ca60c6c2c5f4b0e881b2746ad5f17ef.jpg"
-    }
+  {
+    name: "Odomos Doggy",
+    price_per_unit: 90,
+    quantity: "250g",
+    count: 0,
+    total_available_count: 4,
+    pet_type: "Animal",
+    type: "medicine",
+    rating: 4,
+    description: "If a dog chews shoes whose shoes does he choose?",
+    image: "https://m.media-amazon.com/images/I/41-eQbUPu9L._AC_.jpg",
+  },
+  {
+    name: "Cat Food",
+    price_per_unit: 59,
+    quantity: "100g",
+    rating: 4,
+    count: 0,
+    total_available_count: 4,
+    pet_type: "Animal",
+    type: "food",
+    description: "If a dog chews shoes whose shoes does he choose?",
+    image:
+      "https://ithinkpets.com/wp-content/uploads/2023/05/Catfest-Pillows-with-Chicken-Cream-Cat-Treat-at-ithinkpets.com-1-1200x973.webp",
+  },
+  {
+    name: "Seed Mix",
+    price_per_unit: 290,
+    quantity: "500g",
+    rating: 4.6,
+    count: 0,
+    total_available_count: 4,
+    pet_type: "Animal",
+    type: "food",
+    description: "If a dog chews shoes whose shoes does he choose?",
+    image: "https://images.meesho.com/images/products/227181817/j4vdh_512.webp",
+  },
+  {
+    name: "Cattlefish Bone",
+    price_per_unit: 125,
+    quantity: "200g",
+    rating: 2.4,
+    count: 0,
+    total_available_count: 4,
+    pet_type: "Animal",
+    type: "food",
+    description: "If a dog chews shoes whose shoes does he choose?",
+    image:
+      "https://5.imimg.com/data5/ZA/KT/GO/SELLER-136396/cuttlefish-bone-500x500.JPG",
+  },
+  {
+    name: "Dog Water Pot",
+    price_per_unit: 90,
+    quantity: "3 pieces",
+    rating: 5,
+    count: 0,
+    total_available_count: 4,
+    pet_type: "Animal",
+    type: "accessories",
+    description: "If a dog chews shoes whose shoes does he choose?",
+    image:
+      "https://m.media-amazon.com/images/I/414gIdoFwNL._AC_UF1000,1000_QL80_.jpg",
+  },
+  {
+    name: "Odomos Doggy",
+    price_per_unit: 90,
+    quantity: "250g",
+    rating: 1.2,
+    count: 0,
+    total_available_count: 4,
+    pet_type: "Animal",
+    type: "medicine",
+    description: "If a dog chews shoes whose shoes does he choose?",
+    image: "https://m.media-amazon.com/images/I/41-eQbUPu9L._AC_.jpg",
+  },
+  {
+    name: "Cat Food",
+    price_per_unit: 59,
+    rating: 3.4,
+    quantity: "100g",
+    count: 0,
+    total_available_count: 4,
+    pet_type: "Animal",
+    type: "food",
+    description: "If a dog chews shoes whose shoes does he choose?",
+    image:
+      "https://ithinkpets.com/wp-content/uploads/2023/05/Catfest-Pillows-with-Chicken-Cream-Cat-Treat-at-ithinkpets.com-1-1200x973.webp",
+  },
+  {
+    name: "Seed Mix",
+    price_per_unit: 290,
+    quantity: "500g",
+    rating: 4.7,
+    count: 0,
+    total_available_count: 4,
+    pet_type: "Animal",
+    type: "food",
+    description: "If a dog chews shoes whose shoes does he choose?",
+    image: "https://images.meesho.com/images/products/227181817/j4vdh_512.webp",
+  },
+  {
+    name: "Cattlefish Bone",
+    price_per_unit: 125,
+    quantity: "200g",
+    rating: 3.8,
+    count: 0,
+    total_available_count: 4,
+    pet_type: "Animal",
+    type: "food",
+    description: "If a dog chews shoes whose shoes does he choose?",
+    image:
+      "https://5.imimg.com/data5/ZA/KT/GO/SELLER-136396/cuttlefish-bone-500x500.JPG",
+  },
+  {
+    name: "Dog Water Pot",
+    price_per_unit: 90,
+    quantity: "3 pieces",
+    rating: 1.3,
+    count: 0,
+    total_available_count: 4,
+    pet_type: "Animal",
+    type: "accessories",
+    description: "If a dog chews shoes whose shoes does he choose?",
+    image:
+      "https://m.media-amazon.com/images/I/414gIdoFwNL._AC_UF1000,1000_QL80_.jpg",
+  },
 ];
 
-function MarketItemContainer({text}) {
-    return (
-        <div className="bg bg-base-200 m-0 mb-4 rounded-xl">
-        <h1 className="text-3xl font-bold ml-3">{text}</h1>
-        <div className="grid grid-cols-3 gap-1 align-middle mr-1">
-            {itemData.map((item, index) => (
-                <ItemCard key={index} item={item} />
-            ))}
-        </div>
-        </div>
-    );
+function MarketItemContainer({ text }) {
+  const [showAll, setShowAll] = useState(false);
+
+  // Determine the number of items to show based on the state
+  const itemsToShow = showAll ? itemData : itemData.slice(0, 6);
+
+  return (
+    <div className="bg bg-base-200 m-0 p-1 mb-4 rounded-xl">
+      <h1 className="text-3xl font-bold ml-3">{text}</h1>
+      <div className="grid grid-cols-3 gap-1 align-middle">
+        {itemsToShow.map((item, index) => (
+          <ItemCard key={index} item={item} userType="seller" />
+        ))}
+      </div>
+      <div className="flex justify-center mt-4">
+        <button
+          className="btn btn-primary"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? "See Less" : "See More"}
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default MarketItemContainer;
