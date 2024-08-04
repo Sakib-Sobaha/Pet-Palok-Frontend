@@ -4,6 +4,9 @@ import SectionDivider from "./Section-Divider";
 import Timeline from "./Timeline";
 import Rating from "./Rating";
 
+import EditPasswordModal from "./modals/edit-password";
+import EditProfileModal from "./modals/edit-profile-vet";
+
 const timelineData = [
   {
     id: 1,
@@ -32,6 +35,8 @@ const timelineData = [
   },
 ];
 
+const modal_name = "edit_profile_vet";
+
 const vet = {
   firstname: "Sakib",
   lastname: "Sobaha",
@@ -59,7 +64,7 @@ const vet = {
 };
 
 const images = [
-  "https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_640.jpg",
+  "https://img.freepik.com/free-photo/woman-doctor-wearing-lab-coat-with-stethoscope-isolated_1303-29791.jpg",
   "https://www.bhmpics.com/downloads/beautiful-pictures-of-dogs/56.golden_puppy_dog_pictures.jpg",
   "https://static.toiimg.com/photo/109692764/109692764.jpg",
   "https://www.userbarn.com.au/userspot/app/uploads/2016/03/HYG9.2-Blog-Genral-In-Post-800x533px.png",
@@ -74,6 +79,8 @@ const MiddleLayoutVetProfile = ({ vet_ }) => {
   };
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
+      <EditProfileModal element_id="edit_profile_vet" />
+      <EditPasswordModal element_id="edit_password" />
       {/* Your content for MiddleLayout */}
       <SectionDivider title="Profile Details" icon="" />
 
@@ -148,18 +155,70 @@ const MiddleLayoutVetProfile = ({ vet_ }) => {
           </button>
         )}
       </div>
-      <div className="justify-center">
-        <button className="btn btn-primary w-28 rounded-lg p-2 justify-center m-3">
-          Edit Profile
+      <div className="flex">
+        <button
+          className="btn btn-primary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
+          onClick={() =>
+            document.getElementById("edit_profile_vet").showModal()
+          }
+        >
+          <svg
+            class="feather feather-edit"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+          <span>Edit Profile</span>
         </button>
-        <br />
-      </div>
 
+        <button
+          className="btn btn-accent mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
+          onClick={() => document.getElementById("edit_password").showModal()}
+        >
+          <svg
+            class="feather feather-edit"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+          <span>Change Password</span>
+        </button>
+
+        <button className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2">
+          <svg
+            viewBox="0 0 512 512"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            className="h-6 w-6"
+          >
+            <path d="M256 352c-16.53 0-33.06-5.422-47.16-16.41L0 173.2V400C0 426.5 21.49 448 48 448h416c26.51 0 48-21.49 48-48V173.2l-208.8 162.5C289.1 346.6 272.5 352 256 352zM16.29 145.3l212.2 165.1c16.19 12.6 38.87 12.6 55.06 0l212.2-165.1C505.1 137.3 512 125 512 112C512 85.49 490.5 64 464 64h-416C21.49 64 0 85.49 0 112C0 125 6.01 137.3 16.29 145.3z" />
+          </svg>
+          <span>Send Message</span>
+        </button>
+      </div>
       <div className="grid  w-full place-items-center">
         <p>
           <span className=" font-bold">Vet's Rating:</span>
         </p>
-        <Rating className="" rating={4.1}/>
+        <Rating className="" rating={4.1} />
       </div>
 
       <SectionDivider title="Change Password" />

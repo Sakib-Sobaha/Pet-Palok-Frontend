@@ -73,7 +73,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
 
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
-      <EditProfileModal element_id="edit_profile" />
+      <EditProfileModal element_id="edit_profile_user" />
       <EditPasswordModal element_id="edit_password" />
       {/* Your content for MiddleLayout */}
       <SectionDivider title="Profile Details" icon="" />
@@ -145,7 +145,7 @@ const MiddleLayoutUserProfile = ({ user_ }) => {
         <button
           className="btn btn-primary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
           onClick={() =>
-            document.getElementById("edit_profile").showModal()
+            document.getElementById("edit_profile_user").showModal()
           }
         >
           <svg
