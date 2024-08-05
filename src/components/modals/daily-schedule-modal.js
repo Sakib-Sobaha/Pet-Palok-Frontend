@@ -90,12 +90,17 @@ const DailyScheduleModal = ({
       {isOpen && (
         <dialog id={element_id} className="modal" open>
           <div className="modal-box">
-            <button className="btn btn-error btn-sm float-right" onClick={onClose}>
+            <button
+              className="btn btn-error btn-sm float-right"
+              onClick={onClose}
+            >
               X
             </button>
-            <h3 className="font-bold text-lg">
-              Date: {tarikh.format("DD-MM-YY")}
+            <h3 className="font-bold text-lg ">
+              Daily Schedule for 
+               {": " + tarikh.format("DD MMMM, YYYY")}
             </h3>
+
             <div className="overflow-x-auto">
               <table className="table">
                 {/* head */}
@@ -153,7 +158,7 @@ const DailyScheduleModal = ({
                                   <div className="font-bold">
                                     {user.firstname + " " + user.lastname}
                                   </div>
-                      
+
                                   <div className="text-sm opacity-50">
                                     {pet.name}
                                   </div>

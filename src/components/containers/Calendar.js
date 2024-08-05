@@ -147,26 +147,30 @@ function Calendar() {
           >
             {day && (
               <>
-                {/* <DayScheduleModal
-                  element_id="daily_schedule_modal"
-                  tarikh={currentDate.date(day)}
-                  appointments={appointmentsForDay(day)}
-                /> */}
-
                 <div className="cursor-pointer">
                   <span className="text-sm font-bold">{day}</span>
 
-                  <div className="flex flex-col gap-1 h-full">
-                    {/* ekhane kaj korte hobe, more than one hole kisu ekta */}
-                    {appointmentsForDay(day).map((appointment) => (
-                      <div
-                        key={appointment.id}
-                        className="bg-secondary text-content text-xs rounded p-1"
-                      >
-                        {appointment.booking_time} -{" "}
-                        {appointment.description.slice(0, 12)}
-                      </div>
-                    ))}
+                  <div className="relative flex flex-col gap-1 h-full">
+                    {appointmentsForDay(day).length > 0 && (
+                      <>
+                        {/* Show the first appointment */}
+                        <div className="bg-secondary text-content text-xs rounded p-1">
+                          {appointmentsForDay(day)[0].booking_time} -{" "}
+                          {appointmentsForDay(day)[0].description.slice(0, 12)}
+                        </div>
+
+                        {/* Show a badge if there are additional appointments */}
+                        {appointmentsForDay(day).length > 1 && (
+                          <div className="absolute inset-0 flex items-end justify-end p-2">
+                            <div className="indicator">
+                              <span className="indicator-item badge badge-secondary">
+                                +{appointmentsForDay(day).length - 1}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
               </>
@@ -178,9 +182,7 @@ function Calendar() {
           <DayScheduleModal
             element_id="daily_schedule_modal"
             tarikh={selectedDate}
-            appointments={
-                appointmentsForDay(selectedDate.date())
-            }
+            appointments={appointmentsForDay(selectedDate.date())}
             isOpen={isModalOpen}
             onClose={handleCloseModal}
           />
