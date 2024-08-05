@@ -25,6 +25,7 @@ import Checkout from "./pages/cart/checkout.js";
 import EditUserProfile from "./pages/user/edit-user-profile.js";
 import LostAndFound from "./pages/user/lost-and-found.js";
 import LandingPage from "./pages/Landing-Page.js";
+import Appointments from "./pages/vet/appointments.js";
 
 export default function App() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/marketplace/item" element={<SingleItem />} />
 
           <Route path="/vetDirectory" element={<VetDirectory />} />
+          <Route path="/vet/appointments" element={<Appointments />} />
 
           <Route path="/chatbox" element={<ChatBox />} />
 
