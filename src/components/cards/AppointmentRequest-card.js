@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useState } from "react";
 
@@ -57,7 +58,7 @@ const user = {
   rating_vet: "3",
 };
 
-function AppointmentRequestCard({ appointmentRequest }) {
+function AppointmentCompletedCard({ appointmentRequest }) {
   const lenMax = 25;
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -175,7 +176,7 @@ function AppointmentRequestCard({ appointmentRequest }) {
               </g>
             </svg>
             <b className="ml-2 mt-1">
-              Booking Date: {appointmentRequest.booking_date}
+              Preferred Date: {appointmentRequest.booking_date}
             </b>
           </p>
         </div>
@@ -188,7 +189,7 @@ function AppointmentRequestCard({ appointmentRequest }) {
           {appointmentRequest.medium === "online" && (
             <div>
               <p>
-                <b>Booking Time: </b>
+                <b>Preferred Time: </b>
                 {appointmentRequest.booking_time}
               </p>
             </div>
@@ -210,6 +211,33 @@ function AppointmentRequestCard({ appointmentRequest }) {
             </button>
           )}
         </p>
+
+        <div className="grid grid-cols-2 gap-2">
+          {/* Appointment Date */}
+          <div>
+            <label className="label">
+              <span className="label-text">Appointment Date</span>
+            </label>
+            <input
+              type="date"
+              // value={appointmentDate}
+              // onChange={(e) => setAppointmentDate(e.target.value)}
+              className="input input-bordered w-full input-sm"
+            />
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Appointment Time</span>
+            </label>
+            <input
+              type="time"
+              // value={appointmentTime}
+              // onChange={(e) => setAppointmentTime(e.target.value)}
+              className="input input-bordered w-full input-sm"
+            />
+          </div>
+        </div>
+
         <div className="card-actions grid-cols-2 grid">
           <button
             className="btn btn-secondary rounded-lg"
@@ -252,4 +280,4 @@ function AppointmentRequestCard({ appointmentRequest }) {
   );
 }
 
-export default AppointmentRequestCard;
+export default AppointmentCompletedCard;

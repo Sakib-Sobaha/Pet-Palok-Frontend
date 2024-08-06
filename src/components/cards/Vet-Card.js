@@ -27,10 +27,10 @@ function VetCard({ vet }) {
         />
       </figure>
       <div className="card-body">
-        <h2 className=" m-0 font-bold grid place-items-center pl-4 mt-2">
+        <h2 className=" m-0 font-bold grid place-items-center text-center pl-4 mt-2">
           <div>
             <span className="p-2 text-xl">{vet.firstname + " " + vet.lastname}</span>
-            <Rating rating={vet.rating_vetvisit} />
+            <Rating rating={vet.rating_vetvisit} className=""/>
           </div>
         </h2>
 

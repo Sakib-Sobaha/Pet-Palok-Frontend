@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ItemCard from "../cards/AppointmentRequest-card";
+import AppointmentRequest from "../cards/AppointmentRequest-card";
 
 const appointmentRequests = [
   {
@@ -67,7 +67,7 @@ function AppointmentRequestContainer({ text }) {
       <h1 className="text-3xl font-bold ml-3">{text}</h1>
       <div className="grid grid-cols-1 gap-1 align-middle overflow-y-auto h-[60vh]">
         {itemsToShow.map((item, index) => (
-          <ItemCard key={index} appointmentRequest={item} userType="seller" />
+          <AppointmentRequest key={index} appointmentRequest={item} userType="seller" />
         ))}
       </div>
       {/* <div className="flex justify-center mt-4">

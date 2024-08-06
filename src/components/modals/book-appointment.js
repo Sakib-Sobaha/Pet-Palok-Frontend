@@ -254,19 +254,6 @@ const BookAppointment = ({ element_id, vet }) => {
               />
             </div>
 
-            {/* Appointment Date */}
-            <div>
-              <label className="label">
-                <span className="label-text">Appointment Date</span>
-              </label>
-              <input
-                type="date"
-                value={appointmentDate}
-                onChange={(e) => setAppointmentDate(e.target.value)}
-                className="input input-bordered w-full"
-              />
-            </div>
-
             {/* Visit Type */}
             <div>
               <label className="label">
@@ -284,22 +271,35 @@ const BookAppointment = ({ element_id, vet }) => {
                 <option value="online">Online</option>
               </select>
             </div>
-          </div>
 
-          {/* Appointment Time (Conditional Rendering) */}
-          {visitType === "online" && (
+            {/* Appointment Date */}
             <div>
               <label className="label">
-                <span className="label-text">Appointment Time</span>
+                <span className="label-text">Appointment Date</span>
               </label>
               <input
-                type="time"
-                value={appointmentTime}
-                onChange={(e) => setAppointmentTime(e.target.value)}
+                type="date"
+                value={appointmentDate}
+                onChange={(e) => setAppointmentDate(e.target.value)}
                 className="input input-bordered w-full"
               />
             </div>
-          )}
+          </div>
+
+          {/* Appointment Time (Conditional Rendering) */}
+          {/* {visitType === "online" && ( */}
+          <div>
+            <label className="label">
+              <span className="label-text">Appointment Time</span>
+            </label>
+            <input
+              type="time"
+              value={appointmentTime}
+              onChange={(e) => setAppointmentTime(e.target.value)}
+              className="input input-bordered w-full"
+            />
+          </div>
+          {/* )} */}
 
           <div className="modal-action">
             <button className="btn btn-accent">Book Appointment</button>

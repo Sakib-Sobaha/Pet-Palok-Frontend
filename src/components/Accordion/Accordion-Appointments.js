@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AppointmentRequestContainer from "../containers/AppointmentRequestContainer";
 import UpcomingAppointmentContainer from "../containers/Calendar";
+import AppointmentCompletedContainer from "../containers/AppointmentCompletedContainer";
 
 function AccordionAppointments() {
   const [openSection, setOpenSection] = useState("found");
@@ -68,8 +69,7 @@ function AccordionAppointments() {
         </div>
         {openSection === "previous" && (
           <div className="collapse-content">
-            {/* <LostContainer /> */}
-            Hi, I am the LostContainer
+            <AppointmentCompletedContainer />
           </div>
         )}
       </div>

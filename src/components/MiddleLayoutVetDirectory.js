@@ -1,12 +1,14 @@
-import React from 'react';
-import VetCardContainer from './containers/VetCardContainer';
+import React from "react";
+import VetCardContainer from "./containers/VetCardContainer";
 
-const MiddleLayoutVetDirectory = () => {
+const MiddleLayoutVetDirectory = ({ sortCriteria, searchTerm, ratingRange }) => {
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
-      {/* Your content for MiddleLayout */}
-        <VetCardContainer />
-
+      <VetCardContainer
+        sortCriteria={sortCriteria}
+        searchTerm={searchTerm}
+        ratingRange={ratingRange}
+      />
     </div>
   );
 };
