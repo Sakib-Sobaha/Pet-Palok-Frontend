@@ -21,14 +21,14 @@ const LeftLayoutVetDirectory = ({ onSortChange, onSearchChange, onRatingRangeCha
 
   return (
     <div className="flex-1 bg-base-200 p-2 min-h-screen rounded-lg">
-      <div className="flex flex-auto">
+      <div className="flex flex-auto m-1">
         <input
           type="text"
-          placeholder="Type here"
-          className="input input-bordered input-primary max-w-36 mb-4 mr-2"
+          placeholder="Search"
+          className="input input-bordered input-primary rounded-md w-full mb-2"
           onChange={handleSearchChange}
         />
-        <button className="btn btn-primary flex-auto w-4 mb-4">Search</button>
+        {/* <button className="btn btn-primary flex-auto w-4 mb-4">Search</button> */}
       </div>
 
       <div className="p-1 pt-0 mt-0 mb-3 flex flex-auto">

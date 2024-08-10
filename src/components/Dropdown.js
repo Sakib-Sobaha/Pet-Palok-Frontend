@@ -3,11 +3,11 @@ import React, { useState } from "react";
 
 function Dropdown() {
   // Manage account type state (can be 'user', 'seller', or 'vet')
-  const [accountType, setAccountType] = useState("vet");
+  const [accountType, setAccountType] = useState("seller");
 
   // Define menu items for each account type
   const userMenuItems = [
-    { name: "Dashboard", href: "/dashboard" },
+    { name: "Dashboard", href: "/user/home" },
     { name: "Pets", href: "/user/pets" },
     { name: "Marketplace", href: "/marketplace" },
     { name: "Vet Directory", href: "/vetdirectory" },
@@ -16,23 +16,26 @@ function Dropdown() {
   ];
 
   const sellerMenuItems = [
-    { name: "Dashboard", href: "/dashboard" },
+    { name: "Dashboard", href: "/seller/home" },
     { name: "Marketplace", href: "/marketplace" },
-    { name: "My Store", href: "/seller/store" },
+    { name: "My Profile", href: "/seller/profile/:id" },
+    { name: "Store", href: "/seller/store/:id" },
+    { name: "My Products", href: "/seller/my-products" },
+    { name: "Orders", href: "/seller/orders" },
   ];
 
   const vetMenuItems = [
-    { name: "Dashboard", href: "/dashboard" },
+    { name: "Dashboard", href: "/vet/home" },
     { name: "Vet Directory", href: "/vetdirectory" },
-    { name: "Schedules", href: "/vet/schedules" },
+    { name: "Appointments", href: "/vet/appointments" },
     { name: "Visit Requests", href: "/vet/visit-requests" },
   ];
 
   // Common menu items for all account types
   const commonMenuItems = [
-    { name: "Login/Signup", href: "/login" },
-    { name: "Profile", href: "/profile" },
+    { name: "Messages", href: "/chatbox" },
     { name: "Settings", href: "/settings" },
+    { name: "Login/Signup", href: "/login" },
   ];
 
   // Determine which menu items to render based on account type

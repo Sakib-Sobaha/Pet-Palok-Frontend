@@ -9,7 +9,7 @@ const CommunitieSuggestions = () => {
     // Fetch communities for suggestion
     const fetchCommunities = async () => {
       try {
-        const url = `${process.env.NEXT_PUBLIC_BACK_END}/user/communities/suggest`;
+        const url = `${process.env.NEXT_PUBLIC_BACK_END}/api/v1/getItems`;
         const token = localStorage.getItem("token");
         var myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${token}`);

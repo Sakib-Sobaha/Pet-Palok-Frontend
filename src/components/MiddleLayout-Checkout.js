@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 
 import CheckoutTable from "./cart/CheckoutTable";
 
@@ -74,35 +75,74 @@ const user = {
 const MiddleLayoutCheckout = () => {
   const [showAlert, setShowAlert] = React.useState(false);
   const [alertText, setAlertText] = React.useState("");
+  const [orders, setOrders] = useState([]);
+
+  // State for form fields
+  const [name, setName] = useState("Niloy Faiaz");
+  const [email, setEmail] = useState("niloy870@gmail.com");
+  const [phone, setPhone] = useState("01234123456");
+  const [alternatePhone, setAlternatePhone] = useState("");
+  const [address, setAddress] = useState("10/1, Monipur, Mirpur-2, Dhaka-1216");
+  const [postOffice, setPostOffice] = useState("Mirpur-2");
+  const [district, setDistrict] = useState("Dhaka");
+  const [country, setCountry] = useState("Bangladesh");
+
+  const handleOrdersCreated = (storeOrders) => {
+    // Add user details to each order
+    const updatedOrders = storeOrders.map((storeOrder) => ({
+      sellerId: storeOrder.sellerId,
+      items: storeOrder.items.map((item) => ({
+        itemId: item.itemId,
+        count: item.count,
+      })),
+      totalPrice: storeOrder.storeTotalPrice,
+      deliveryFee: storeOrder.deliveryFee,
+      storeTotalPayment: storeOrder.grandTotal,
+      orderedOn: new Date().toLocaleString(),
+      checkoutDetails: {
+        name,
+        email,
+        phone,
+        alternatePhone,
+        address,
+        postOffice,
+        district,
+        country,
+      },
+    }));
+
+    setOrders(updatedOrders);
+    // console.log("Orders created:", updatedOrders); // Handle the orders as needed
+  };
 
   const handlePlaceOrder = () => {
-    // iff success ....
-      setAlertText("Order placed successfully!");
+    // Process orders and redirect
+    setAlertText("Order placed successfully!");
+    alert("Order placed successfully!");
 
-      setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000);
-      // sleep 1s
-
-      window.location.href = "/user/home";
-    
+    setShowAlert(true);
+    setTimeout(() => setShowAlert(false), 3000);
+    window.location.href = "/user/home";
   };
 
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
-
       <h1 className="text-3xl font-bold p-1 m-1">Checkout Items:</h1>
-      <CheckoutTable district={user.district}/>
+      <CheckoutTable
+        district={district}
+        onOrdersCreated={handleOrdersCreated}
+      />
 
       <h1 className="text-3xl font-bold p-1 m-1">Checkout Details:</h1>
 
-      <div className="grid grid-cols-2 gap-4 m-3">
+      <div className="grid grid-cols-2 gap-4 m-3 rounded-md">
         <div>
           <label className="font-bold">Name:</label>
           <input
             type="text"
-            value={user.firstname + " " + user.lastname}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="input input-bordered w-full mt-1"
-            readOnly
           />
         </div>
 
@@ -110,9 +150,10 @@ const MiddleLayoutCheckout = () => {
           <label className="font-bold">Email:</label>
           <input
             type="email"
-            value={user.email}
+            value={email}
+            // onChange={(e) => setEmail(e.target.value)}
             className="input input-bordered w-full mt-1"
-            readOnly
+            contentEditable={false}
           />
         </div>
 
@@ -120,8 +161,10 @@ const MiddleLayoutCheckout = () => {
           <label className="font-bold">Phone:</label>
           <input
             type="text"
-            value={user.phone}
+            value={phone}
+            // onChange={(e) => setPhone(e.target.value)}
             className="input input-bordered w-full mt-1"
+            contentEditable={false}
           />
         </div>
 
@@ -130,16 +173,19 @@ const MiddleLayoutCheckout = () => {
           <input
             type="text"
             placeholder="optional"
+            value={alternatePhone}
+            onChange={(e) => setAlternatePhone(e.target.value)}
             className="input input-bordered w-full mt-1"
           />
           {/* <span className="badge badge-info">Optional</span> */}
         </div>
 
         <div>
-          <label className="font-bold">Address:</label> <br/>
+          <label className="font-bold">Address:</label> <br />
           <textarea
             className="textarea textarea-bordered w-full"
-            value={user.address}
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
           ></textarea>
         </div>
 
@@ -147,9 +193,9 @@ const MiddleLayoutCheckout = () => {
           <label className="font-bold">Post Office:</label>
           <input
             type="text"
-            value={user.postOffice}
+            value={postOffice}
+            onChange={(e) => setPostOffice(e.target.value)}
             className="input input-bordered w-full mt-1"
-            
           />
         </div>
 
@@ -157,9 +203,9 @@ const MiddleLayoutCheckout = () => {
           <label className="font-bold">District:</label>
           <input
             type="text"
-            value={user.district}
+            value={district}
+            onChange={(e) => setDistrict(e.target.value)}
             className="input input-bordered w-full mt-1"
-            
           />
         </div>
 
@@ -167,17 +213,24 @@ const MiddleLayoutCheckout = () => {
           <label className="font-bold">Country:</label>
           <input
             type="text"
-            value={user.country}
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
             className="input input-bordered w-full mt-1"
-            
           />
         </div>
       </div>
       <div className="grid w-full place-content-center">
-      <button className="btn btn-primary justify-center w-40 m-4"
-        onClick={handlePlaceOrder}
-      >Place Order</button>
+        <button
+          className="btn btn-primary justify-center w-40 m-4"
+          onClick={handlePlaceOrder}
+        >
+          Place Order
+        </button>
       </div>
+
+      {/* <div className="w-full overflow-x-auto text-blue-700">
+        orders: {JSON.stringify(orders)}
+      </div> */}
 
       {showAlert && (
         <div
@@ -200,7 +253,6 @@ const MiddleLayoutCheckout = () => {
           <span>{alertText}</span>
         </div>
       )}
-      
     </div>
   );
 };

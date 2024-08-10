@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 
-const LeftLayoutPets = ({ type }) => {
+const LeftLayoutPets = ({ onSearch, onFilter, onSort }) => {
   const [ageRange, setAgeRange] = useState({ min: 1, max: 20 });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState({
+    Bird: false,
+    Fish: false,
+    Animal: false,
+  });
+  const [sortOrder, setSortOrder] = useState("");
 
   // Handler function to update age range
   const handleMinAgeChange = (event) => {
@@ -16,6 +23,28 @@ const LeftLayoutPets = ({ type }) => {
       ...prevRange,
       max: Math.max(event.target.value, ageRange.min + 1),
     }));
+  };
+
+  const handleTypeChange = (event) => {
+    setSelectedTypes({
+      ...selectedTypes,
+      [event.target.name]: event.target.checked,
+    });
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    onSearch(event.target.value);
+  };
+
+  const handleApplyFilters = () => {
+    onFilter({ ...ageRange, types: Object.keys(selectedTypes).filter(type => selectedTypes[type]) });
+    onSort(sortOrder);
+  };
+
+  const handleSortChange = (event) => {
+    setSortOrder(event.target.value);
+    onSort(event.target.value);
   };
 
   return (
@@ -44,22 +73,22 @@ const LeftLayoutPets = ({ type }) => {
         <span className="font-bold">Create Pet Profile</span>
       </button>
 
-      <div className="flex flex-auto">
+      <div className="flex flex-auto m-1">
         <input
           type="text"
-          placeholder="Type here"
-          className="input input-bordered input-primary max-w-36 mb-4 mr-2"
+          placeholder="Search"
+          className="input input-bordered input-primary rounded-md w-full mb-4"
+          value={searchTerm}
+          onChange={handleSearchChange}
         />
-        <button className="btn btn-primary flex-auto w-4 mb-4">Search</button>
+        
       </div>
 
       <div className="p-1 pt-0 mt-0 mb-3 flex flex-auto">
-        <select className="select select-primary w-full h-10 rounded-md">
-          <option disabled selected>
-            Sort by...
-          </option>
-          <option>Age Low to High</option>
-          <option>Age High to Low</option>
+        <select className="select select-primary w-full h-10 rounded-md" onChange={handleSortChange} value={sortOrder}>
+          <option value="">Sort by...</option>
+          <option value="ageLowToHigh">Age Low to High</option>
+          <option value="ageHighToLow">Age High to Low</option>
         </select>
       </div>
 
@@ -109,25 +138,35 @@ const LeftLayoutPets = ({ type }) => {
 
       <p className="font-bold pb-2 pl-1 pt-3">Type</p>
       <div className="flex flex-col">
-        <label className="label cursor-pointer">
-          <span className="label-text">Bird</span>
-          <input type="checkbox" defaultChecked className="checkbox" />
-        </label>
-        <label className="label cursor-pointer">
-          <span className="label-text">Fish</span>
-          <input type="checkbox" defaultChecked className="checkbox" />
-        </label>
-        <label className="label cursor-pointer">
-          <span className="label-text">Animal</span>
-          <input type="checkbox" defaultChecked className="checkbox" />
-        </label>
-        
-
+        {Object.keys(selectedTypes).map(type => (
+          <label key={type} className="label cursor-pointer">
+            <span className="label-text">{type}</span>
+            <input
+              type="checkbox"
+              name={type}
+              checked={selectedTypes[type]}
+              onChange={handleTypeChange}
+              className="checkbox"
+            />
+          </label>
+        ))}
         <div className="flex">
-          <button className="btn btn-primary w-28 mt-4 mr-1 align-middle">
+          <button className="btn btn-primary w-28 mt-4 mr-1 align-middle" onClick={handleApplyFilters}>
             Apply
           </button>
-          <button className="btn btn-secondary w-28 mt-4 align-middle">
+          <button className="btn btn-secondary w-28 mt-4 align-middle" onClick={() => {
+            setAgeRange({ min: 1, max: 20 });
+            setSelectedTypes({
+              Bird: false,
+              Fish: false,
+              Animal: false,
+              
+            });
+            setSearchTerm("");
+            setSortOrder("");
+            onFilter({ min: 1, max: 20, types: [] });
+            onSort("");
+          }}>
             Reset
           </button>
         </div>

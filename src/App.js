@@ -26,6 +26,7 @@ import EditUserProfile from "./pages/user/edit-user-profile.js";
 import LostAndFound from "./pages/user/lost-and-found.js";
 import LandingPage from "./pages/Landing-Page.js";
 import Appointments from "./pages/vet/appointments.js";
+import StoreOrders from "./pages/seller/store-orders.js";
 
 export default function App() {
   return (
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="/seller/profile/:sellerId" element={<SellerProfile />} />
           <Route path="/seller/home" element={<SellerHome />} />
           <Route path="/seller/my-products" element={<SellerMyProducts />} />
+          <Route path="/seller/orders" element={<StoreOrders />} />
 
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/marketplace/item" element={<SingleItem />} />

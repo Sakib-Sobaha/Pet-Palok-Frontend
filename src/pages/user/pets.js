@@ -1,18 +1,31 @@
-import React from "react";
-
-import LeftLayout from "../../components/LeftLayoutPets";
-import MiddleLayout from "../../components/MiddleLayoutPets";
+import React, { useState } from "react";
+import LeftLayoutPets from "../../components/LeftLayoutPets";
+import MiddleLayoutPets from "../../components/MiddleLayoutPets";
 import RightLayout from "../../components/RightLayout";
 import LayoutLRM from "../../components/LayoutLRM";
-// import Menu from "../../components/Menu-LeftSidebar";
-
 
 function Pets() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState({ min: 1, max: 20, types: [] });
+  const [sortOrder, setSortOrder] = useState("");
+
   return (
     <div>
       <LayoutLRM
-        left={<LeftLayout type="user"/>}
-        middle={<MiddleLayout />}
+        left={
+          <LeftLayoutPets
+            onSearch={setSearchTerm}
+            onFilter={setFilter}
+            onSort={setSortOrder}
+          />
+        }
+        middle={
+          <MiddleLayoutPets
+            searchTerm={searchTerm}
+            filter={filter}
+            sortOrder={sortOrder}
+          />
+        }
         right={<RightLayout />}
       />
     </div>

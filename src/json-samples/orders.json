@@ -1,0 +1,50 @@
+[
+  {
+    "sellerId": 1,
+    "items": [
+      { "itemId": 1, "count": 1 },
+      { "itemId": 2, "count": 3 }
+    ],
+    "deliveryFee": 65,
+    "checkoutDetails": {
+      "name": "Niloy Faiaz",
+      "email": "niloy870@gmail.com",
+      "phone": "01234123456",
+      "alternatePhone": "",
+      "address": "10/1, Monipur, Mirpur-2, Dhaka-1216",
+      "postOffice": "Mirpur-2",
+      "district": "Dhaka",
+      "country": "Bangladesh"
+    }
+  },
+  {
+    "sellerId": 2,
+    "items": [{ "itemId": 34, "count": 4 }],
+    "deliveryFee": 65,
+    "checkoutDetails": {
+      "name": "Niloy Faiaz",
+      "email": "niloy870@gmail.com",
+      "phone": "01234123456",
+      "alternatePhone": "",
+      "address": "10/1, Monipur, Mirpur-2, Dhaka-1216",
+      "postOffice": "Mirpur-2",
+      "district": "Dhaka",
+      "country": "Bangladesh"
+    }
+  },
+  {
+    "sellerId": 3,
+    "items": [{ "itemId": 5, "count": 1 }],
+    "deliveryFee": 65,
+    "checkoutDetails": {
+      "name": "Niloy Faiaz",
+      "email": "niloy870@gmail.com",
+      "phone": "01234123456",
+      "alternatePhone": "",
+      "address": "10/1, Monipur, Mirpur-2, Dhaka-1216",
+      "postOffice": "Mirpur-2",
+      "district": "Dhaka",
+      "country": "Bangladesh"
+    }
+  }
+]

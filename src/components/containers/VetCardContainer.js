@@ -28,7 +28,7 @@ const vetData = [
     email: "niloy870@gmail.com",
     phone: "01234123456",
     password: "pasword",
-    clinic_name: "Bird Lovers Hostpital",
+    clinic_name: "Bird Care",
     clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
     address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
     postOffice: "Mirpur-2",
@@ -48,7 +48,7 @@ const vetData = [
     email: "niloy870@gmail.com",
     phone: "01234123456",
     password: "pasword",
-    clinic_name: "Bird Lovers Hostpital",
+    clinic_name: "Kutta Care",
     clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
     address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
     postOffice: "Mirpur-2",
@@ -68,7 +68,7 @@ const vetData = [
     email: "niloy870@gmail.com",
     phone: "01234123456",
     password: "pasword",
-    clinic_name: "Bird Lovers Hostpital",
+    clinic_name: "Machbazar Clinic",
     clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
     address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
     postOffice: "Mirpur-2",
@@ -93,7 +93,12 @@ function VetCardContainer({ sortCriteria, searchTerm, ratingRange }) {
     const filteredData = vetData.filter(
       (vet) =>
         (vet.firstname.concat(" "+vet.lastname)).toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet.lastname.toLowerCase().includes(searchTerm.toLowerCase())
+        vet.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (vet.address.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (vet.postOffice.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (vet.district.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (vet.country.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (vet.clinic_name.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     // Filtering by rating range
@@ -126,6 +131,10 @@ function VetCardContainer({ sortCriteria, searchTerm, ratingRange }) {
 
   return (
     <div className="">
+      <h1 className="text-4xl font-bold mb-2 flex">
+        <img className="h-20 w-20 flex" src="https://cdn4.iconfinder.com/data/icons/health-care-and-first-responders-with-masks/64/doctor-asian-female-coronavirus-2-512.png" alt="vet" />
+        <p className="mt-4">Vet Directory</p>
+        </h1>
       <div className="grid grid-cols-3 gap-2 align-middle mr-1">
         {filteredAndSortedVetData.slice(0, visibleCount).map((vet, index) => (
           <VetCard key={index} vet={vet} />
