@@ -1,9 +1,11 @@
 // Dropdown.js
 import React, { useState } from "react";
+import { useUser } from "./UserContext.js"; // Import useUser hook
 
 function Dropdown() {
   // Manage account type state (can be 'user', 'seller', or 'vet')
-  const [accountType, setAccountType] = useState("seller");
+  const [accountType, setAccountType] = useState("user");
+  const { user } = useUser(); // Get user state from UserContext
 
   // Define menu items for each account type
   const userMenuItems = [
@@ -40,13 +42,18 @@ function Dropdown() {
 
   // Determine which menu items to render based on account type
   let menuItems;
-  if (accountType === "user") {
-    menuItems = userMenuItems;
-  } else if (accountType === "seller") {
-    menuItems = sellerMenuItems;
-  } else if (accountType === "vet") {
-    menuItems = vetMenuItems;
-  }
+
+  // if (user) {
+    if (accountType === "user") {
+      menuItems = userMenuItems;
+    } else if (accountType === "seller") {
+      menuItems = sellerMenuItems;
+    } else if (accountType === "vet") {
+      menuItems = vetMenuItems;
+    }
+  // } else {
+  //   menuItems = [];
+  // }
 
   // Combine account-specific and common menu items
   const combinedMenuItems = [...menuItems, ...commonMenuItems];

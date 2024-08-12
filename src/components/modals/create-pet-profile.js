@@ -101,6 +101,7 @@ const CreatePetProfile = ({ element_id }) => {
                 onChange={handleChange}
                 className="input input-bordered w-full"
                 placeholder="Appearance"
+                maxLength="10"
               />
             </div>
 

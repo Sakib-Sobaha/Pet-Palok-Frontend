@@ -71,13 +71,13 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder }) => {
         "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      name: "Mikkiy",
+      name: "Tuni",
       age: 1,
       type: "Bird",
       breed: "Green Cockatiel",
       description: "If a dog chews shoes whose shoes does he choose?",
       image:
-        "https://t3.ftcdn.net/jpg/00/95/29/28/360_F_95292880_GfqmxNb4u8ZxG18i2jkLt6gkAvl8xdz3.jpg",
+        "https://featherbudz.com/wp-content/uploads/2023/03/What-does-lutino-mean-In-Budgies-1.jpg",
     },
     {
       name: "Nimo",
