@@ -19,7 +19,7 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: loginEmail, password: loginPassword }),
+        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
       });
 
       if (!response.ok) {
@@ -35,6 +35,8 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
     } catch (error) {
       console.error("Login error:", error);
     }
+
+    window.location.href = `/${type.toLowerCase()}/home`;
   };
 
   const handleSignup = async (e) => {
@@ -52,7 +54,7 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: signupEmail, password: signupPassword }),
+        body: JSON.stringify({ email: signupEmail, password: signupPassword }),
       });
 
       if (!response.ok) {
@@ -134,7 +136,9 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
                 </label>
               </div>
               <div className="form-control mt-6">
-                <button type="submit" className="btn btn-primary">Login</button>
+                <button type="submit" className="btn btn-primary">
+                  Login
+                </button>
               </div>
             </form>
           )}
@@ -179,11 +183,15 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
                   onChange={(e) => setSignupConfirmPassword(e.target.value)}
                 />
                 {!passwordsMatch && (
-                  <p className="text-red-500 text-xs mt-1">Passwords do not match</p>
+                  <p className="text-red-500 text-xs mt-1">
+                    Passwords do not match
+                  </p>
                 )}
               </div>
               <div className="form-control mt-6">
-                <button type="submit" className="btn btn-primary">Sign Up</button>
+                <button type="submit" className="btn btn-primary">
+                  Sign Up
+                </button>
               </div>
             </form>
           )}
