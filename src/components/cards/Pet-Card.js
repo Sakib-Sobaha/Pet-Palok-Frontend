@@ -5,6 +5,8 @@ function PetCard({ pet }) {
   const lenMax = 12;
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const image = pet && pet.images && pet.images.length > 0 ? pet.images[0] : '';
+
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);
   };
@@ -17,12 +19,13 @@ function PetCard({ pet }) {
     <div className="card card-compact bg-base-100 w-64 shadow-xl m-1 hover:scale-105 transition-transform duration-300 hover:shadow-lg">
       <figure>
         <img
-          src={pet.image}
+          src={image}
           alt={pet.name}
           className="rounded-t-lg h-48 object-cover w-full"
         />
       </figure>
       <div className="card-body">
+        {/* {JSON.stringify(pet)} */}
         <h2 className="card-title font-bold">{pet.name}</h2>
 
         <div className="flex w-full justify-between p-0">

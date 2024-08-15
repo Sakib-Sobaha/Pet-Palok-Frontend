@@ -6,7 +6,7 @@ const fetchData = async (token) => {
   try {
     const url = "http://localhost:8080/api/v1/pets/getAllPets";
     const headers = new Headers({
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     });
 
@@ -20,7 +20,9 @@ const fetchData = async (token) => {
     if (!response.ok) {
       // Log the response status and text for debugging
       const errorText = await response.text();
-      throw new Error(`Network response was not ok. Status: ${response.status}, ${errorText}`);
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
     }
 
     const data = await response.json();
@@ -35,22 +37,28 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder }) => {
   const [petData, setPetData] = useState([]); // State to hold pet data
   const [visibleCount, setVisibleCount] = useState(6);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [loading, setLoading] = useState(true); // State to handle loading
 
-  // Fetch pet data when the component mounts
-  useEffect(() => {
-    const token = "your_bearer_token_here"; // Replace with your actual token
-
-    // Check if token is available
-    if (token) {
-      fetchData(token).then((data) => {
-        if (data.length === 0) {
-          console.warn("No data received from the API");
-        }
-        setPetData(data);
-      });
-    } else {
-      console.error("Bearer token is missing");
+  const fetchPets = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.error("No auth token found in local storage.");
+      setLoading(false);
+      return [];
     }
+
+    try {
+      const data = await fetchData(token);
+      setPetData(data);
+    } catch (error) {
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false); // Ensure loading is set to false after fetching
+    }
+  };
+
+  useEffect(() => {
+    fetchPets();
   }, []);
 
   const filterPets = () => {
@@ -108,17 +116,35 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder }) => {
         />
         Pet Profiles
       </h1>
-      <div className="grid grid-cols-3 gap-2 align-middle mr-1">
-        {filteredPets.slice(0, visibleCount).map((pet, index) => (
-          <PetCard key={index} pet={pet} />
-        ))}
-      </div>
-      {filteredPets.length > 6 && (
-        <div className="flex justify-center mt-4">
-          <button className="btn btn-primary w-28" onClick={toggleVisibility}>
-            {isExpanded ? "See Less" : "See More"}
-          </button>
+      {loading ? (
+        <div className="flex justify-center items-center h-48">
+          <span className="loading loading-ring loading-xs"></span>
+          <span className="loading loading-ring loading-sm"></span>
+          <span className="loading loading-ring loading-md"></span>
+          <span className="loading loading-ring loading-lg"></span>
         </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-3 gap-2 align-middle mr-1">
+            {filteredPets.length > 0 ? (
+              filteredPets
+                .slice(0, visibleCount)
+                .map((pet, index) => <PetCard key={index} pet={pet} />)
+            ) : (
+              <p>No pets found</p>
+            )}
+          </div>
+          {filteredPets.length > 6 && (
+            <div className="flex justify-center mt-4">
+              <button
+                className="btn btn-primary w-28"
+                onClick={toggleVisibility}
+              >
+                {isExpanded ? "See Less" : "See More"}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

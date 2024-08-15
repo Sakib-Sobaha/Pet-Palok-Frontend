@@ -41,7 +41,7 @@ export default function App() {
           <Routes>
             <Route path="/user/home" element={<UserHome />} />
             <Route path="/user/pets" element={<UserPets />} />
-            <Route path="/user/pets/:id" element={<PetProfile />} />
+            <Route path="/user/pets/:petId" element={<PetProfile />} />
             <Route path="/user/vetvisit/:id" element={<VetVisit />} />
             <Route path="/user/profile/:userId" element={<UserProfile />} />
             <Route path="/user/profile/edit" element={<EditUserProfile />} />

@@ -15,6 +15,7 @@ const fetchData = async () => {
         "Authorization": `Bearer ${token}`,
       },
     });
+    console.log(JSON.stringify(response));
 
     if (!response.ok) {
       throw new Error("Failed to fetch users");

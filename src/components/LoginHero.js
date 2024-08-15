@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+// import jwtDecode from "jwt-decode";
 // import crypto from 'crypto'; // For password hashing in the front-end
 
 function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
@@ -10,6 +11,16 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+
+  // const getUserIdFromToken = (token) => {
+  //   try {
+  //     const decoded = jwtDecode(token);
+  //     return decoded.id; // Or whatever key contains the user ID
+  //   } catch (error) {
+  //     console.error("Invalid token:", error);
+  //     return null;
+  //   }
+  // };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -31,12 +42,16 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
 
       // Store token in local storage
       localStorage.setItem("authToken", token);
+
+      // const userId = getUserIdFromToken(token);
+      // localStorage.setItem("userId", userId);
+      // console.log(userId);
+
       localStorage.setItem("userType", type.toLowerCase());
+      // window.location.href = `/${type.toLowerCase()}/home`;
     } catch (error) {
       console.error("Login error:", error);
     }
-
-    window.location.href = `/${type.toLowerCase()}/home`;
   };
 
   const handleSignup = async (e) => {
