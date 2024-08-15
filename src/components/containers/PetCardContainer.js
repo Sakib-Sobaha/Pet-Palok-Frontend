@@ -4,7 +4,7 @@ import PetCard from "../cards/Pet-Card";
 // Function to fetch pet data from the API
 const fetchData = async (token) => {
   try {
-    const url = "http://localhost:8080/api/v1/pets/getAllPets";
+    const url = `${process.env.REACT_APP_API_URL}/pets/petByOwnerId/66b6456f905b40469d5f46a9`;
     const headers = new Headers({
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",

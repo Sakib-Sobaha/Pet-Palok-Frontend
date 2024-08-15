@@ -48,7 +48,7 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
       // console.log(userId);
 
       localStorage.setItem("userType", type.toLowerCase());
-      // window.location.href = `/${type.toLowerCase()}/home`;
+      window.location.href = `/${type.toLowerCase()}/home`;
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -80,10 +80,14 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
       const token = data.token;
 
       // Store token in local storage
-      localStorage.setItem("authToken", token);
-      localStorage.setItem("userType", type.toLowerCase());
+      // localStorage.setItem("authToken", token);
+      // localStorage.setItem("userType", type.toLowerCase());
+      alert("Signup successful! Now Log in with your credentials.");
+      activeTab = "login";
+      window.location.href = `/landing`;
     } catch (error) {
       console.error("Signup error:", error);
+      window.location.href = `/login`;
     }
   };
 

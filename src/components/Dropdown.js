@@ -35,7 +35,7 @@ function Dropdown() {
 
   // Common menu items for all account types
   const commonMenuItems = [
-    { name: "Messages", href: "/chatbox" },
+    { name: "Home", href: "/landing" },
     { name: "Settings", href: "/settings" },
     { name: "Login/Signup", href: "/login" },
   ];
@@ -43,13 +43,18 @@ function Dropdown() {
   // Determine which menu items to render based on account type
   let menuItems;
 
+  const userType = localStorage.getItem("userType");
+
   // if (user) {
-    if (accountType === "user") {
+    if (userType === "user") {
       menuItems = userMenuItems;
-    } else if (accountType === "seller") {
+    } else if (userType === "seller") {
       menuItems = sellerMenuItems;
-    } else if (accountType === "vet") {
+    } else if (userType === "vet") {
       menuItems = vetMenuItems;
+    }
+    else {
+      menuItems = [];
     }
   // } else {
   //   menuItems = [];

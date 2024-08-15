@@ -14,6 +14,12 @@ import logo from "../images/logo_cropped.png";
 function Navbar() {
   const { theme, toggleTheme } = useContext(ThemeContext); // Use theme context
 
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userType");
+    window.location.href = "/landing";
+  };
+
   return (
     <div className="navbar bg-base-200">
       {/* <Drawer /> */}
@@ -93,7 +99,11 @@ function Navbar() {
               <a>Settings</a>
             </li>
             <li>
-              <a>Logout</a>
+              <a
+                onClick={handleLogout}
+              >
+                Logout
+                </a>
             </li>
           </ul>
         </div>

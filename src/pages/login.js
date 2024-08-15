@@ -236,7 +236,7 @@ function Login() {
           text="This is the login for users."
           icon={UserIcon}
           loginURL={`${process.env.REACT_APP_API_URL}/auth/authenticate`}
-          signupURL={`${process.env.REACT_APP_API_URL}/user/register`}
+          signupURL={`${process.env.REACT_APP_API_URL}/auth/register`}
         />
       )}
       {activeTab === "tab2" && (
