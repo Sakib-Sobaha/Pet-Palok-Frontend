@@ -34,7 +34,8 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
       });
 
       if (!response.ok) {
-        throw new Error("Login failed");
+        console.error("Login failed");
+        return;
       }
 
       const data = await response.json();
@@ -73,7 +74,8 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
       });
 
       if (!response.ok) {
-        throw new Error("Signup failed");
+        console.error("Signup failed");
+        return;
       }
 
       const data = await response.json();

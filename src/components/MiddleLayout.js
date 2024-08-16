@@ -8,7 +8,7 @@ const fetchData = async () => {
   }
 
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -18,7 +18,8 @@ const fetchData = async () => {
     console.log(JSON.stringify(response));
 
     if (!response.ok) {
-      throw new Error("Failed to fetch users");
+      console.error("Failed to fetch users");
+      return;
     }
 
     const data = await response.json();
