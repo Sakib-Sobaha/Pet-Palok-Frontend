@@ -30,6 +30,10 @@ import LandingPage from "./pages/Landing-Page.js";
 import Appointments from "./pages/vet/appointments.js";
 import StoreOrders from "./pages/seller/store-orders.js";
 import PetBSX from "./pages/user/pet-bsx.js";
+import Communities from "./pages/communities/communities.js";
+
+
+import PhotoUpload from "./pages/tests/photo-up-test.js";
 
 
 export default function App() {
@@ -76,7 +80,11 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/about" element={<About />} />
 
+            <Route path="/communities" element={<Communities />} />
+
             <Route path="/landing" element={<LandingPage />} />
+
+            <Route path="/photo-up-test" element={<PhotoUpload />} />
           </Routes>
           <Footer />
         </Router>

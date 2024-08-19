@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PetCardContainer from './containers/PetCardContainer';
 import CreatePetProfile from './modals/create-pet-profile';
 
 const MiddleLayoutPets = ({ searchTerm, filter, sortOrder }) => {
-  const [userId, setUserId] = useState(null);
-
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
-      <CreatePetProfile element_id={"create_pet_profile"} user_id={userId} />
+      <CreatePetProfile element_id={"create_pet_profile"} />
       <PetCardContainer
         searchTerm={searchTerm}
         filter={filter}
         sortOrder={sortOrder}
-        setUserId={setUserId} // Pass down the setter function
       />
     </div>
   );

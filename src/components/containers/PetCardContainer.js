@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import PetCard from "../cards/Pet-Card";
 
+const handleLogout = () => {
+  localStorage.removeItem("authToken");
+  window.location.href = "/login"; // Redirect to the login page
+};
+
 // Function to fetch pet data from the API
 const fetchData = async (token, id) => {
   try {
@@ -16,6 +21,10 @@ const fetchData = async (token, id) => {
     };
 
     const response = await fetch(url, requestOptions);
+
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -47,6 +56,10 @@ const fetchUserAPI = async (token) => {
 
     const response = await fetch(url, requestOptions);
 
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
+
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(
@@ -62,33 +75,31 @@ const fetchUserAPI = async (token) => {
   }
 };
 
-const PetCardContainer = ({ searchTerm, filter, sortOrder }) => {
-  const [petData, setPetData] = useState([]); // State to hold pet data
-  const [user, setUser] = useState(null); // State to hold user data
+const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
+  const [petData, setPetData] = useState([]); 
+  const [user, setUser] = useState(null); 
   const [visibleCount, setVisibleCount] = useState(6);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [loading, setLoading] = useState(true); // State to handle loading
-  const [filteredPets, setFilteredPets] = useState([]); // State to hold filtered pets
+  const [loading, setLoading] = useState(true); 
+  const [filteredPets, setFilteredPets] = useState([]); 
 
   const fetchPets = async () => {
     const token = localStorage.getItem("authToken");
 
     if (!token || !user?.id) {
-      console.error(
-        "No auth token found in local storage or user ID is missing."
-      );
+      console.error("No auth token found in local storage or user ID is missing.");
       setLoading(false);
       return;
     }
 
     try {
-      setLoading(true); // Set loading to true before fetching
+      setLoading(true); 
       const data = await fetchData(token, user.id);
       setPetData(data);
     } catch (error) {
       console.error("Fetch error:", error);
     } finally {
-      setLoading(false); // Ensure loading is set to false after fetching
+      setLoading(false); 
     }
   };
 
@@ -101,32 +112,31 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder }) => {
     }
 
     try {
-      setLoading(true); // Set loading to true before fetching
+      setLoading(true); 
       const data = await fetchUserAPI(token);
       setUser(data);
+      setUserId(data.id); // Pass the user ID to the parent component
     } catch (error) {
       console.error("Fetch error:", error);
     } finally {
-      setLoading(false); // Ensure loading is set to false after fetching
+      setLoading(false); 
     }
   };
 
   useEffect(() => {
     fetchUser();
-  }, []); // Fetch user data on mount
+  }, []); 
 
   useEffect(() => {
     if (user?.id) {
       fetchPets();
     }
-  }, [user]); // Fetch pets data when user ID is available
+  }, [user]); 
 
   useEffect(() => {
-    // Only apply filters and sorting when petData changes
     const filterPets = () => {
-      let filtered = [...petData]; // Copy petData to avoid mutating original array
+      let filtered = [...petData]; 
 
-      // Apply search filter
       if (searchTerm) {
         filtered = filtered.filter(
           (pet) =>
@@ -137,19 +147,10 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder }) => {
         );
       }
 
-      // Apply age filter
-      if (filter) {
-        filtered = filtered.filter(
-          (pet) => pet.age >= filter.min && pet.age <= filter.max
-        );
-      }
-
-      // Apply type filter
       if (filter && filter.types.length > 0) {
         filtered = filtered.filter((pet) => filter.types.includes(pet.type));
       }
 
-      // Apply sorting
       if (sortOrder === "ageLowToHigh") {
         filtered.sort((a, b) => a.age - b.age);
       } else if (sortOrder === "ageHighToLow") {
@@ -160,7 +161,7 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder }) => {
     };
 
     setFilteredPets(filterPets());
-  }, [petData, searchTerm, filter, sortOrder]); // Run filtering when petData, searchTerm, filter, or sortOrder change
+  }, [petData, searchTerm, filter, sortOrder]); 
 
   const toggleVisibility = () => {
     setIsExpanded(!isExpanded);
@@ -210,5 +211,7 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder }) => {
     </div>
   );
 };
+
+
 
 export default PetCardContainer;
