@@ -1,77 +1,86 @@
-import React, { useState } from 'react';
-import { supabase } from './supabase'; // Ensure correct path
+import React, { useState } from "react";
+import { supabase } from "./supabase"; // Ensure correct path
 import { SessionContextProvider } from "@supabase/auth-helpers-react"; // Correct import
 import { v4 as uuidv4 } from "uuid";
 
+const user = {
+  id: "images-test-1",
+};
+
 function PhotoUpload() {
-    const [file, setFile] = useState(null);
-    const [uploadedUrl, setUploadedUrl] = useState("");
-    const [uploading, setUploading] = useState(false);
-    const [images, setImages] = useState([]);
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [fileUrl, setFileUrl] = useState("");
 
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
-    };
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
 
-    async function getImages() {
-        const {data, error} = await supabase
-            .storage
-            .from('pet-palok')
-            .list("images/",{
-                limit: 100,
-                offset: 0,
-                sortBy: {column: 'created_at', order: 'desc'}
-            });
-
-        if (data) {
-            console.log(data);
-            setImages(data);
-        } else {
-            console.log(error);
-        }
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a file first!");
+      return;
     }
 
-    const handleUpload = async () => {
-        if (!file) {
-            alert("Please select a file first!");
-            return;
-        }
+    try {
+      setUploading(true);
 
-        setUploading(true);
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${uuidv4()}.${fileExt}`;
+      const filePath = `${fileName}`;
 
-        const { data, error } = await supabase
-            .storage
-            .from('pet-palok')
-            .upload("images/" + uuidv4(), file);
+      let { date, error } = await supabase.storage
+        .from("pet-palok")
+        .upload(filePath, file);
 
-        if (data) {
-            getImages();
-        } else {
-            console.log(error);
-        }
+      if (error) {
+        throw error;
+      }
 
-        setUploading(false);
-    };
+      const { data: url } = await supabase.storage
+        .from("pet-palok")
+        .getPublicUrl(filePath);
 
-    return (
-        <div>
-            <SessionContextProvider supabaseClient={supabase}>
-                <h1>Upload Photo</h1>
-                <input type="file" onChange={handleFileChange} />
-                <button onClick={handleUpload} disabled={uploading}>
-                    {uploading ? "Uploading..." : "Upload"}
-                </button>
+      console.log(url.publicUrl);
+      setFileUrl(url.publicUrl);
+      
+      alert("Image uploaded successfully!");
+    } catch (error) {
+      console.log(error);
+      alert("Error uploading image");
+    } finally {
+      setUploading(false);
+    }
+  };
 
-                {uploadedUrl && (
-                    <div>
-                        <h2>Uploaded Photo</h2>
-                        <img src={uploadedUrl} alt="Uploaded" style={{ width: '300px' }} />
-                        <p>Public URL: <a href={uploadedUrl} target="_blank" rel="noopener noreferrer">{uploadedUrl}</a></p>
-                    </div>
-                )}
-            </SessionContextProvider>
-        </div>
-    );
+  return (
+    <div>
+      <SessionContextProvider supabaseClient={supabase}>
+        <h1>Upload Photo</h1>
+        <input type="file" onChange={handleFileChange} />
+        <button
+          onClick={handleUpload}
+          disabled={uploading}
+          className="btn btn-primary"
+        >
+          {uploading ? "Uploading..." : "Upload"}
+        </button>
+
+        {fileUrl && (
+          <div>
+            <h2>Uploaded Photo</h2>
+            <img src={fileUrl} alt="Uploaded" style={{ width: "300px" }} />
+            <p>
+              Public URL:{" "}
+              <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                {fileUrl}
+              </a>
+            </p>
+          </div>
+        )}
+      </SessionContextProvider>
+    </div>
+  );
 }
 
 export default PhotoUpload;
