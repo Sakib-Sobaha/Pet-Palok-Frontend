@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useFileUpload } from "../Supabase/image-uploader"; // Import the custom hook
 
 const handleLogout = () => {
   localStorage.removeItem("authToken");
@@ -11,7 +12,7 @@ const initialPet = {
   type: "",
   breed: "",
   appearance: "",
-  DOB: "",
+  dob: "",
   gender: "",
   description: "",
   images: [], // To store uploaded images' URLs
@@ -20,7 +21,7 @@ const initialPet = {
 const CreatePetProfile = ({ element_id, user_id }) => {
   const [pet, setPet] = useState(initialPet); // State for pet details
   const [selectedImages, setSelectedImages] = useState([]); // State for image files
-  const [loading, setLoading] = useState(false); // State for loading status
+  const { uploadFiles, uploading } = useFileUpload(); // Use the custom hook
 
   // Handler to update pet properties
   const handleChange = (e) => {
@@ -42,45 +43,18 @@ const CreatePetProfile = ({ element_id, user_id }) => {
     setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
-  // Function to upload a single image
-  const uploadImage = async (file) => {
-    const token = localStorage.getItem("authToken");
-
-    const formData = new FormData();
-    formData.append("containerName", "petpalok-image-container");
-    formData.append("file", file);
-
-    const response = await fetch(
-      "http://localhost:8080/api/v1/files1/upload",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Image upload failed.");
-    }
-
-    const result = await response.json();
-    return result.data; // Return the image URL
-  };
-
   // Function to handle pet profile creation
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    if (selectedImages.length === 0) {
+      alert("Please select at least one image.");
+      return;
+    }
 
     try {
-      // Upload each selected image and get URLs
-      const imageUrls = await Promise.all(
-        selectedImages.map((image) => uploadImage(image))
-      );
-
+      // Upload images and get their URLs
+      const imageUrls = await uploadFiles(selectedImages);
       console.log("Image URLs:", imageUrls);
 
       // Update pet object with uploaded image URLs
@@ -112,16 +86,19 @@ const CreatePetProfile = ({ element_id, user_id }) => {
 
       const result = await response.json();
       console.log("Pet profile created:", result);
+      alert("Pet profile created successfully!");
+      
 
       // Clear the form after successful submission
       setPet(initialPet);
       setSelectedImages([]);
     } catch (error) {
-      // Handle the error as needed
-      new Error("Failed to create pet profile:", error);
-    } finally {
-      setLoading(false);
+      console.error("Failed to create pet profile:", error);
     }
+
+    document.getElementById("create_pet_profile").close();
+    window.location.reload(); // Reload the page to see the new pet profile
+
   };
 
   return (
@@ -208,8 +185,8 @@ const CreatePetProfile = ({ element_id, user_id }) => {
                 </label>
                 <input
                   type="date"
-                  name="DOB"
-                  value={pet.DOB}
+                  name="dob"
+                  value={pet.dob}
                   onChange={handleChange}
                   className="input input-bordered w-full"
                   required
@@ -291,8 +268,12 @@ const CreatePetProfile = ({ element_id, user_id }) => {
             </div>
 
             <div className="modal-action">
-              <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? "Creating..." : "Create Profile"}
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={uploading}
+              >
+                {uploading ? "Creating..." : "Create Profile"}
               </button>
 
               <form method="dialog">

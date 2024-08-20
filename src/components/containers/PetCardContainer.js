@@ -6,6 +6,22 @@ const handleLogout = () => {
   window.location.href = "/login"; // Redirect to the login page
 };
 
+function calculateAge(dob) {
+  const birthDate = new Date(dob);
+  const today = new Date();
+
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+
+  // Adjust years and months if the current month is before the birth month
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  return years; // Return only the years
+}
+
 // Function to fetch pet data from the API
 const fetchData = async (token, id) => {
   try {
@@ -76,30 +92,32 @@ const fetchUserAPI = async (token) => {
 };
 
 const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
-  const [petData, setPetData] = useState([]); 
-  const [user, setUser] = useState(null); 
+  const [petData, setPetData] = useState([]);
+  const [user, setUser] = useState(null);
   const [visibleCount, setVisibleCount] = useState(6);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [loading, setLoading] = useState(true); 
-  const [filteredPets, setFilteredPets] = useState([]); 
+  const [loading, setLoading] = useState(true);
+  const [filteredPets, setFilteredPets] = useState([]);
 
   const fetchPets = async () => {
     const token = localStorage.getItem("authToken");
 
     if (!token || !user?.id) {
-      console.error("No auth token found in local storage or user ID is missing.");
+      console.error(
+        "No auth token found in local storage or user ID is missing."
+      );
       setLoading(false);
       return;
     }
 
     try {
-      setLoading(true); 
+      setLoading(true);
       const data = await fetchData(token, user.id);
       setPetData(data);
     } catch (error) {
       console.error("Fetch error:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -112,30 +130,30 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
     }
 
     try {
-      setLoading(true); 
+      setLoading(true);
       const data = await fetchUserAPI(token);
       setUser(data);
       setUserId(data.id); // Pass the user ID to the parent component
     } catch (error) {
       console.error("Fetch error:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchUser();
-  }, []); 
+  }, []);
 
   useEffect(() => {
     if (user?.id) {
       fetchPets();
     }
-  }, [user]); 
+  }, [user]);
 
   useEffect(() => {
     const filterPets = () => {
-      let filtered = [...petData]; 
+      let filtered = [...petData];
 
       if (searchTerm) {
         filtered = filtered.filter(
@@ -151,6 +169,13 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
         filtered = filtered.filter((pet) => filter.types.includes(pet.type));
       }
 
+      if (filter && filter.min !== undefined && filter.max !== undefined) {
+        filtered = filtered.filter((pet) => {
+          const age = calculateAge(pet.dob);
+          return age >= filter.min && age <= filter.max;
+        });
+      }
+
       if (sortOrder === "ageLowToHigh") {
         filtered.sort((a, b) => a.age - b.age);
       } else if (sortOrder === "ageHighToLow") {
@@ -161,7 +186,7 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
     };
 
     setFilteredPets(filterPets());
-  }, [petData, searchTerm, filter, sortOrder]); 
+  }, [petData, searchTerm, filter, sortOrder]);
 
   const toggleVisibility = () => {
     setIsExpanded(!isExpanded);
@@ -211,7 +236,5 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
     </div>
   );
 };
-
-
 
 export default PetCardContainer;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Rating from "../Rating-Small";
 
-function ItemCardNoButton({ item, userType = "user" }) {
+function ItemCardNoButton({ item, userType = "seller" }) {
   const [showAlert, setShowAlert] = useState(false);
 
   const handleVisitItem = () => {

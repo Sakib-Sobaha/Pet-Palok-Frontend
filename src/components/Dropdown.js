@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { useUser } from "./UserContext.js"; // Import useUser hook
 
-function Dropdown() {
+function Dropdown({_user}) {
   // Manage account type state (can be 'user', 'seller', or 'vet')
+  const [user, setUser] = useState(_user);
   const [accountType, setAccountType] = useState("user");
-  const { user } = useUser(); // Get user state from UserContext
 
   // Define menu items for each account type
   const userMenuItems = [
@@ -20,7 +20,7 @@ function Dropdown() {
   const sellerMenuItems = [
     { name: "Dashboard", href: "/seller/home" },
     { name: "Marketplace", href: "/marketplace" },
-    { name: "My Profile", href: "/seller/profile/:id" },
+    { name: "My Profile", href: "/seller/profile" },
     { name: "Store", href: "/seller/store/:id" },
     { name: "My Products", href: "/seller/my-products" },
     { name: "Orders", href: "/seller/orders" },

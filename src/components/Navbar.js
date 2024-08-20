@@ -1,38 +1,53 @@
-// Navbar.js
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Drawer from "./Drawer";
 import { ThemeContext } from "../components/ThemeContext"; // Import ThemeContext
 import Dropdown from "./Dropdown";
 import logo from "../images/logo_cropped.png";
-// const menuItems = [
-//   { name: "Dashboard", url: "/dashboard" },
-//   { name: "Login/Signup", url: "/login" },
-//   { name: "Profile", url: "/profile" },
-//   { name: "Settings", url: "/settings" },
-// ];
+import { fetchUserData } from "./api-fetch-functions/fetch-whoami";
 
 function Navbar() {
+  const userType = localStorage.getItem("userType");
+
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { theme, toggleTheme } = useContext(ThemeContext); // Use theme context
+
+  useEffect(() => {
+    const userType = localStorage.getItem("userType");
+    const fetchUser = async () => {
+      setLoading(true);
+      const data = await fetchUserData(`/${userType}/whoami`); // Use the reusable fetch function
+      if (data) {
+        setUser(data);
+        // setUserId(data.id); // Pass the user ID to the parent component if needed
+      }
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userType");
-    window.location.href = "/login";
+    // window.location.href = "/login";
   };
 
   return (
     <div className="navbar bg-base-200">
       {/* <Drawer /> */}
-      <Dropdown />
-      <div className="flex-1 pr-2 justify-start" >
-      <img src={logo} alt="PetPalok" className="h-12 rounded-lg hover:shadow hover:scale-105 cursor-pointer" 
-        onClick={() => {
-          window.location.href = "/landing";
-
-        }}
-      />
-
+      <Dropdown _user={user} />
+      <div className="flex-1 pr-2 justify-start">
+        <img
+          src={logo}
+          alt="PetPalok"
+          className="h-12 rounded-lg hover:shadow hover:scale-105 cursor-pointer"
+          onClick={() => {
+            window.location.href = "/landing";
+          }}
+        />
       </div>
+      {user?.email}
       <div className="flex-1 pr-4 justify-end">
         <label className="swap swap-rotate">
           {/* this hidden checkbox controls the state */}
@@ -80,8 +95,8 @@ function Navbar() {
           >
             <div className="w-10 rounded-full">
               <img
-                alt="Tailwind CSS Navbar component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                alt={user?.firstname + " " + user?.lastname}
+                src={user?.image}
               />
             </div>
           </div>
@@ -90,20 +105,25 @@ function Navbar() {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
             <li>
-              <a className="justify-between">
+              <a className="justify-between"
+                onClick={
+                  
+                  ()=>{
+                    if(userType != "" && userType)
+                      window.location.href=`/${userType}/profile/${user.id}`
+                  }
+                }
+              >
                 Profile
-                <span className="badge">New</span>
+
+                {/* <span className="badge">New</span> */}
               </a>
             </li>
             <li>
               <a>Settings</a>
             </li>
             <li>
-              <a
-                onClick={handleLogout}
-              >
-                Logout
-                </a>
+              <a onClick={handleLogout}>Logout</a>
             </li>
           </ul>
         </div>

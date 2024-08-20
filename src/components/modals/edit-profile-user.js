@@ -1,36 +1,13 @@
 import React, { useState } from "react";
+import { useFileUpload } from "../Supabase/image-uploader";
 
-
-const initialUser = {
-  firstname: "Niloy",
-  lastname: "Faiaz",
-  email: "niloy870@gmail.com",
-  phone: "01234123456",
-  password: "pasword",
-  address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-  postOffice: "Mirpur-2",
-  district: "Dhaka",
-  country: "Bangladesh",
-  DOB: "2020-01-01",
-  gender: "Male",
-  about:
-    "Chokkor is a cute dog! He is a very good friend! I pass most of my time with him. Soo friendly. My beloved! Doggy doggy doggy dogyy. Cutie pie amar. I love him too too too too much",
-  rating_buysellexch: "4",
-  rating_petkeeping: "5",
-  rating_vet: "3",
-};
-
-const images = [
-  "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://www.bhmpics.com/downloads/beautiful-pictures-of-dogs/56.golden_puppy_dog_pictures.jpg",
-  "https://static.toiimg.com/photo/109692764/109692764.jpg",
-  "https://www.userbarn.com.au/userspot/app/uploads/2016/03/HYG9.2-Blog-Genral-In-Post-800x533px.png",
-  "https://hips.hearstapps.com/del.h-cdn.co/assets/cm/15/10/54f94e3f42698_-_dog-stick-del-blog.jpg?crop=1xw:0.7309644670050761xh;center,top&resize=1200:*",
-];
-
-const EditProfileUser = ({ element_id }) => {
-  const [user, setUser] = useState(initialUser);
+const EditProfileUser = ({ element_id, _user }) => {
+  const [user, setUser] = useState(_user);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [imageSrc, setImageSrc] = useState(user?.image || "");
+
+  const { uploadFiles } = useFileUpload();
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,26 +17,81 @@ const EditProfileUser = ({ element_id }) => {
     }));
   };
 
-  const toggleAbout = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const handleSave = () => {
-    console.log("User information saved:", user);
-    // Here you can add logic to save the user information, such as making an API call
-  };
-
-  const [imageSrc, setImageSrc] = useState(images[0]);
-
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
+    setSelectedImage(file);
 
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImageSrc(reader.result); // Update the state with the data URL
+        setImageSrc(reader.result); // Update the image preview
       };
-      reader.readAsDataURL(file); // Read the file as a data URL
+      reader.readAsDataURL(file);
+
+      // Upload the file to Supabase and get the URL
+      const imageUrls = await uploadFiles([file]);
+      console.log("Image URLs:", imageUrls);
+
+      // Update the user object with the new profile image URL
+      setUser((prevState) => ({
+        ...prevState,
+        image: imageUrls[0], // Assume uploadFiles returns an array of URLs
+      }));
+    }
+  };
+
+  const handleSave = async () => {
+    console.log("User information saved:", user);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      // Create an object that only contains the necessary attributes for the UpdateUserRequest
+      const updateUserRequest = {
+        firstName: user.firstname,
+        lastName: user.lastname,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+        postOffice: user.postOffice,
+        district: user.district,
+        country: user.country,
+        dob: user.dob,
+        ratingBuySellExchange: user.rating_buysellexch,
+        ratingPetKeeping: user.rating_petkeeping,
+        ratingVet: user.rating_vet,
+        about: user.about,
+        gender: user.gender,
+        image: user.image
+      };
+
+      console.log(JSON.stringify(updateUserRequest));
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/user/update/${user.id}`,
+        {
+          method: "PUT",
+          headers: {
+            // Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateUserRequest),
+        }
+      );
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setUser(updatedUser);
+        alert("Profile updated successfully!");
+      } else {
+        alert("Failed to update profile. Please try again.");
+
+      }
+    } catch (error) {
+      // console.error("Error updating user profile:", error);
+      console.log(error)
+      // alert("An error occurred while updating the profile.");
+    }
+    finally {
+      window.location.reload();
     }
   };
 
@@ -69,7 +101,6 @@ const EditProfileUser = ({ element_id }) => {
         <div className="modal-box">
           <h3 className="font-bold text-lg">Edit User Profile</h3>
 
-         
           <div className="">
             <div className="avatar mb-5 ml-10 pl-3 mr-10 mt-2">
               <div className="ring-primary ring-offset-base-100 w-40 h-40 rounded-full aspect-square ring ring-offset-2">
@@ -80,7 +111,7 @@ const EditProfileUser = ({ element_id }) => {
               <input
                 type="file"
                 className="file-input file-input-bordered file-input-primary h-10 w-80"
-                onChange={handleFileChange} // Connect the file change handler
+                onChange={handleFileChange}
               />
             </div>
           </div>
@@ -90,8 +121,8 @@ const EditProfileUser = ({ element_id }) => {
               <span className="font-bold">First Name:</span>
               <input
                 type="text"
-                name="name"
-                value={user.firstname }
+                name="firstname"
+                value={user?.firstname}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -100,8 +131,8 @@ const EditProfileUser = ({ element_id }) => {
               <span className="font-bold">Last Name:</span>
               <input
                 type="text"
-                name="name"
-                value={user.lastname}
+                name="lastname"
+                value={user?.lastname}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -110,21 +141,24 @@ const EditProfileUser = ({ element_id }) => {
               <span className="font-bold">DOB:</span>
               <input
                 type="date"
-                name="DOB"
-                value={user.DOB}
+                name="dob"
+                value={user?.dob}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
             </p>
             <p>
               <span className="font-bold">Gender:</span>
-              <select className="select input-bordered w-full max-w-xs">
-                <option selected disabled>
-                  {user.gender}
-                </option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Others</option>
+              <select
+                name="gender"
+                value={user?.gender}
+                onChange={handleChange}
+                className="select input-bordered w-full max-w-xs"
+              >
+                <option disabled>{user?.gender}</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                {/* <option value="Others">Others</option> */}
               </select>
             </p>
           </div>
@@ -134,8 +168,8 @@ const EditProfileUser = ({ element_id }) => {
               <span className="font-bold">Phone:</span>
               <input
                 type="text"
-                name="phone"
-                value={user.phone}
+                name="phoneNumber"
+                value={user?.phoneNumber}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -145,7 +179,7 @@ const EditProfileUser = ({ element_id }) => {
               <input
                 type="text"
                 name="email"
-                value={user.email}
+                value={user?.email}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -159,8 +193,9 @@ const EditProfileUser = ({ element_id }) => {
               <span className="font-bold">Present Address:</span>
 
               <textarea
+                name="address"
                 className="textarea textarea-bordered w-full"
-                value={user.address}
+                value={user?.address}
                 onChange={handleChange}
               ></textarea>
             </p>
@@ -169,7 +204,7 @@ const EditProfileUser = ({ element_id }) => {
               <input
                 type="text"
                 name="postOffice"
-                value={user.postOffice}
+                value={user?.postOffice}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -179,7 +214,7 @@ const EditProfileUser = ({ element_id }) => {
               <input
                 type="text"
                 name="district"
-                value={user.district}
+                value={user?.district}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -189,33 +224,30 @@ const EditProfileUser = ({ element_id }) => {
               <input
                 type="text"
                 name="country"
-                value={user.country}
+                value={user?.country}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
             </p>
           </div>
 
-          <div className="font-serif italic m-4">
+          <div className="font-serif italic m-4 w-full">
             <b className="font-bold not-italic font-sans">About: {"   "}</b>
-            {isExpanded || user.about.split(" ").length <= 30
-              ? user.about
-              : `${user.about.split(" ").slice(0, 30).join(" ")}...`}
-            {user.about.split(" ").length > 30 && (
-              <button
-                onClick={toggleAbout}
-                className="text-blue-600 text-xs ml-0"
-              >
-                {isExpanded ? " See Less" : " See More"}
-              </button>
-            )}
+            <br />
+            <textarea
+              name="about"
+              className="textarea textarea-bordered"
+              value={user?.about}
+              onChange={handleChange}
+            />
           </div>
 
           <div className="modal-action">
-            <button className="btn btn-accent">Save</button>
+            <button className="btn btn-accent" onClick={handleSave}>
+              Save
+            </button>
 
             <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
               <button className="btn btn-error">Close</button>
             </form>
           </div>
