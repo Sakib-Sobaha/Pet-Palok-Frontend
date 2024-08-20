@@ -235,7 +235,7 @@ function Login() {
           title="Welcome User!"
           text="This is the login for users."
           icon={UserIcon}
-          loginURL={`${process.env.REACT_APP_API_URL}/auth/authenticate`}
+          loginURL={`${process.env.REACT_APP_API_URL}/user/authenticate`}
           signupURL={`${process.env.REACT_APP_API_URL}/user/register`}
         />
       )}
