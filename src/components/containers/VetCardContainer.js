@@ -1,104 +1,148 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import VetCard from "../cards/Vet-Card";
 
-const vetData = [
-  {
-    firstname: "Sakib",
-    lastname: "Sobaha",
-    email: "niloy870@gmail.com",
-    phone: "01234123456",
-    password: "pasword",
-    clinic_name: "Bird Lovers Hostpital",
-    clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
-    address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-    postOffice: "Mirpur-2",
-    district: "Dhaka",
-    country: "Bangladesh",
-    DOB: "2020-01-01",
-    gender: "male",
-    about:
-      "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care for them! If we dont, who will?",
-    rating_vetvisit: "4",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-R_iD-Msj-mEkHzhS48sHUxB8sYwl9ZLe4Q&s",
-  },
-  {
-    firstname: "best sakib",
-    lastname: "Sobaha",
-    email: "niloy870@gmail.com",
-    phone: "01234123456",
-    password: "pasword",
-    clinic_name: "Bird Care",
-    clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
-    address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-    postOffice: "Mirpur-2",
-    district: "Dhaka",
-    country: "Bangladesh",
-    DOB: "2020-01-01",
-    gender: "male",
-    image:
-      "https://img.freepik.com/free-photo/veterinarian-checking-dog-medium-shot_23-2149143871.jpg",
-    about:
-      "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care for them! If we dont, who will?",
-    rating_vetvisit: "4.3",
-  },
-  {
-    firstname: "pocha",
-    lastname: "Sobaha",
-    email: "niloy870@gmail.com",
-    phone: "01234123456",
-    password: "pasword",
-    clinic_name: "Kutta Care",
-    clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
-    address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-    postOffice: "Mirpur-2",
-    district: "Dhaka",
-    country: "Bangladesh",
-    DOB: "2020-01-01",
-    gender: "male",
-    image:
-      "https://img.freepik.com/free-photo/veterinarian-checking-dog-medium-shot_23-2149143871.jpg",
-    about:
-      "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care for them! If we dont, who will?",
-    rating_vetvisit: "1",
-  },
-  {
-    firstname: "medium baje",
-    lastname: "Sobaha",
-    email: "niloy870@gmail.com",
-    phone: "01234123456",
-    password: "pasword",
-    clinic_name: "Machbazar Clinic",
-    clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
-    address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-    postOffice: "Mirpur-2",
-    district: "Dhaka",
-    country: "Bangladesh",
-    DOB: "2020-01-01",
-    gender: "male",
-    image:
-      "https://img.freepik.com/free-photo/veterinarian-checking-dog-medium-shot_23-2149143871.jpg",
-    about:
-      "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care for them! If we dont, who will?",
-    rating_vetvisit: "2.3",
-  },
-];
+const handleLogout = () => {
+  localStorage.removeItem("authToken");
+  window.location.href = "/login"; // Redirect to the login page
+};
 
-function VetCardContainer({ sortCriteria, searchTerm, ratingRange }) {
+// Function to fetch vet data from the API
+const fetchVetData = async (token) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/vet/getVets`; // Update this to your vets endpoint
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch vets:", error);
+    return []; // Return an empty array in case of an error
+  }
+};
+
+const fetchVetAPI = async (token) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/vet/whoami`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch vet: WHOAMI", error);
+    return []; // Return an empty array in case of an error
+  }
+};
+
+const VetCardContainer = ({ sortCriteria, searchTerm, ratingRange, setVetId }) => {
+  const [vetData, setVetData] = useState([]);
+  const [vet, setVet] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(6);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const fetchVets = async () => {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      console.error("No auth token found in local storage.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const data = await fetchVetData(token);
+      setVetData(data);
+    } catch (error) {
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchVet = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.error("No auth token found in local storage.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const data = await fetchVetAPI(token);
+      setVet(data);
+      setVetId(data.id);
+    } catch (error) {
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchVet();
+  }, []);
+
+  useEffect(() => {
+    fetchVets();
+  }, []);
 
   const getFilteredAndSortedVetData = () => {
     // Filtering by search term
     const filteredData = vetData.filter(
       (vet) =>
-        (vet.firstname.concat(" "+vet.lastname)).toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (vet.firstname.concat(" " + vet.lastname))
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         vet.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (vet.address.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (vet.postOffice.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (vet.district.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (vet.country.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (vet.clinic_name.toLowerCase().includes(searchTerm.toLowerCase()))
+        vet.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet.postOffice.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet.clinic_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     // Filtering by rating range
@@ -130,25 +174,40 @@ function VetCardContainer({ sortCriteria, searchTerm, ratingRange }) {
   const filteredAndSortedVetData = getFilteredAndSortedVetData();
 
   return (
-    <div className="">
+    <div>
       <h1 className="text-4xl font-bold mb-2 flex">
-        <img className="h-20 w-20 flex" src="https://cdn4.iconfinder.com/data/icons/health-care-and-first-responders-with-masks/64/doctor-asian-female-coronavirus-2-512.png" alt="vet" />
+        <img
+          className="h-20 w-20 flex"
+          src="https://cdn4.iconfinder.com/data/icons/health-care-and-first-responders-with-masks/64/doctor-asian-female-coronavirus-2-512.png"
+          alt="vet"
+        />
         <p className="mt-4">Vet Directory</p>
-        </h1>
-      <div className="grid grid-cols-3 gap-2 align-middle mr-1">
-        {filteredAndSortedVetData.slice(0, visibleCount).map((vet, index) => (
-          <VetCard key={index} vet={vet} />
-        ))}
-      </div>
-      {filteredAndSortedVetData.length > 6 && (
-        <div className="flex justify-center mt-4">
-          <button className="btn btn-primary w-28" onClick={toggleVisibility}>
-            {isExpanded ? "See Less" : "See More"}
-          </button>
+      </h1>
+      {loading ? (
+        <div className="flex justify-center items-center h-48">
+          <span className="loading loading-ring loading-xs"></span>
+          <span className="loading loading-ring loading-sm"></span>
+          <span className="loading loading-ring loading-md"></span>
+          <span className="loading loading-ring loading-lg"></span>
         </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-3 gap-2 align-middle mr-1">
+            {filteredAndSortedVetData.slice(0, visibleCount).map((vet, index) => (
+              <VetCard key={index} vet={vet} />
+            ))}
+          </div>
+          {filteredAndSortedVetData.length > 6 && (
+            <div className="flex justify-center mt-4">
+              <button className="btn btn-primary w-28" onClick={toggleVisibility}>
+                {isExpanded ? "See Less" : "See More"}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
-}
+};
 
 export default VetCardContainer;
