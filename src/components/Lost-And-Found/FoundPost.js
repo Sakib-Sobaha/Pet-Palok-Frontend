@@ -10,7 +10,7 @@ const foundPost = {
     "Found a dog in City Park, Mirpur-2, Dhaka. He probably is a stray dog. He is very friendly and playful",
   image: "https://images.unsplash.com/photo-1517849845537-4d257902454a",
   condition: "bad", // Adjust condition here for testing
-  contact: "018XXXXXXXX",
+  contactNo: "018XXXXXXXX",
   location_return: "Jonota Housing, Mirpur-1, Dhaka-1216",
   appearance_breed: "brown, probably persian",
   confirmation_status: "pending",
@@ -98,7 +98,7 @@ const FoundPost = () => {
             </p>
             <p>
               <b>Contact:</b> <br />
-              <span>{foundPost.contact}</span>
+              <span>{foundPost.contactNo}</span>
             </p>
             <p>
               <b>Confirmation Status:</b> <br />

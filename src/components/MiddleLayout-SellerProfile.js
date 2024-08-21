@@ -1,64 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import SectionDivider from "./Section-Divider";
 import Rating from "./Rating";
-
 import EditPasswordModal from "./modals/edit-password";
 import EditProfileModal from "./modals/edit-profile-seller";
 
+const fetchData = async (token, sellerId) => {
+  // console.log("Fetching seller profile with id:1 ... ", sellerId);
+  try {
+    // console.log("Fetching seller profile with id:", sellerId);
+    const url = `${process.env.REACT_APP_API_URL}/seller/getSellerById/${sellerId}`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
 
-// const timelineData = [
-//   {
-//     id: 1,
-//     date: "2017-01-01",
-//     event: "Was Born",
-//   },
-//   {
-//     id: 2,
-//     date: "2018-02-18",
-//     event: "Had Constipation",
-//   },
-//   {
-//     id: 3,
-//     date: "2020-03-17",
-//     event: "Haga problem",
-//   },
-//   {
-//     id: 4,
-//     date: "2023-04-01",
-//     event: "Shonay Somossha",
-//   },
-//   {
-//     id: 5,
-//     date: "2023-07-04",
-//     event: "Matha betha",
-//   },
-// ];
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    };
 
-const seller = {
-  firstname: "Sakib",
-  lastname: "Sobaha",
+    const response = await fetch(url, requestOptions);
 
-  email: "niloy870@gmail.com",
-  phone: "01234123456",
+    if (!response.ok) {
+      const errorText = await response.json();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
 
-  password: "pasword",
-
-  store_name: "Sakibs Pet Shop",
-  store_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
-
-  address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-  postOffice: "Mirpur-2",
-  district: "Dhaka",
-  country: "Bangladesh",
-
-  DOB: "2020-01-01",
-  gender: "male",
-
-  about:
-    "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care for them! If we dont, who will?",
-
-  rating_vetvisit: "4",
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch the vet profile:", error);
+    return null;
+  }
 };
 
 const images = [
@@ -69,59 +45,72 @@ const images = [
   "https://hips.hearstapps.com/del.h-cdn.co/assets/cm/15/10/54f94e3f42698_-_dog-stick-del-blog.jpg?crop=1xw:0.7309644670050761xh;center,top&resize=1200:*",
 ];
 
-const MiddleLayoutSellerProfile = ({ vet_ }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const MiddleLayoutSellerProfile = ({ _sellerId }) => {
 
-  const toggleabout = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [sellerId, setSellerId] = useState(_sellerId);
+  const [seller, setSeller] = useState({});
+
+  // Fetch the vet profile on component mount
+  useEffect(() => {
+    const fetchSellerProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (token && sellerId) {
+        const data = await fetchData(token, sellerId);
+        if (data) {
+          setSeller(data);
+          console.log(JSON.stringify(data));
+        }
+      }
+    };
+
+    fetchSellerProfile();
+    // console.log("Seller ID:", sellerId);
+  }, [sellerId]);
+
+  const toggleAbout = () => {
     setIsExpanded(!isExpanded);
   };
+
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
       <EditProfileModal element_id="edit_profile_seller" />
       <EditPasswordModal element_id="edit_password" />
-      {/* Your content for MiddleLayout */}
+
       <SectionDivider title="Profile Details" icon="" />
 
       <div className="avatar float-right mb-5 mr-10 mt-2">
         <div className="ring-primary ring-offset-base-100 w-40 h-40 rounded-full aspect-square ring ring-offset-2">
-          <img src={images[0]} alt="img" />
+          <img src={images[0]} alt="Vet Profile" />
         </div>
       </div>
 
       <h1 className="text-xl font-bold m-3">
-        Name: <b className="text-4xl">{seller.firstname + " " + seller.lastname} </b>
+        Name: <b className="text-4xl">{seller?.firstname + " " + seller?.lastname}</b>
       </h1>
       <div className="text-lg m-3 grid-cols-2 grid mb-5">
         <p>
-          <span className="font-bold">DOB:</span> {seller.DOB}
+          <span className="font-bold">DOB:</span> {seller?.DOB}
         </p>
         <p>
-          <span className="font-bold">Gender:</span> {seller.gender}
+          <span className="font-bold">Gender:</span> {seller?.gender}
         </p>
-
-        {/* <p>
-          <br />
-        </p>
-        <p> 
-          <br />
-        </p> */}
       </div>
 
       <h1 className="pl-3 font-bold text-xl">Contact Info:</h1>
 
       <div className="text-lg m-1 ml-3 grid-cols-2 grid mb-5">
         <p>
-          <span className="font-bold">Phone:</span> {seller.phone}
+          <span className="font-bold">Phone:</span> {seller?.phone}
         </p>
         <p>
-          <span className="font-bold">Email:</span> {seller.email}
+          <span className="font-bold">Email:</span> {seller?.email}
         </p>
         <p>
-          <span className="font-bold">Store Name:</span> {seller.store_name}
+          <span className="font-bold">Store Name:</span> {seller?.store_name}
         </p>
         <p>
-          <span className="font-bold">Store Address:</span>{" "}
-          {seller.store_address}
+          <span className="font-bold">Store Address:</span> {seller?.store_address}
         </p>
       </div>
 
@@ -129,30 +118,31 @@ const MiddleLayoutSellerProfile = ({ vet_ }) => {
 
       <div className="text-lg ml-3 m-1 grid-cols-2 grid mb-5">
         <p>
-          <span className="font-bold">Address:</span> {seller.address}
+          <span className="font-bold">Address:</span> {seller?.address}
         </p>
         <p>
-          <span className="font-bold">Post-Office:</span> {seller.postOffice}
+          <span className="font-bold">Post-Office:</span> {seller?.postOffice}
         </p>
         <p>
-          <span className="font-bold">District:</span> {seller.district}
+          <span className="font-bold">District:</span> {seller?.district}
         </p>
         <p>
-          <span className="font-bold">Country:</span> {seller.country}
+          <span className="font-bold">Country:</span> {seller?.country}
         </p>
       </div>
 
-      <div className=" font-serif italic m-4">
-        <b className="font-bold not-italic font-sans">About: {"   "}</b>
-        {isExpanded || seller.about.split(" ").length <= 30
-          ? seller.about
-          : `${seller.about.split(" ").slice(0, 30).join(" ")}...`}
-        {seller.about.split(" ").length > 30 && (
-          <button onClick={toggleabout} className="text-blue-600 text-xs ml-0">
+      <div className="font-serif italic m-4">
+        <b className="font-bold not-italic font-sans">About: {" "}</b>
+        {isExpanded || seller?.about?.split(" ").length <= 30
+          ? seller?.about
+          : `${seller?.about?.split(" ").slice(0, 30).join(" ")}...`}
+        {seller?.about?.split(" ").length > 30 && (
+          <button onClick={toggleAbout} className="text-blue-600 text-xs ml-0">
             {isExpanded ? " See Less" : " See More"}
           </button>
         )}
       </div>
+
       <div className="flex">
         <button
           className="btn btn-primary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
@@ -161,13 +151,13 @@ const MiddleLayoutSellerProfile = ({ vet_ }) => {
           }
         >
           <svg
-            class="feather feather-edit"
+            className="feather feather-edit"
             fill="none"
             height="24"
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             viewBox="0 0 24 24"
             width="24"
             xmlns="http://www.w3.org/2000/svg"
@@ -185,13 +175,13 @@ const MiddleLayoutSellerProfile = ({ vet_ }) => {
           }
         >
           <svg
-            class="feather feather-edit"
+            className="feather feather-edit"
             fill="none"
             height="24"
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             viewBox="0 0 24 24"
             width="24"
             xmlns="http://www.w3.org/2000/svg"
@@ -219,10 +209,8 @@ const MiddleLayoutSellerProfile = ({ vet_ }) => {
         <p>
           <span className=" font-bold mb-2">Store Rating:</span>
         </p>
-        <Rating className="" rating={4.5} />
+        <Rating className="" rating={seller?.rating_vetvisit || 0} />
       </div>
-
-      
     </div>
   );
 };

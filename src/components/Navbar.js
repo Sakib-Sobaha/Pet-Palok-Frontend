@@ -30,7 +30,7 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userType");
-    // window.location.href = "/login";
+    window.location.href = "/login";
   };
 
   return (
