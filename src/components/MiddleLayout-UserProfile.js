@@ -47,10 +47,10 @@ const MiddleLayoutUserProfile = ({ userId }) => {
         // Make the API request with the Authorization header
         const response = await fetch(url, {
           method: "GET",
-          // headers: {
-          //   'Authorization': `Bearer ${token}`,
-          //   'Content-Type': 'application/json',
-          // },
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
         });
 
         // Parse the response data

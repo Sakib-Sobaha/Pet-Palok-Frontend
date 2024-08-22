@@ -4,11 +4,11 @@ import ItemCard from "../cards/Item-Card";
 const itemData = [
   {
     name: "Odomos Doggy",
-    price_per_unit: 90,
+    pricePerUnit: 90,
     quantity: "250g",
     count: 0,
-    total_available_count: 4,
-    pet_type: "Animal",
+    totalAvailableCount: 4,
+    petType: "Animal",
     type: "medicine",
     rating: 4,
     description: "If a dog chews shoes whose shoes does he choose?",
@@ -16,12 +16,12 @@ const itemData = [
   },
   {
     name: "Cat Food",
-    price_per_unit: 59,
+    pricePerUnit: 59,
     quantity: "100g",
     rating: 4,
     count: 0,
-    total_available_count: 4,
-    pet_type: "Animal",
+    totalAvailableCount: 4,
+    petType: "Animal",
     type: "food",
     description: "If a dog chews shoes whose shoes does he choose?",
     image:
@@ -29,24 +29,24 @@ const itemData = [
   },
   {
     name: "Seed Mix",
-    price_per_unit: 290,
+    pricePerUnit: 290,
     quantity: "500g",
     rating: 4.6,
     count: 0,
-    total_available_count: 4,
-    pet_type: "Bird",
+    totalAvailableCount: 4,
+    petType: "Bird",
     type: "food",
     description: "If a dog chews shoes whose shoes does he choose?",
     image: "https://images.meesho.com/images/products/227181817/j4vdh_512.webp",
   },
   {
     name: "Cattlefish Bone",
-    price_per_unit: 125,
+    pricePerUnit: 125,
     quantity: "200g",
     rating: 2.4,
     count: 0,
-    total_available_count: 4,
-    pet_type: "Bird",
+    totalAvailableCount: 4,
+    petType: "Bird",
     type: "food",
     description: "If a dog chews shoes whose shoes does he choose?",
     image:
@@ -54,12 +54,12 @@ const itemData = [
   },
   {
     name: "Dog Water Pot",
-    price_per_unit: 90,
+    pricePerUnit: 90,
     quantity: "3 pieces",
     rating: 5,
     count: 0,
-    total_available_count: 4,
-    pet_type: "Animal",
+    totalAvailableCount: 4,
+    petType: "Animal",
     type: "accessories",
     description: "If a dog chews shoes whose shoes does he choose?",
     image:
@@ -67,24 +67,24 @@ const itemData = [
   },
   {
     name: "Odomos Fish",
-    price_per_unit: 90,
+    pricePerUnit: 90,
     quantity: "250g",
     rating: 1.2,
     count: 0,
-    total_available_count: 4,
-    pet_type: "Fish",
+    totalAvailableCount: 4,
+    petType: "Fish",
     type: "medicine",
     description: "If a dog chews shoes whose shoes does he choose?",
     image: "https://m.media-amazon.com/images/I/41-eQbUPu9L._AC_.jpg",
   },
   {
     name: "Fish Food",
-    price_per_unit: 59,
+    pricePerUnit: 59,
     rating: 3.4,
     quantity: "100g",
     count: 0,
-    total_available_count: 4,
-    pet_type: "Fish",
+    totalAvailableCount: 4,
+    petType: "Fish",
     type: "food",
     description: "If a dog chews shoes whose shoes does he choose?",
     image:
@@ -92,24 +92,24 @@ const itemData = [
   },
   {
     name: "Seed Mix",
-    price_per_unit: 290,
+    pricePerUnit: 290,
     quantity: "500g",
     rating: 4.7,
     count: 0,
-    total_available_count: 4,
-    pet_type: "Fish",
+    totalAvailableCount: 4,
+    petType: "Fish",
     type: "medicine",
     description: "If a dog chews shoes whose shoes does he choose?",
     image: "https://images.meesho.com/images/products/227181817/j4vdh_512.webp",
   },
   {
     name: "Cattlefish Bone",
-    price_per_unit: 125,
+    pricePerUnit: 125,
     quantity: "200g",
     rating: 3.8,
     count: 0,
-    total_available_count: 4,
-    pet_type: "Animal",
+    totalAvailableCount: 4,
+    petType: "Animal",
     type: "medicine",
     description: "If a dog chews shoes whose shoes does he choose?",
     image:
@@ -117,12 +117,12 @@ const itemData = [
   },
   {
     name: "Dog Water Pot",
-    price_per_unit: 90,
+    pricePerUnit: 90,
     quantity: "3 pieces",
     rating: 1.3,
     count: 0,
-    total_available_count: 4,
-    pet_type: "Animal",
+    totalAvailableCount: 4,
+    petType: "Animal",
     type: "accessories",
     description: "If a dog chews shoes whose shoes does he choose?",
     image:
@@ -139,20 +139,20 @@ function MarketItemContainer({ text, searchTerm, sortOption, filters }) {
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.pet_type.toLowerCase().includes(searchTerm.toLowerCase())
+      item.petType.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter(item => item.price_per_unit >= filters.priceRange.min && item.price_per_unit <= filters.priceRange.max)
+    .filter(item => item.pricePerUnit >= filters.priceRange.min && item.pricePerUnit <= filters.priceRange.max)
     .filter(item => filters.itemTypes[item.type.toLowerCase()])
-    .filter(item => filters.petTypes[item.pet_type.toLowerCase()]);
+    .filter(item => filters.petTypes[item.petType.toLowerCase()]);
 
 
   // Sorting items based on sortOption
   const sortedItems = [...filteredItems].sort((a, b) => {
     if (sortOption === "priceLowToHigh") {
-      return a.price_per_unit - b.price_per_unit;
+      return a.pricePerUnit - b.pricePerUnit;
     }
     if (sortOption === "priceHighToLow") {
-      return b.price_per_unit - a.price_per_unit;
+      return b.pricePerUnit - a.pricePerUnit;
     }
     if (sortOption === "ratingLowToHigh") {
       return a.rating - b.rating;

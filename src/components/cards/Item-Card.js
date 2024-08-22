@@ -36,7 +36,7 @@ function ItemCardNoButton({ item, userType = "seller" }) {
   };
 
   return (
-    <div className="tooltip tooltip-warning tooltip-right" data-tip={item.pet_type}>
+    <div className="tooltip tooltip-warning tooltip-right" data-tip={item.petType}>
       {/* <button className="btn">?</button> */}
       <div className="ml-2 card rounded-none bg-base-100 w-64 h-80 shadow-xl m-1 cursor-pointer hover:scale-105 transition-transform duration-300 hover:shadow-lg">
         <figure onClick={handleVisitItem} className="">
@@ -59,7 +59,7 @@ function ItemCardNoButton({ item, userType = "seller" }) {
           <div className="grid grid-cols-3 m-1 gap-0 place-items-center">
             <h2 className="text-sm m-0 text-green-600 grid place-items-center font-mono">
               <b className="font-bold">
-                {item && item.price_per_unit + " taka"}
+                {item && item.pricePerUnit + " taka"}
               </b>
             </h2>
 

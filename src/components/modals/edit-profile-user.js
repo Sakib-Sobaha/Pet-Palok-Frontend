@@ -70,7 +70,7 @@ const EditProfileUser = ({ element_id, _user }) => {
         {
           method: "PUT",
           headers: {
-            // Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(updateUserRequest),
