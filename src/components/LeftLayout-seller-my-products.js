@@ -70,6 +70,11 @@ const LeftLayoutSellerMyProducts = ({ onSearch, onSort, onFilter }) => {
 
   return (
     <div className="flex-1 bg-base-200 p-3 pt-0 min-h-screen h-auto rounded-lg">
+      <button className="btn btn-secondary w-28 mt-4 align-middle"
+        onClick={() => 
+          document.getElementById("add_product").showModal()
+        }>
+      Add Product</button>
       {/* Search */}
       <div className="relative flex flex-auto p-1">
         <input
