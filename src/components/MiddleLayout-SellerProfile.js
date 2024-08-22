@@ -85,7 +85,7 @@ const MiddleLayoutSellerProfile = ({ sellerId }) => {
 
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
-      <EditProfileModal element_id="edit_profile_seller" />
+      <EditProfileModal element_id="edit_profile_seller" _seller={seller}/>
       <EditPasswordModal element_id="edit_password" />
 
       <SectionDivider title="Profile Details" icon="" />
@@ -233,7 +233,7 @@ const MiddleLayoutSellerProfile = ({ sellerId }) => {
             <p>
               <span className=" font-bold mb-2">Store Rating:</span>
             </p>
-            <Rating className="" rating={seller?.rating_vetvisit || 0} />
+            <Rating className="" rating={seller?.rating || 0} />
           </div>
           </>
         ) : (

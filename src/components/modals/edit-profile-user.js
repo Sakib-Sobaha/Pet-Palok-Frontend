@@ -70,7 +70,7 @@ const EditProfileUser = ({ element_id, _user }) => {
         {
           method: "PUT",
           headers: {
-            // Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(updateUserRequest),
@@ -89,8 +89,7 @@ const EditProfileUser = ({ element_id, _user }) => {
       // console.error("Error updating user profile:", error);
       console.log(error)
       // alert("An error occurred while updating the profile.");
-    }
-    finally {
+    } finally {
       window.location.reload();
     }
   };
