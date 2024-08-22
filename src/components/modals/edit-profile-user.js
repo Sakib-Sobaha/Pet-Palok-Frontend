@@ -44,7 +44,7 @@ const EditProfileUser = ({ element_id, _user }) => {
     console.log("User information saved:", user);
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("authToken");
 
       // Create an object that only contains the necessary attributes for the UpdateUserRequest
       const updateUserRequest = {

@@ -181,9 +181,10 @@ function AppointmentRequestCard({ appointmentRequest }) {
             </button>
           )}
           {appointmentRequest.prescription === null && (
-            <button className="btn btn-error btn-xs w-48">
+            <button className="btn btn-error btn-xs w-48 flex">
               <svg
                 enable-background="new 0 0 32 32"
+                className="h-4 w-4"
                 id="Editable-line"
                 version="1.1"
                 viewBox="0 0 32 32"

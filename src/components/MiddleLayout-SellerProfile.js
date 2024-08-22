@@ -85,6 +85,7 @@ const MiddleLayoutSellerProfile = ({ sellerId }) => {
 
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
+      {/* {JSON.stringify(seller)} */}
       <EditProfileModal element_id="edit_profile_seller" _seller={seller}/>
       <EditPasswordModal element_id="edit_password" />
 
