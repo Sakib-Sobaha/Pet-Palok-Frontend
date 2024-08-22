@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 
 const initialSeller = {
-  firstname: "Sakib",
-  lastname: "Sobaha",
-  email: "niloy870@gmail.com",
+  name: "Sakib Sobaha",
+  email: "abir@gmail.com",
   phone: "01234123456",
   password: "pasword",
-  store_name: "Sakibs Pet Shop",
-  store_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
+  storeName: "Sakibs Pet Shop",
+  storeAddress: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
   address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
   postOffice: "Mirpur-2",
   district: "Dhaka",
   country: "Bangladesh",
-  DOB: "2020-01-01",
+  dob: "2020-01-01",
   gender: "male",
   about:
     "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care of them! If we dont, who will?",
@@ -104,11 +103,11 @@ const EditProfileSeller = ({ element_id }) => {
               />
             </p>
             <p>
-              <span className="font-bold">DOB:</span>
+              <span className="font-bold">dob:</span>
               <input
                 type="date"
-                name="DOB"
-                value={seller.DOB}
+                name="dob"
+                value={seller.dob}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />

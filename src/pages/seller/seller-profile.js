@@ -14,7 +14,7 @@ function SellerProfile() {
     <div>
       <LayoutLRM
         left={<LeftLayout type="" />}
-        middle={<MiddleLayout _sellerId={sellerId} />}
+        middle={<MiddleLayout sellerId={sellerId} />}
         right={<RightLayout />}
       />
     </div>
