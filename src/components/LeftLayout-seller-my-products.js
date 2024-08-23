@@ -70,11 +70,26 @@ const LeftLayoutSellerMyProducts = ({ onSearch, onSort, onFilter }) => {
 
   return (
     <div className="flex-1 bg-base-200 p-3 pt-0 min-h-screen h-auto rounded-lg">
-      <button className="btn btn-secondary w-28 mt-4 align-middle"
-        onClick={() => 
-          document.getElementById("add_product").showModal()
-        }>
-      Add Product</button>
+      <button
+        className="btn btn-primary w-56 ml-1  mt-4 rounded-md align-middle"
+        onClick={() => document.getElementById("add_product").showModal()}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          className="h-5 w-5 flex"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="3"
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
+        Add Product
+      </button>
       {/* Search */}
       <div className="relative flex flex-auto p-1">
         <input

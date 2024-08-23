@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import MarketItemContainer from './containers/MarketItemContainer';
+import MarketItemContainer from './containers/MyProductsContainer';
 import AddProduct from './modals/add-product';
 
 const handleLogout = () => {
@@ -38,7 +38,7 @@ const fetchSellerWhoAMI = async (token) => {
     return data;
   } catch (error) {
     console.error("Failed to fetch seller: WHOAMI", error);
-    return []; // Return an empty array in case of an error
+    return null; // Return null in case of an error
   }
 };
 
@@ -75,12 +75,28 @@ const MiddleLayoutSellerMyProducts = ({ searchTerm, sortOption, filters }) => {
     fetchSeller();
   }, []);
 
+  if (loading) {
+    return <div>
+      <span className="loading loading-dots loading-lg"></span>
+
+    </div>; // You can replace this with a loading spinner or any other loading indicator
+  }
+
   return (
     <div className="flex-1 bg-base-100 rounded-lg min-h-screen">
       <AddProduct element_id="add_product" seller_id={sellerId}/>
+
       {/* {sellerId} */}
       {/* Your content for MiddleLayout */}
-      <MarketItemContainer text="Store Items" searchTerm={searchTerm} sortOption={sortOption} filters={filters} />
+      {seller && (
+        <MarketItemContainer
+          text="Store Items"
+          searchTerm={searchTerm}
+          sortOption={sortOption}
+          filters={filters}
+          _seller={seller}
+        />
+      )}
         {/* <MarketItemContainer text="Most Visited" /> */}
     </div>
   );

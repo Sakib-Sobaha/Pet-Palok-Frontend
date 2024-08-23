@@ -54,6 +54,8 @@ const AddProduct = ({ element_id, seller_id }) => {
       // Upload images and get their URLs
       const imageUrls = await uploadFiles(selectedImages);
       console.log("Image URLs:", imageUrls);
+      
+      console.log("Item: "+JSON.stringify(item));
 
       // Update item object with uploaded image URLs
       const newItemData = {
