@@ -11,7 +11,8 @@ console.log("User Type: ", userType);
 // Function to fetch pet data from the API
 const fetchViewerWhoAMI = async (token) => {
   try {
-    const url = `${process.env.REACT_APP_API_URL}/`+userType+`/whoami`;
+    const url = `${process.env.REACT_APP_API_URL}/` + userType + `/whoami`;
+    console.log(url);
     const headers = new Headers({
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -231,9 +232,9 @@ function MarketItemContainer({ text, searchTerm, sortOption, filters }) {
     }
   };
 
-  useEffect(() => {
-    fetchViewer();
-  }, []);
+  // useEffect(() => {
+  //   fetchViewer();
+  // }, []);
 
   const fetchMarketItems = async () => {
     const token = localStorage.getItem("authToken");
@@ -299,23 +300,21 @@ function MarketItemContainer({ text, searchTerm, sortOption, filters }) {
   return (
     <div className="bg bg-base-200 m-0 p-1 mb-4 rounded-xl">
       <h1 className="text-3xl font-bold ml-3">{text}</h1>
-      {viewer && (
-        <>
-          <div className="grid grid-cols-3 gap-1 align-middle">
-            {itemsToShow.map((item, index) => (
-              <ItemCard key={index} item={item} viewer={viewer.id} />
-            ))}
-          </div>
-          <div className="flex justify-center mt-4">
-            <button
-              className="btn btn-primary"
-              onClick={() => setShowAll(!showAll)}
-            >
-              {showAll ? "See Less" : "See More"}
-            </button>
-          </div>
-        </>
-      )}
+      <>
+        <div className="grid grid-cols-3 gap-1 align-middle">
+          {itemsToShow.map((item, index) => (
+            <ItemCard key={index} item={item} />
+          ))}
+        </div>
+        <div className="flex justify-center mt-4">
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowAll(!showAll)}
+          >
+            {showAll ? "See Less" : "See More"}
+          </button>
+        </div>
+      </>
     </div>
   );
 }

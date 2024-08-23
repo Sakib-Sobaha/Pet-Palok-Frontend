@@ -94,6 +94,9 @@ const AddProduct = ({ element_id, seller_id }) => {
       console.error("Failed to create product:", error);
     }
 
+    //reset the modal boxes
+    setItem(initialItem);
+
     document.getElementById(element_id).close();
     // window.location.reload(); // Reload the page to see the new product
   };

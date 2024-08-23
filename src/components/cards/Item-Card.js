@@ -1,10 +1,70 @@
 import React, { useState } from "react";
 import Rating from "../Rating-Small";
 
-function ItemCardNoButton({ item, viewer, owner }) {
-  const [showAlert, setShowAlert] = useState(false);
+const handleLogout = () => {
+  localStorage.removeItem("authToken");
+  window.location.href = "/login"; // Redirect to the login page
+};
 
+const deleteReq = async (token, itemId) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/marketplace/deleteItem/${itemId}`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: headers,
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to Delete Data", error);
+    return null; // Return null in case of an error
+  }
+};
+
+function ItemCardNoButton({ item, owner, onDelete }) {
+  const [showAlert, setShowAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
   const userType = localStorage.getItem("userType");
+
+  const deleteItemCall = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.error("No auth token found in local storage.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await deleteReq(token, item.id);
+      if (onDelete) {
+        onDelete(item.id); // Call the onDelete callback if provided
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleVisitItem = () => {
     window.location.href = "/marketplace/item";
@@ -20,11 +80,12 @@ function ItemCardNoButton({ item, viewer, owner }) {
     setTimeout(() => setShowAlert(false), 2000);
   };
 
-  const deleteItem = () => {
-    console.log("Item deleted");
+  const handleDeleteItem = () => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      deleteItemCall();
+    }
   };
 
- 
   const getTypeColor = (type) => {
     switch (type.toLowerCase()) {
       case "food":
@@ -98,9 +159,9 @@ function ItemCardNoButton({ item, viewer, owner }) {
               <>
                 <button
                   className="btn btn-error rounded-none"
-                  onClick={deleteItem}
+                  onClick={handleDeleteItem}
                 >
-                  Delete Item
+                  {loading ? "Deleting..." : "Delete Item"}
                 </button>
               </>
             )}
