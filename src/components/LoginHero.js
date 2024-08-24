@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-// import jwtDecode from "jwt-decode";
-// import crypto from 'crypto'; // For password hashing in the front-end
 
 function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
   const [activeTab, setActiveTab] = useState("login");
@@ -11,16 +9,8 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
-
-  // const getUserIdFromToken = (token) => {
-  //   try {
-  //     const decoded = jwtDecode(token);
-  //     return decoded.id; // Or whatever key contains the user ID
-  //   } catch (error) {
-  //     console.error("Invalid token:", error);
-  //     return null;
-  //   }
-  // };
+  const [loginError, setLoginError] = useState(""); // State for login error message
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false); // State for successful login alert
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -34,7 +24,8 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
       });
 
       if (!response.ok) {
-        console.error("Login failed");
+        setLoginError("Wrong credentials, please try again."); // Set error message if login fails
+        setShowSuccessAlert(false); // Hide success alert if there's an error
         return;
       }
 
@@ -44,14 +35,19 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
       // Store token in local storage
       localStorage.setItem("authToken", token);
 
-      // const userId = getUserIdFromToken(token);
-      // localStorage.setItem("userId", userId);
-      // console.log(userId);
-
       localStorage.setItem("userType", type.toLowerCase());
-      window.location.href = `/${type.toLowerCase()}/home`;
+
+      // Show success alert
+      setShowSuccessAlert(true);
+      setLoginError(""); // Clear any previous error message
+
+      // Redirect after a short delay
+      setTimeout(() => {
+        window.location.href = `/${type.toLowerCase()}/home`;
+      }, 500);
     } catch (error) {
       console.error("Login error:", error);
+      setLoginError("An error occurred during login. Please try again."); // Set error message on catch
     }
   };
 
@@ -81,20 +77,18 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
       const data = await response.json();
       const token = data.token;
 
-      // Store token in local storage
-      // localStorage.setItem("authToken", token);
-      // localStorage.setItem("userType", type.toLowerCase());
+      // Show signup success message and switch to login tab
       alert("Signup successful! Now Log in with your credentials.");
-      activeTab = "login";
-      window.location.href = `/landing`;
+      setActiveTab("login");
     } catch (error) {
       console.error("Signup error:", error);
-      window.location.href = `/login`;
     }
   };
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+    setLoginError(""); // Clear error message when switching tabs
+    setShowSuccessAlert(false); // Clear success alert when switching tabs
   };
 
   return (
@@ -102,7 +96,6 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
       <div className="hero-content flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left pl-8">
           <div className="">{icon}</div>
-          {/* <img src="https://www.flaticon.com/free-animated-icon/shopping-cart_15576198?term=shopping&related_id=15576198" /> */}
           <h1 className="text-5xl font-bold text-center">{title}</h1>
           <p className="py-6 text-center">{text}</p>
         </div>
@@ -123,6 +116,7 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
               Sign Up
             </a>
           </div>
+
           {activeTab === "login" && (
             <form className="card-body" onSubmit={handleLogin}>
               <div className="form-control">
@@ -215,6 +209,45 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
                 </button>
               </div>
             </form>
+          )}
+          {/* Display Error Alert for Login */}
+          {loginError && (
+            <div role="alert" className="alert alert-error">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          {/* Display Success Alert for Login */}
+          {showSuccessAlert && (
+            <div role="alert" className="alert alert-success ">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>Login successful! Redirecting...</span>
+            </div>
           )}
         </div>
       </div>

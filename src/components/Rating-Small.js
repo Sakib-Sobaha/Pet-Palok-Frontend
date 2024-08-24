@@ -15,6 +15,16 @@ function RatingSmall({ rating }) {
     colorClass = "bg-red-200 border-red-400";
   }
 
+  if(rating === 0){
+    return (
+      <div
+        className="badge badge-warning text-xs badge-sm"
+      >
+        No Rating Yet
+      </div>
+    );
+  }
+
   return (
     <div
       className={`radial-progress ${colorClass} progress-success text-primary-content border-4 text-xs`}
