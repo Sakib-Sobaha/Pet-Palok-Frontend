@@ -31,6 +31,7 @@ import Appointments from "./pages/vet/appointments.js";
 import StoreOrders from "./pages/seller/store-orders.js";
 import PetBSX from "./pages/user/pet-bsx.js";
 import Communities from "./pages/communities/communities.js";
+import ChatRoom from "./pages/messaging/chat-room.js";
 
 
 import PhotoUpload from "./pages/tests/photo-up-test.js";
@@ -72,6 +73,7 @@ export default function App() {
             <Route path="/vet/appointments" element={<Appointments />} />
 
             <Route path="/chatbox" element={<ChatBox />} />
+            <Route path="/chatroom" element={<ChatRoom />} />
 
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />

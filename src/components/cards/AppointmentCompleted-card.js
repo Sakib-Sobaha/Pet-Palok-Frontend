@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { downloadFile } from "../../components/Supabase/file-downloader"; // Import the download function
 // import ReactToolTip from "../Tooltip/ReactToolTip";
 
 const pet = {
@@ -159,7 +159,11 @@ function AppointmentRequestCard({ appointmentRequest }) {
           </p>
 
           {appointmentRequest.prescription !== null && (
-            <button className="btn btn-primary btn-xs w-48">
+            <button 
+              className="btn btn-primary btn-xs w-48"
+              onClick={downloadFile(appointmentRequest.prescription)}
+
+            >
               <svg
                 class="feather feather-download"
                 fill="none"

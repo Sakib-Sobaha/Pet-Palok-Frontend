@@ -134,20 +134,20 @@ const VetCardContainer = ({ sortCriteria, searchTerm, ratingRange, setVetId }) =
     // Filtering by search term
     const filteredData = vetData.filter(
       (vet) =>
-        (vet.firstname.concat(" " + vet.lastname))
+        (vet?.firstname.concat(" " + vet?.lastname))
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
-        vet.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet.postOffice.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet.clinic_name.toLowerCase().includes(searchTerm.toLowerCase())
+        vet?.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet?.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet?.postOffice.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet?.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet?.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet?.clinic_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     // Filtering by rating range
     const filteredByRatingData = filteredData.filter((vet) => {
-      const rating = parseFloat(vet.rating_vetvisit);
+      const rating = parseFloat(vet?.rating_vetvisit);
       return rating >= ratingRange.min && rating <= ratingRange.max;
     });
 

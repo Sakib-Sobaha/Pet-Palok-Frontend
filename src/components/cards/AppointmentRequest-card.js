@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const pet = {
   name: "Chokkor",
@@ -12,6 +12,36 @@ const pet = {
   description:
     "Chokkor is a cute dog! He is a very good friend! I pass most of my time with him. Soo friendly. My beloved! Doggy doggy doggy dogyy. Cutie pie amar. I love him too too too too much",
 };
+
+// const fetchPetData = async (token, petId) => {
+//   try {
+//     const url = `http://localhost:8080/api/v1/pets/${petId}`;
+//     const headers = new Headers({
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json",
+//     });
+
+//     const requestOptions = {
+//       method: "GET",
+//       headers: headers,
+//     };
+
+//     const response = await fetch(url, requestOptions);
+
+//     if (!response.ok) {
+//       const errorText = await response.json();
+//       throw new Error(
+//         `Network response was not ok. Status: ${response.status}, ${errorText}`
+//       );
+//     }
+
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error("Failed to fetch the pet:", error);
+//     return null; // Return null in case of an error
+//   }
+// };
 
 const vet = {
   firstname: "Sakib",
@@ -39,6 +69,37 @@ const vet = {
   rating_vetvisit: "4",
 };
 
+
+// const fetchVetData = async (token, vetId) => {
+//   try {
+//     const url = `http://localhost:8080/api/v1/vet/getVetById/${vetId}`;
+//     const headers = new Headers({
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json",
+//     });
+
+//     const requestOptions = {
+//       method: "GET",
+//       headers: headers,
+//     };
+
+//     const response = await fetch(url, requestOptions);
+
+//     if (!response.ok) {
+//       const errorText = await response.json();
+//       throw new Error(
+//         `Network response was not ok. Status: ${response.status}, ${errorText}`
+//       );
+//     }
+
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error("Failed to fetch the pet:", error);
+//     return null; // Return null in case of an error
+//   }
+// };
+
 const user = {
   firstname: "Niloy",
   lastname: "Faiaz",
@@ -58,9 +119,97 @@ const user = {
   rating_vet: "3",
 };
 
-function AppointmentCompletedCard({ appointmentRequest }) {
+function AppointmentCompletedCard({ appointmentRequest, petId, vetId, userId }) {
   const lenMax = 25;
   const [isExpanded, setIsExpanded] = useState(false);
+  // const[vet, setVet] = useState(null);
+  // const [pet, setPet] = useState(null);
+  // const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // State to handle loading
+
+
+
+  // const fetchPet = async () => {
+  //   const token = localStorage.getItem("authToken");
+  //   if (!token) {
+  //     console.error("No auth token found in local storage.");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const data = await fetchPetData(token, petId);
+  //     setPet(data);
+  //   } catch (error) {
+  //     console.error("Fetch error:", error);
+  //   } finally {
+  //     setLoading(false); // Ensure loading is set to false after fetching
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchPet();
+  // }, [petId]);
+
+  // const fetchVet = async () => {
+  //   const token = localStorage.getItem("authToken");
+  //   if (!token) {
+  //     console.error("No auth token found in local storage.");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const data = await fetchVetData(token, vetId);
+  //     setVet(data);
+  //   } catch (error) {
+  //     console.error("Fetch error:", error);
+  //   } finally {
+  //     setLoading(false); // Ensure loading is set to false after fetching
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchVet();
+  // }, [vetId]);
+
+
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       // Construct the URL for the API request
+  //       const url = `${process.env.REACT_APP_API_URL}/user/getUserById/${userId}`;
+  //       console.log(url);
+  //       console.log(userId);
+
+  //       // Get the Bearer token from local storage (or wherever you store it)
+  //       const token = localStorage.getItem("authToken");
+
+  //       // Make the API request with the Authorization header
+  //       const response = await fetch(url, {
+  //         method: "GET",
+  //         headers: {
+  //           'Authorization': `Bearer ${token}`,
+  //           'Content-Type': 'application/json',
+  //         },
+  //       });
+
+  //       // Parse the response data
+  //       const data = await response.json();
+
+  //       // Update the state with the fetched data
+  //       setUser(data);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   // Fetch user data when the component mounts or userId changes
+  //   fetchUserData();
+  // }, [userId]);
+
 
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);

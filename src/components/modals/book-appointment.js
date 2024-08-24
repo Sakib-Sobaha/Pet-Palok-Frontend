@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const petData = [
   {
@@ -52,26 +52,87 @@ const petData = [
   },
 ];
 
-const vetData = {
-  firstname: "Sakib",
-  lastname: "Sobaha",
-  email: "niloy870@gmail.com",
-  phone: "01234123456",
-  password: "pasword",
-  clinic_name: "Bird Lovers Hospital",
-  clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
-  address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-  postOffice: "Mirpur-2",
-  district: "Dhaka",
-  country: "Bangladesh",
-  DOB: "2020-01-01",
-  gender: "male",
-  image:
-    "https://img.freepik.com/free-photo/veterinarian-checking-dog-medium-shot_23-2149143871.jpg",
-  about:
-    "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care of them! If we don't, who will?",
-  rating_vetvisit: "4",
+const fetchPetData = async (token) => {
+  try{
+    const url = `${process.env.REACT_APP_API_URL}/pets/getAllPets`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if(!response.ok){
+      const errorText = await response.json();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch pets:", error);
+    return []; // Return an empty array in case of an error
+  }
 };
+
+
+// const vetData = {
+//   firstname: "Sakib",
+//   lastname: "Sobaha",
+//   email: "niloy870@gmail.com",
+//   phone: "01234123456",
+//   password: "pasword",
+//   clinic_name: "Bird Lovers Hospital",
+//   clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
+//   address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
+//   postOffice: "Mirpur-2",
+//   district: "Dhaka",
+//   country: "Bangladesh",
+//   DOB: "2020-01-01",
+//   gender: "male",
+//   image:
+//     "https://img.freepik.com/free-photo/veterinarian-checking-dog-medium-shot_23-2149143871.jpg",
+//   about:
+//     "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care of them! If we don't, who will?",
+//   rating_vetvisit: "4",
+// };
+
+// const fetchVetData = async (token, vetId) => {
+//   try {
+//     const url = `${process.env.REACT_APP_API_URL}/vet/getVetById/${vetId}`;
+//     const headers = new Headers({
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json",
+//     });
+
+//     const requestOptions = {
+//       method: "GET",
+//       headers: headers,
+//     };
+
+//     const response = await fetch(url, requestOptions);
+
+//     if (!response.ok) {
+//       const errorText = await response.json();
+//       throw new Error(
+//         `Network response was not ok. Status: ${response.status}, ${errorText}`
+//       );
+//     }
+
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error("Failed to fetch the vet profile:", error);
+//     return null;
+//   }
+// };
 
 const user = {
   firstname: "Niloy",
@@ -92,12 +153,119 @@ const user = {
   rating_vet: "3",
 };
 
-const BookAppointment = ({ element_id, vet }) => {
+
+// fetch the logged in user
+const fetchUserAPI = async (token) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/user/whoami`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+    
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if(!response.ok){
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+    return null;
+  }
+};
+
+const BookAppointment = ({ element_id, _vet }) => {
   const [selectedPet, setSelectedPet] = useState(null);
   const [appointmentDate, setAppointmentDate] = useState("");
   const [appointmentTime, setAppointmentTime] = useState("");
   const [visitType, setVisitType] = useState("offline");
   const [illnessDescription, setIllnessDescription] = useState("");
+  const[loading, setLoading] = useState(true); // State to handle loading
+  const[pets, setPetData] = useState([]);
+  console.log(JSON.stringify(_vet));
+  const [vet, setVet] = useState(_vet);
+  const [user, setUser] = useState(null);
+
+  // useEffect(() => {
+  //   setVet(_vet);
+  // }, [_vet]);
+
+  const fetchPets = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.error("No auth token found in local storage.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await fetchPetData(token);
+      setPetData(data);
+    } catch (error) {
+      console.error("Failed to fetch pets:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPets();
+  }, []);
+  
+
+  // const fetchVet = async () => {
+  //   const token = localStorage.getItem("authToken");
+  //   if (!token) {
+  //     console.error("No auth token found in local storage.");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const data = await fetchVetData(token, vet?.id);
+  //     setVet(data);
+  //   } catch (error) {
+  //     console.error("Failed to fetch vet:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchVet();
+  // }, []);
+
+  const fetchUser = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.error("No auth token found in local storage.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await fetchUserAPI(token);
+      setUser(data);
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
 
   const todayDate = new Date().toISOString().split("T")[0];
 
@@ -118,18 +286,20 @@ const BookAppointment = ({ element_id, vet }) => {
 
   return (
     <div>
+      
       <dialog id={element_id} className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Book an Appointment</h3>
           <div className="grid grid-cols-1 gap-4">
             {/* Vet Information */}
+            {JSON.stringify(_vet)}
             <div>
               <label className="label">
                 <span className="label-text">Vet Name</span>
               </label>
               <input
                 type="text"
-                value={`${vetData.firstname} ${vetData.lastname}`}
+                value={`${_vet?.firstname} ${_vet?.lastname}`}
                 className="input input-bordered w-full"
                 readOnly
               />
@@ -140,7 +310,7 @@ const BookAppointment = ({ element_id, vet }) => {
               </label>
               <input
                 type="text"
-                value={vetData.clinic_name}
+                value={vet?.clinic_name}
                 className="input input-bordered w-full"
                 readOnly
               />
@@ -153,7 +323,7 @@ const BookAppointment = ({ element_id, vet }) => {
               </label>
               <input
                 type="text"
-                value={`${user.firstname} ${user.lastname}`}
+                value={`${user?.firstname} ${user?.lastname}`}
                 className="input input-bordered w-full"
                 readOnly
               />
