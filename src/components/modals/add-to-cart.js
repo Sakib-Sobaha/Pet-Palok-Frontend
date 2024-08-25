@@ -125,6 +125,7 @@ const AddToCart = ({ element_id, _item }) => {
                   // close this modal with element id  give already
                   setCount(1);
                   document.getElementById(element_id).close();
+                  window.location.reload();
                 } else {
                   console.error("Failed to Add to Cart");
                   alert("Failed to add item to cart");

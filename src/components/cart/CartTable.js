@@ -52,6 +52,74 @@ const handleIncrementAPI = async (token, cartItemId) => {
   }
 };
 
+const deleteCartItemAPI = async (token, cartItemId) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/cart/removeItem/${cartItemId}`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: headers,
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to delete item from cart:", error);
+    return null;
+  }
+};
+
+const clearCartAPI = async (token) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/cart/clearCart`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+    });
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: headers,
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  }
+  catch (error) {
+    console.error("Failed to Clear Cart", error);
+    return null; // Return null in case of an error
+  }
+};
+
 const handleDecrementAPI = async (token, cartItemId) => {
   try {
     const url = `${process.env.REACT_APP_API_URL}/cart/decrementCount/${cartItemId}`;
@@ -316,6 +384,22 @@ function CartTable({
       item.count -= 1;
       setGroupedItems(updatedItems);
     }
+
+    const cartItemId = item.cartItemId;
+
+
+    try{
+      setLoading(true); // Start loading
+      // call increment api for backend update
+      handleDecrementAPI(token, cartItemId);
+
+    }
+    catch (error) {
+      console.error("Failed to increment item count:", error);
+    }
+    finally {
+      setLoading(false); // End loading
+    }
   };
 
   const handleIncrement = (storeName, index) => {
@@ -326,6 +410,23 @@ function CartTable({
       item.count += 1;
       setGroupedItems(updatedItems);
     }
+
+    const cartItemId = item.cartItemId;
+
+
+    try{
+      setLoading(true); // Start loading
+      // call increment api for backend update
+      handleIncrementAPI(token, cartItemId);
+
+    }
+    catch (error) {
+      console.error("Failed to increment item count:", error);
+    }
+    finally {
+      setLoading(false); // End loading
+    }
+    
   };
 
   // Checkout action
@@ -358,25 +459,51 @@ function CartTable({
   const handleClearCart = () => {
     setCartItems([]); // Clear all items from the cart
     setSelectedItems({}); // Clear selected items
+
+    // Call the API to clear the cart
+    clearCartAPI(token);
+    
   };
 
   // Remove Selected action
-  const handleRemoveSelected = () => {
+  const handleRemoveSelected = async () => {
     const updatedItems = { ...groupedItems };
-
-    Object.keys(selectedItems).forEach((key) => {
+    const token = localStorage.getItem("authToken");
+  
+    const deletePromises = Object.keys(selectedItems).map(async (key) => {
       const [storeName, index] = key.split("-");
-      if (updatedItems[storeName]) {
-        updatedItems[storeName].splice(index, 1);
+      const itemIndex = parseInt(index, 10); // Convert index to a number
+  
+      if (updatedItems[storeName] && updatedItems[storeName][itemIndex]) {
+        const item = updatedItems[storeName][itemIndex];
+        const cartItemId = item.cartItemId; // Assuming each item has a cartItemId
+  
+        // Call the API to delete the cart item
+        const response = await deleteCartItemAPI(token, cartItemId);
+  
+        if (response) {
+          console.log(`Item ${item.name} removed from the cart.`);
+          
+          updatedItems[storeName].splice(itemIndex, 1); // Remove the item from the state
+        } else {
+          console.error(`Failed to remove item ${item.name} from the cart.`);
+        }
+  
+        // If the store has no more items, remove the store from the groupedItems object
         if (updatedItems[storeName].length === 0) {
           delete updatedItems[storeName];
         }
       }
+      window.location.reload();
     });
-
+  
+    // Wait for all delete requests to complete
+    await Promise.all(deletePromises);
+  
     setGroupedItems(updatedItems);
     setSelectedItems({});
   };
+  
 
   // Function to decrement item quantity
   // const handleDecrement = async (cartItemId, itemId) => {
@@ -518,7 +645,7 @@ function CartTable({
                         <button
                           className="btn btn-xs btn-outline m-1"
                           onClick={() => handleIncrement(storeName, index)}
-                          disabled={item.count >= item.totalAvailableCount}
+                          disabled={item.count >= item.totalAvailableCount || item.count >= 5}
                         >
                           +
                         </button>
