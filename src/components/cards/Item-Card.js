@@ -6,6 +6,41 @@ const handleLogout = () => {
   window.location.href = "/login"; // Redirect to the login page
 };
 
+const addToCartReq = async (token, itemId) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/cart/addToCart`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({ itemId: itemId, count:1 }),
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to Add to Cart", error);
+    return null; // Return null in case of an error
+  }
+};
+
 const deleteReq = async (token, itemId) => {
   try {
     const url = `${process.env.REACT_APP_API_URL}/marketplace/deleteItem/${itemId}`;

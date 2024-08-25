@@ -1,176 +1,331 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const sellers = [
-  {
-    id: 1,
-    firstname: "Abir",
-    lastname: "Auntor",
+const handleLogout = () => {
+  localStorage.removeItem("authToken");
+  window.location.href = "/login"; // Redirect to the login page
+};
 
-    email: "niloy870@gmail.com",
-    phone: "01234123456",
+const getTypeColor = (type) => {
+  switch (type.toLowerCase()) {
+    case "food":
+      return "badge-success"; // Green background for food
+    case "accessories":
+      return "badge-info"; // Blue background for accessories
+    case "medicine":
+      return "badge-error"; // Red background for medicine
+    default:
+      return "badge-ghost"; // Default gray for unknown types
+  }
+};
 
-    password: "pasword",
+const handleIncrementAPI = async (token, cartItemId) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/cart/incrementCount/${cartItemId}`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
 
-    store_name: "Abir Bird Care",
-    store_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
+    };
 
-    address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-    postOffice: "Mirpur-2",
-    district: "Dhaka",
-    country: "Bangladesh",
+    const response = await fetch(url, requestOptions);
 
-    DOB: "2020-01-01",
-    gender: "male",
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
 
-    about:
-      "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care for them! If we dont, who will?",
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
 
-    rating_vetvisit: "4",
-  },
-  {
-    id: 2,
-    firstname: "Niloy",
-    lastname: "Faiaz",
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to increment item count:", error);
+    return null;
+  }
+};
 
-    email: "niloy870@gmail.com",
-    phone: "01234123456",
+const handleDecrementAPI = async (token, cartItemId) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/cart/decrementCount/${cartItemId}`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
 
-    password: "pasword",
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
+    };
 
-    store_name: "Koki and Birdy",
-    store_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
+    const response = await fetch(url, requestOptions);
 
-    address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-    postOffice: "Mirpur-2",
-    district: "Dhaka",
-    country: "Bangladesh",
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
 
-    DOB: "2020-01-01",
-    gender: "male",
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
 
-    about:
-      "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care for them! If we dont, who will?",
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to decrement item count:", error);
+    return null;
+  }
+};
 
-    rating_vetvisit: "4",
-  },
-  {
-    id: 3,
-    firstname: "Sakib",
-    lastname: "Sobaha",
+const fetchSellerById = async (token, sellerId) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/seller/getSellerById/${sellerId}`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
 
-    email: "niloy870@gmail.com",
-    phone: "01234123456",
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    };
 
-    password: "pasword",
+    const response = await fetch(url, requestOptions);
 
-    store_name: "Sakibs Pet Shop",
-    store_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
+    if (response.status === 401) {
+      handleLogout();
+    }
 
-    address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-    postOffice: "Mirpur-2",
-    district: "Dhaka",
-    country: "Bangladesh",
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
 
-    DOB: "2020-01-01",
-    gender: "male",
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch seller by id:", error);
+    return null;
+  }
+};
 
-    about:
-      "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care for them! If we dont, who will?",
+const fetchItemByIdAPI = async (token, itemId) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/marketplace/item/${itemId}`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
 
-    rating_vetvisit: "4",
-  },
-];
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    };
 
-const initialCartItems = [
-  {
-    name: "Odomos Doggy",
-    sellerId: 1,
-    price_per_unit: 90,
-    quantity: "250g",
-    count: 0,
-    total_available_count: 4,
-    pet_type: "Animal",
-    type: "medicine",
-    description: "If a dog chews shoes whose shoes does he choose?",
-    image: "https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_640.jpg",
-  },
-  {
-    name: "Cat Food",
-    sellerId: 1,
-    price_per_unit: 59,
-    quantity: "100g",
-    count: 0,
-    total_available_count: 4,
-    pet_type: "Animal",
-    type: "food",
-    description: "If a dog chews shoes whose shoes does he choose?",
-    image:
-      "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Seed Mix",
-    sellerId: 2,
-    price_per_unit: 290,
-    quantity: "500g",
-    count: 0,
-    total_available_count: 4,
-    pet_type: "Animal",
-    type: "food",
-    description: "If a dog chews shoes whose shoes does he choose?",
-    image:
-      "https://t3.ftcdn.net/jpg/00/95/29/28/360_F_95292880_GfqmxNb4u8ZxG18i2jkLt6gkAvl8xdz3.jpg",
-  },
-  {
-    name: "Cattlefish Bone",
-    sellerId: 3,
-    price_per_unit: 125,
-    quantity: "200g",
-    count: 0,
-    total_available_count: 4,
-    pet_type: "Animal",
-    type: "food",
-    description: "If a dog chews shoes whose shoes does he choose?",
-    image:
-      "https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcRHc-hn-wtBtKuCnyl_aQo3bp6Sqx8G2oIadx2-T3svIVieizMMDT-me2CBv8oksfsn",
-  },
-];
+    const response = await fetch(url, requestOptions);
 
-function CartTable() {
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch item by id:", error);
+    return null;
+  }
+};
+
+const fetchCartAPI = async (token) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/cart/getCartItems`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch cart items:", error);
+    return []; // Return an empty array in case of an error
+  }
+};
+
+function CartTable({
+  selectedItemsCentral,
+  setSelectedItemsCentral,
+  groupedItemsByStoreCentral,
+  checkoutCentral,
+  sellersCentral,
+}) {
   const [alertText, setAlertText] = useState("");
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState({});
   const [showAlert, setShowAlert] = useState(false);
+  const [sellers, setSellers] = useState([]);
+  const [itemsData, setItemsData] = useState({});
+  const [groupedItems, setGroupedItems] = useState({});
 
-  const getStoreName = (sellerId) => {
-    const seller = sellers.find((s) => s.id === sellerId);
-    return seller ? seller.store_name : "Unknown Store";
-  };
+  const [loading, setLoading] = useState(false);
 
-  const groupItemsByStore = (items) => {
-    return items.reduce((acc, item, index) => {
-      const storeName = getStoreName(item.sellerId);
-      if (!acc[storeName]) {
-        acc[storeName] = [];
+  const [tempSelected, setTempSelected] = useState([]);
+
+  const token = localStorage.getItem("authToken"); // Use localStorage to get the token
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true); // Start loading
+
+      try {
+        // Fetch cart items
+        const cart = await fetchCartAPI(token);
+        setCartItems(cart);
+
+        // Fetch details for each cart item
+        const itemDetails = await Promise.all(
+          cart.map(async (cartItem) => {
+            const item = await fetchItemByIdAPI(token, cartItem.itemId);
+            return {
+              ...item,
+              ...cartItem,
+              cartItemId: cartItem.id,
+            };
+          })
+        );
+
+        setItemsData(itemDetails);
+
+        // Fetch seller details
+        const uniqueSellerIds = [
+          ...new Set(itemDetails.map((item) => item.sellerId)),
+        ];
+        const sellerDetails = await Promise.all(
+          uniqueSellerIds.map((sellerId) => fetchSellerById(token, sellerId))
+        );
+
+        setSellers(sellerDetails);
+        sellersCentral(sellerDetails);
+
+        // Group items by seller
+        const groupedBySeller = groupItemsBySellerId(
+          itemDetails,
+          sellerDetails
+        );
+        setGroupedItems(groupedBySeller);
+        groupedItemsByStoreCentral(groupedBySeller);
+      } catch (err) {
+        console.error("Failed to fetch data: ", err);
+      } finally {
+        setLoading(false); // End loading
       }
-      acc[storeName].push({ ...item, index });
+    };
+
+    fetchData();
+  }, [token]);
+
+  const groupItemsBySellerId = (items) => {
+    return items.reduce((acc, item) => {
+      // Use sellerId to group items
+      const sellerId = item.sellerId;
+
+      // Ensure the sellerId array exists
+      if (!acc[sellerId]) {
+        acc[sellerId] = [];
+      }
+
+      // Push the item into the seller's array
+      acc[sellerId].push({
+        ...item,
+        cartItemId: item.id, // or item.cartItemId if CartItem ID is a different field
+        itemId: item.itemId, // Ensuring the Item ID is retained correctly
+      });
+
       return acc;
     }, {});
   };
 
-  const groupedItems = groupItemsByStore(cartItems);
+  const handleCheckboxChange = (storeName, index) => {
+    const key = `${storeName}-${index}`;
+    console.log("key: " + key);
 
-  // Handle checkbox change to select or deselect an item
-  const handleCheckboxChange = (storeName, itemIndex) => {
-    setSelectedItems((prevSelected) => {
-      const key = `${storeName}-${itemIndex}`;
-      const updatedSelection = { ...prevSelected };
-      if (updatedSelection[key]) {
-        delete updatedSelection[key]; // Deselect item
+    const item = groupedItems[storeName]?.[index];
+    const itemId = item?.id; // Extract the item ID from the grouped items
+    console.log("item : " + JSON.stringify(item));
+    if (!itemId) return; // Exit if itemId is not available
+
+    // Update local selectedItems state
+    setSelectedItems((prevSelectedItems) => ({
+      ...prevSelectedItems,
+      [key]: !prevSelectedItems[key],
+    }));
+
+    // Update central selectedItems state
+    setSelectedItemsCentral((prevSelectedItemsCentral) => {
+      if (prevSelectedItemsCentral.includes(itemId)) {
+        // If the item ID is already selected, remove it from the array
+        return prevSelectedItemsCentral.filter((id) => id !== itemId);
       } else {
-        updatedSelection[key] = true; // Select item
+        // If the item ID is not selected, add it to the array
+        return [...prevSelectedItemsCentral, itemId];
       }
-      return updatedSelection;
     });
+  };
+
+  const handleDecrement = (storeName, index) => {
+    const updatedItems = { ...groupedItems };
+    const item = updatedItems[storeName][index];
+
+    if (item.count > 1) {
+      item.count -= 1;
+      setGroupedItems(updatedItems);
+    }
+  };
+
+  const handleIncrement = (storeName, index) => {
+    const updatedItems = { ...groupedItems };
+    const item = updatedItems[storeName][index];
+
+    if (item.count < item.totalAvailableCount) {
+      item.count += 1;
+      setGroupedItems(updatedItems);
+    }
   };
 
   // Checkout action
@@ -178,21 +333,20 @@ function CartTable() {
     const selectedItemNames = Object.keys(selectedItems)
       .filter((key) => selectedItems[key])
       .map((key) => {
-        const [storeName, index] = key.split("-");
-        return groupedItems[storeName][parseInt(index, 10)].name;
+        const [sellerId, index] = key.split("-");
+        return groupedItems[sellerId][parseInt(index, 10)].name;
       });
 
     if (selectedItemNames.length > 0) {
       setAlertText(`Checkout these items: ${selectedItemNames.join(", ")}`);
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000);
+      alert(`Checkout these items: ${selectedItemNames.join(", ")}`);
+      setTimeout(() => setShowAlert(false), 5000);
 
       // Change the URL to the checkout page
-      // add 1 second delay to show the alert message
-        
-
-
-      window.location.href = "/checkout";
+      // window.location.href = "/checkout";
+      checkoutCentral(true);
+      console.log("checkout items: " + JSON.stringify(selectedItems));
     } else {
       setAlertText("No items selected for checkout");
       setShowAlert(true);
@@ -208,154 +362,209 @@ function CartTable() {
 
   // Remove Selected action
   const handleRemoveSelected = () => {
-    const itemsToRemove = Object.keys(selectedItems).filter(
-      (key) => selectedItems[key]
-    );
-    const newCartItems = cartItems.filter((_, index) => {
-      const storeName = getStoreName(cartItems[index].sellerId);
-      return !itemsToRemove.includes(`${storeName}-${index}`);
+    const updatedItems = { ...groupedItems };
+
+    Object.keys(selectedItems).forEach((key) => {
+      const [storeName, index] = key.split("-");
+      if (updatedItems[storeName]) {
+        updatedItems[storeName].splice(index, 1);
+        if (updatedItems[storeName].length === 0) {
+          delete updatedItems[storeName];
+        }
+      }
     });
-    setCartItems(newCartItems);
-    setSelectedItems({}); // Clear selected items after removal
+
+    setGroupedItems(updatedItems);
+    setSelectedItems({});
   };
 
-  // Handle increment
-  const handleIncrement = (storeName, itemIndex) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item, index) =>
-        index === itemIndex && item.count < item.total_available_count
-          ? { ...item, count: item.count + 1 }
-          : item
-      )
-    );
-  };
+  // Function to decrement item quantity
+  // const handleDecrement = async (cartItemId, itemId) => {
+  //   // Find the cart item and ensure it's not already at the minimum quantity
+  //   const item = cartItems.find((item) => item.cartItemId === cartItemId);
 
-  // Handle decrement
-  const handleDecrement = (storeName, itemIndex) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item, index) =>
-        index === itemIndex && item.count > 0
-          ? { ...item, count: item.count - 1 }
-          : item
-      )
-    );
-  };
+  //   if (item && item.quantity > 1) {
+  //     // Decrement the quantity
+  //     const updatedQuantity = item.quantity - 1;
+
+  //     // Update the state
+  //     const updatedCartItems = cartItems.map((cartItem) =>
+  //       cartItem.cartItemId === cartItemId
+  //         ? { ...cartItem, quantity: updatedQuantity }
+  //         : cartItem
+  //     );
+
+  //     setCartItems(updatedCartItems);
+
+  //     // Update backend if necessary
+  //     await handleIncrementAPI(token, cartItemId);
+
+  //     console.log(`Decremented item ${itemId} to quantity: ${updatedQuantity}`);
+  //   }
+  // };
+
+  // Function to increment item quantity
+  // const handleIncrement = async (cartItemId, itemId) => {
+  //   // Find the cart item
+  //   const item = cartItems.find((item) => item.cartItemId === cartItemId);
+
+  //   if (item) {
+  //     // Increment the quantity
+  //     const updatedQuantity = item.quantity + 1;
+
+  //     // Update the state
+  //     const updatedCartItems = cartItems.map((cartItem) =>
+  //       cartItem.cartItemId === cartItemId
+  //         ? { ...cartItem, quantity: updatedQuantity }
+  //         : cartItem
+  //     );
+
+  //     setCartItems(updatedCartItems);
+
+  //     // Update backend if necessary
+  //     await handleDecrementAPI(token, cartItemId);
+
+  //     console.log(`Incremented item ${itemId} to quantity: ${updatedQuantity}`);
+  //   }
+  // };
 
   return (
-    <div className="overflow-x-auto">
-      {Object.keys(groupedItems).map((storeName) => (
-        <div key={storeName} className="mb-4">
-          <h2 className="text-xl font-bold mb-2">{storeName}</h2>
-          <table className="table w-full mb-4">
-            {/* head */}
-            <thead>
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" disabled />
-                  </label>
-                </th>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price Per Unit</th>
-                <th>Unit Count</th>
-                <th>Total Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {groupedItems[storeName].map((item, index) => (
-                <tr key={item.name + index}>
-                  <th>
-                    <label>
-                      <input
-                        type="checkbox"
-                        className="checkbox"
-                        checked={!!selectedItems[`${storeName}-${index}`]}
-                        onChange={() => handleCheckboxChange(storeName, index)}
-                      />
-                    </label>
-                  </th>
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div className="avatar">
-                        <div className="mask mask-squircle h-12 w-12">
-                          <img src={item.image} alt={item.name} />
+    <div>
+      {loading ? (
+        <span className="loading loading-ring loading-lg"></span> // Show loading spinner
+      ) : cartItems.length === 0 ? (
+        <div>No items in cart yet</div> // No items message
+      ) : (
+        <div className="overflow-x-auto">
+          {Object.keys(groupedItems).map((storeName) => (
+            <div key={storeName} className="mb-6">
+              <h2 className="text-2xl font-bold mb-4">{storeName}</h2>
+              <table className="table w-full mb-6 border-collapse border border-base-200">
+                {/* Table head */}
+                <thead>
+                  <tr>
+                    <th>
+                      <label>
+                        <input type="checkbox" className="checkbox" disabled />
+                      </label>
+                    </th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price Per Unit</th>
+                    <th>Unit Count</th>
+                    <th>Total Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {groupedItems[storeName].map((item, index) => (
+                    <tr key={item.name + index} className="hover">
+                      <td>
+                        <label>
+                          <input
+                            type="checkbox"
+                            className="checkbox"
+                            checked={
+                              selectedItemsCentral[`${storeName}-${index}`]
+                            }
+                            onChange={() =>
+                              handleCheckboxChange(storeName, index)
+                            }
+                          />
+                        </label>
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-4">
+                          <div className="avatar">
+                            <div className="mask mask-squircle h-12 w-12">
+                              <img src={item.images[0]} alt={item.name} />
+                            </div>
+                          </div>
+                          <div>
+                            <div className="font-semibold">{item.name}</div>
+                            <div>
+                              <span className="badge badge-secondary badge-xs mx-0.5 py-1.5">
+                                {item.petType.charAt(0).toUpperCase() +
+                                  item.petType.slice(1).toLowerCase()}
+                              </span>
+                              <span
+                                className={`badge badge-outline badge-xs text-xs mx-0.5 py-1.5 ${getTypeColor(
+                                  item.type
+                                )}`}
+                              >
+                                {item.type.charAt(0).toUpperCase() +
+                                  item.type.slice(1).toLowerCase()}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div>
-                        <div className="font-bold">{item.name}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{item.quantity}</td>
-                  <td>{item.price_per_unit} Taka</td>
-                  <td className="justify-center">
-                    <button
-                      className="btn btn-xs btn-outline m-1"
-                      onClick={() => handleDecrement(storeName, item.index)}
-                      disabled={item.count <= 0}
-                    >
-                      -
-                    </button>
-                    {item.count}
-                    <button
-                      className="btn btn-xs btn-outline m-1"
-                      onClick={() => handleIncrement(storeName, item.index)}
-                      disabled={item.count >= item.total_available_count}
-                    >
-                      +
-                    </button>
-                  </td>
-                  <td>{item.price_per_unit * item.count} Taka</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ))}
+                      </td>
+                      <td>{item.quantity}</td>
+                      <td>{item.pricePerUnit} Taka</td>
+                      <td className="text-center">
+                        <button
+                          className="btn btn-xs btn-outline m-1"
+                          onClick={() => handleDecrement(storeName, index)}
+                          disabled={item.count <= 1}
+                        >
+                          -
+                        </button>
+                        {item.count}
+                        <button
+                          className="btn btn-xs btn-outline m-1"
+                          onClick={() => handleIncrement(storeName, index)}
+                          disabled={item.count >= item.totalAvailableCount}
+                        >
+                          +
+                        </button>
+                      </td>
 
-      <button
-        className="btn btn-primary float-right m-1"
-        onClick={handleCheckout}
-      >
-        Checkout
-      </button>
-      <button
-        className="btn btn-error float-right m-1"
-        onClick={handleClearCart}
-      >
-        Clear Cart
-      </button>
-      <button
-        className="btn btn-warning float-right m-1"
-        onClick={handleRemoveSelected}
-      >
-        Remove Selected
-      </button>
+                      <td>{item.pricePerUnit * item.count} Taka</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
 
-      {showAlert && (
-        <div
-          role="alert"
-          className="alert alert-success flex items-center mt-4 p-4 bg-orange-300 border border-orange-400 text-orange-700 rounded"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 shrink-0 stroke-current mr-2"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>{alertText}</span>
+          {/* Action buttons */}
+          <div className="flex justify-end gap-2 mb-4">
+            <button className="btn btn-primary" onClick={handleCheckout}>
+              Checkout
+            </button>
+            <button className="btn btn-error" onClick={handleClearCart}>
+              Clear Cart
+            </button>
+            <button className="btn btn-warning" onClick={handleRemoveSelected}>
+              Remove Selected
+            </button>
+          </div>
+          {/* {JSON.stringify(groupedItems == {})} */}
+
+          {/* Alert message */}
+          {showAlert && (
+            <div
+              role="alert"
+              className="alert alert-success flex items-center mt-4 p-4 bg-orange-300 border border-orange-400 text-orange-700 rounded"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 shrink-0 stroke-current mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{alertText}</span>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 }
-
 export default CartTable;
