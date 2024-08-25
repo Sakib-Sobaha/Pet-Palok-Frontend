@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Rating from "../Rating-Small";
+import AddToCart from "../modals/add-to-cart";
 
 const handleLogout = () => {
   localStorage.removeItem("authToken");
@@ -102,7 +103,7 @@ function ItemCardNoButton({ item, owner, onDelete }) {
   };
 
   const handleVisitItem = () => {
-    window.location.href = "/marketplace/item";
+    window.location.href = "/marketplace/item/" + item.id;
   };
 
   const searchByType = () => {
@@ -110,9 +111,12 @@ function ItemCardNoButton({ item, owner, onDelete }) {
   };
 
   const addToCart = () => {
-    setShowAlert(true);
+    // setShowAlert(true);
+    document.getElementById("add_to_cart"+item.id).showModal()
+
     // Automatically hide the alert after 2 seconds
-    setTimeout(() => setShowAlert(false), 2000);
+    // setTimeout(() => setShowAlert(false), 2000);
+    
   };
 
   const handleDeleteItem = () => {
@@ -122,7 +126,7 @@ function ItemCardNoButton({ item, owner, onDelete }) {
   };
 
   const getTypeColor = (type) => {
-    switch (type.toLowerCase()) {
+    switch (type?.toLowerCase()) {
       case "food":
         return "badge-success"; // Green background for food
       case "accessories":
@@ -139,6 +143,7 @@ function ItemCardNoButton({ item, owner, onDelete }) {
       className="tooltip tooltip-info tooltip-right"
       data-tip={item.petType}
     >
+      {item && <AddToCart element_id={"add_to_cart"+item.id} _item={item} />}
       <div
         className={`ml-2 card rounded-none bg-base-100 w-64 shadow-xl m-1 cursor-pointer hover:scale-105 transition-transform duration-300 hover:shadow-lg ${
           owner ? "h-96" : "h-80"

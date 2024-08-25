@@ -2,7 +2,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeContext.js"; // Import ThemeProvider
-import {UserProvider} from "./components/UserContext.js"; // Import UserProvider
+import { UserProvider } from "./components/UserContext.js"; // Import UserProvider
 
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
@@ -33,9 +33,7 @@ import PetBSX from "./pages/user/pet-bsx.js";
 import Communities from "./pages/communities/communities.js";
 import ChatRoom from "./pages/messaging/chat-room.js";
 
-
 import PhotoUpload from "./pages/tests/photo-up-test.js";
-
 
 export default function App() {
   return (
@@ -50,7 +48,6 @@ export default function App() {
             <Route path="/user/vetvisit/:id" element={<VetVisit />} />
             <Route path="/user/profile/:userId" element={<UserProfile />} />
             <Route path="/user/profile/edit" element={<EditUserProfile />} />
-
 
             <Route path="/user/petbsx" element={<PetBSX />} />
 
@@ -67,7 +64,7 @@ export default function App() {
             <Route path="/seller/orders" element={<StoreOrders />} />
 
             <Route path="/marketplace" element={<Marketplace />} />
-            <Route path="/marketplace/item" element={<SingleItem />} />
+            <Route path="/marketplace/item/:itemId" element={<SingleItem />} />
 
             <Route path="/vetDirectory" element={<VetDirectory />} />
             <Route path="/vet/appointments" element={<Appointments />} />

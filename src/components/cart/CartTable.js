@@ -427,6 +427,10 @@ function CartTable({
   //     console.log(`Incremented item ${itemId} to quantity: ${updatedQuantity}`);
   //   }
   // };
+  const sellerIdToStoreName = sellers.reduce((acc, seller) => {
+    acc[seller.id] = seller.storeName;
+    return acc;
+  }, {});
 
   return (
     <div>
@@ -438,7 +442,9 @@ function CartTable({
         <div className="overflow-x-auto">
           {Object.keys(groupedItems).map((storeName) => (
             <div key={storeName} className="mb-6">
-              <h2 className="text-2xl font-bold mb-4">{storeName}</h2>
+              <h2 className="text-2xl font-bold mb-4">
+                {sellerIdToStoreName[storeName]}
+              </h2>
               <table className="table w-full mb-6 border-collapse border border-base-200">
                 {/* Table head */}
                 <thead>
@@ -564,6 +570,7 @@ function CartTable({
           )}
         </div>
       )}
+      {/* <div className="overflow-x-auto">{JSON.stringify(sellers)}</div> */}
     </div>
   );
 }
