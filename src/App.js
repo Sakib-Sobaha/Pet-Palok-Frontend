@@ -15,6 +15,7 @@ import PetProfile from "./pages/user/pet-profile.js";
 import VetVisit from "./pages/user/vet-visit.js";
 import UserProfile from "./pages/user/user-profile.js";
 import VetProfile from "./pages/vet/vet-profile.js";
+import VetHome from "./pages/vet/vet-home.js";
 import VetDirectory from "./pages/vet-directory/vet-directory.js";
 import SellerProfile from "./pages/seller/seller-profile.js";
 import SellerHome from "./pages/seller/seller-home.js";
@@ -57,6 +58,10 @@ export default function App() {
             <Route path="/user/lost-and-found" element={<LostAndFound />} />
 
             <Route path="/vet/profile/:vetId" element={<VetProfile />} />
+
+            <Route path="/vet/home" element={<VetHome />} />
+
+
 
             <Route
               path="/seller/profile/:sellerId"
