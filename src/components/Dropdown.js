@@ -15,6 +15,7 @@ function Dropdown({_user}) {
     { name: "Vet Directory", href: "/vetdirectory" },
     { name: "Lost and Found", href: "/user/lost-and-found" },
     { name: "Communities", href: "/communities" },
+    { name: "My Orders", href: "/user/orders" },
   ];
 
   const sellerMenuItems = [

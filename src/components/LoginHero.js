@@ -247,6 +247,7 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
                 />
               </svg>
               <span>Login successful! Redirecting...</span>
+              <span className="loading loading-spinner loading-lg"></span>
             </div>
           )}
         </div>

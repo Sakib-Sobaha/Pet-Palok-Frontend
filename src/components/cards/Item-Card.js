@@ -1,9 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Rating from "../Rating-Small";
+import AddToCart from "../modals/add-to-cart";
 
 const handleLogout = () => {
   localStorage.removeItem("authToken");
   window.location.href = "/login"; // Redirect to the login page
+};
+
+const addToCartReq = async (token, itemId) => {
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/cart/addToCart`;
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({ itemId: itemId, count:1 }),
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if (response.status === 401) {
+      handleLogout(); // Token is likely expired, logout the user
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}, ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to Add to Cart", error);
+    return null; // Return null in case of an error
+  }
 };
 
 const deleteReq = async (token, itemId) => {
@@ -40,10 +76,16 @@ const deleteReq = async (token, itemId) => {
   }
 };
 
-function ItemCardNoButton({ item, owner, onDelete }) {
+function ItemCardNoButton({ _item, owner, onDelete }) {
+  const [item, setItem] = useState(_item);
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
   const userType = localStorage.getItem("userType");
+
+  useEffect(() => {
+    setItem(_item);
+  }, [_item]);
+
 
   const deleteItemCall = async () => {
     const token = localStorage.getItem("authToken");
@@ -67,7 +109,7 @@ function ItemCardNoButton({ item, owner, onDelete }) {
   };
 
   const handleVisitItem = () => {
-    window.location.href = "/marketplace/item";
+    window.location.href = "/marketplace/item/" + item.id;
   };
 
   const searchByType = () => {
@@ -75,9 +117,13 @@ function ItemCardNoButton({ item, owner, onDelete }) {
   };
 
   const addToCart = () => {
-    setShowAlert(true);
+    console.log("Add to cart for item: "+ item.name + " with id: "+ item.id);
+    // setShowAlert(true);
+    document.getElementById("add_to_cart"+item.id).showModal()
+
     // Automatically hide the alert after 2 seconds
-    setTimeout(() => setShowAlert(false), 2000);
+    // setTimeout(() => setShowAlert(false), 2000);
+    
   };
 
   const handleDeleteItem = () => {
@@ -87,7 +133,7 @@ function ItemCardNoButton({ item, owner, onDelete }) {
   };
 
   const getTypeColor = (type) => {
-    switch (type.toLowerCase()) {
+    switch (type?.toLowerCase()) {
       case "food":
         return "badge-success"; // Green background for food
       case "accessories":
@@ -104,6 +150,7 @@ function ItemCardNoButton({ item, owner, onDelete }) {
       className="tooltip tooltip-info tooltip-right"
       data-tip={item.petType}
     >
+      {item && <AddToCart element_id={"add_to_cart"+item.id} _item={item} />}
       <div
         className={`ml-2 card rounded-none bg-base-100 w-64 shadow-xl m-1 cursor-pointer hover:scale-105 transition-transform duration-300 hover:shadow-lg ${
           owner ? "h-96" : "h-80"
@@ -119,7 +166,7 @@ function ItemCardNoButton({ item, owner, onDelete }) {
         <div className="card-body p-1">
           <h2 className="text-xl m-0 font-bold grid place-items-center pl-4 mt-2">
             <div>
-              <span className="p-2">{item.name}</span>
+              <span className="p-2">{item.name.slice(0,18)}{item.name.length > 18 ? (<span>...</span>):""}</span>
               <Rating rating={item.rating} />
             </div>
           </h2>

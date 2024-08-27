@@ -128,7 +128,7 @@ function MarketItemContainer({ text, searchTerm, sortOption, filters, _seller })
       {/* {itemsToShow.length} */}
       <div className="grid grid-cols-3 gap-1 align-middle">
         {itemsToShow.map((item, index) => (
-          <ItemCard key={index} item={item} owner={true}/>
+          <ItemCard key={index} _item={item} owner={true}/>
         ))}
       </div>
       <div className="flex justify-center mt-4">

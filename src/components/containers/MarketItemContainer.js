@@ -303,7 +303,7 @@ function MarketItemContainer({ text, searchTerm, sortOption, filters }) {
       <>
         <div className="grid grid-cols-3 gap-1 align-middle">
           {itemsToShow.map((item, index) => (
-            <ItemCard key={index} item={item} />
+            <ItemCard key={index} _item={item} />
           ))}
         </div>
         <div className="flex justify-center mt-4">
