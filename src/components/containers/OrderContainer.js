@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import OrderCard from "../cards/Order-Card";
 
 const fetchOrdersFromApi = async (token) => {
+  console.log(token);
   const url = `${process.env.REACT_APP_API_URL}/order/getOrdersBySellerId`;
   const requestOptions = {
     method: "GET",
@@ -32,7 +33,7 @@ function OrderContainer({ searchTerm, sortOption, filters }) {
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("authToken");
       const fetchedOrders = await fetchOrdersFromApi(token);
       if (fetchedOrders) {
         setOrders(fetchedOrders);
