@@ -32,6 +32,7 @@ import StoreOrders from "./pages/seller/store-orders.js";
 import PetBSX from "./pages/user/pet-bsx.js";
 import Communities from "./pages/communities/communities.js";
 import ChatRoom from "./pages/messaging/chat-room.js";
+import UserOrders from "./pages/user/user-orders.js";
 
 import PhotoUpload from "./pages/tests/photo-up-test.js";
 
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="/user/profile/edit" element={<EditUserProfile />} />
 
             <Route path="/user/petbsx" element={<PetBSX />} />
+            <Route path="/user/orders" element={<UserOrders />} />
 
             <Route path="/user/lost-and-found" element={<LostAndFound />} />
 

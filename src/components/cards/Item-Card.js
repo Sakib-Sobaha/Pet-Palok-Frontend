@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Rating from "../Rating-Small";
 import AddToCart from "../modals/add-to-cart";
 
@@ -76,10 +76,16 @@ const deleteReq = async (token, itemId) => {
   }
 };
 
-function ItemCardNoButton({ item, owner, onDelete }) {
+function ItemCardNoButton({ _item, owner, onDelete }) {
+  const [item, setItem] = useState(_item);
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
   const userType = localStorage.getItem("userType");
+
+  useEffect(() => {
+    setItem(_item);
+  }, [_item]);
+
 
   const deleteItemCall = async () => {
     const token = localStorage.getItem("authToken");
@@ -111,6 +117,7 @@ function ItemCardNoButton({ item, owner, onDelete }) {
   };
 
   const addToCart = () => {
+    console.log("Add to cart for item: "+ item.name + " with id: "+ item.id);
     // setShowAlert(true);
     document.getElementById("add_to_cart"+item.id).showModal()
 
@@ -159,7 +166,7 @@ function ItemCardNoButton({ item, owner, onDelete }) {
         <div className="card-body p-1">
           <h2 className="text-xl m-0 font-bold grid place-items-center pl-4 mt-2">
             <div>
-              <span className="p-2">{item.name}</span>
+              <span className="p-2">{item.name.slice(0,18)}{item.name.length > 18 ? (<span>...</span>):""}</span>
               <Rating rating={item.rating} />
             </div>
           </h2>

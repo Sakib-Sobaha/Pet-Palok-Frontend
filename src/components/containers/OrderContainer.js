@@ -1,82 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import OrderCard from "../cards/Order-Card";
 
-const orders_ = [
-  {
-    sellerId: 1,
-    items: [
-      { itemId: 1, count: 1 },
-      { itemId: 2, count: 3 },
-      { itemId: 3, count: 4 },
-    ],
-    deliveryFee: 65,
-    orderedOn: "8/1/2024, 10:30:00 AM",
-    status: "Accepted",
-    checkoutDetails: {
-      name: "Niloy Faiaz",
-      email: "niloy870@gmail.com",
-      phone: "01234123456",
-      alternatePhone: "",
-      address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-      postOffice: "Mirpur-2",
-      district: "Dhaka",
-      country: "Bangladesh",
+const fetchOrdersFromApi = async (token) => {
+  const url = `${process.env.REACT_APP_API_URL}/order/getOrdersBySellerId`;
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
-  },
-  {
-    sellerId: 1,
-    items: [{ itemId: 2, count: 5 }],
-    deliveryFee: 65,
-    orderedOn: "8/8/2024, 8:00:00 PM",
-    status: "Accepted",
-    checkoutDetails: {
-      name: "Sobaha Sakib",
-      email: "sobaha@gmail.com",
-      phone: "01234123456",
-      alternatePhone: "",
-      address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-      postOffice: "Kamlapur-2",
-      district: "Shahjahanpur",
-      country: "Bangladesh",
-    },
-  },
-  {
-    sellerId: 1,
-    items: [
-      { itemId: 2, count: 4 },
-      { itemId: 3, count: 3 },
-    ],
-    deliveryFee: 65,
-    orderedOn: "8/7/2024, 7:00:00 PM",
-    status: "Delivered",
-    checkoutDetails: {
-      name: "Koki Uddin",
-      email: "koki@gmail.com",
-      phone: "019090909090",
-      alternatePhone: "01909099911",
-      address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-      postOffice: "Mirpur-2",
-      district: "Gopalgonj",
-      country: "Bangladesh",
-    },
-  },
-];
+  };
+  try {
+    const response = await fetch(url, requestOptions);
+    if (response.ok) {
+      return await response.json();
+    } else {
+      console.error("Failed to fetch orders");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return null;
+  }
+};
 
 function OrderContainer({ searchTerm, sortOption, filters }) {
-  const [orders, setOrders] = useState(orders_);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch orders from the API when the component mounts
+  useEffect(() => {
+    const fetchOrders = async () => {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const fetchedOrders = await fetchOrdersFromApi(token);
+      if (fetchedOrders) {
+        setOrders(fetchedOrders);
+      }
+      setLoading(false);
+    };
+
+    fetchOrders();
+  }, []);
 
   // Filter orders based on search term and filter criteria
   const filteredOrders = orders.filter((order) => {
     const matchesSearch =
-      order.checkoutDetails.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.checkoutDetails.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.checkoutDetails.phone.includes(searchTerm) ||
-      order.checkoutDetails.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.checkoutDetails.postOffice.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.checkoutDetails.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.checkoutDetails.country.toLowerCase().includes(searchTerm.toLowerCase());
+      order.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.phone.includes(searchTerm) ||
+      order.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.postOffice.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.country.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const statusKey = order.status.toLowerCase().replace(/ /g, "_"); // Adjust for underscore
+    // Convert order status to lowercase and match it with filters
+    const statusKey = order.status ? order.status.toLowerCase().replace(/ /g, "_") : "";
     const matchesStatus = filters.orderStates[statusKey] !== undefined ? filters.orderStates[statusKey] : false;
 
     return matchesSearch && matchesStatus;
@@ -94,15 +73,21 @@ function OrderContainer({ searchTerm, sortOption, filters }) {
 
   return (
     <div className="bg bg-base-200 m-0 p-2 pt-4 rounded-xl">
-      <p>searchTerm: {searchTerm}</p>
-      <p>filters: {JSON.stringify(filters)}</p>
-      <p>sortOption: {sortOption}</p>
-      <h1 className="text-2xl font-bold mb-3 ml-2">Order Container</h1>
-      <div className="flex flex-col">
-        {sortedOrders.map((order) => (
-          <OrderCard key={order.sellerId} order_={order} />
-        ))}
-      </div>
+      {loading ? (
+        <div className="text-center">Loading...</div>
+      ) : (
+        <>
+          <p>searchTerm: {searchTerm}</p>
+          <p>filters: {JSON.stringify(filters)}</p>
+          <p>sortOption: {sortOption}</p>
+          <h1 className="text-2xl font-bold mb-3 ml-2">Order Container</h1>
+          <div className="flex flex-col">
+            {sortedOrders.map((order) => (
+              <OrderCard key={order.id} order_={order} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
