@@ -84,12 +84,25 @@ function Navbar() {
       </div>
       {user?.email}
 
-
       {/* notifications , cart, theme */}
       <div className="flex-1 pr-4 justify-end">
         {localStorage.getItem("authToken") !== null && (
           <div className="dropdown dropdown-bottom">
-            <div tabIndex={0} role="button" className=" m-0">
+            <div tabIndex={0} role="button" className="m-0 indicator">
+              {/* Badge showing the count of unread notifications */}
+              {notifications.filter((notification) => notification.unread)
+                .length > 0 && (
+                <span className="indicator-item indicator-top indicator-end mr-4 mt-1 badge badge-xs badge-info hover:badge-primary">
+                  {notifications.filter((notification) => notification.unread)
+                    .length > 99
+                    ? "99+"
+                    : notifications.filter(
+                        (notification) => notification.unread
+                      ).length}
+                </span>
+              )}
+
+              {/* Icon with hover effects */}
               <svg
                 data-name="Layer 1"
                 id="Layer_1"
@@ -100,6 +113,8 @@ function Navbar() {
                 <path d="M40.62,28.34l-.87-.7A2,2,0,0,1,39,26.08V18A15,15,0,0,0,26.91,3.29a3,3,0,0,0-5.81,0A15,15,0,0,0,9,18v8.08a2,2,0,0,1-.75,1.56l-.87.7a9,9,0,0,0-3.38,7V37a4,4,0,0,0,4,4h8.26a8,8,0,0,0,15.47,0H40a4,4,0,0,0,4-4V35.36A9,9,0,0,0,40.62,28.34ZM24,43a4,4,0,0,1-3.44-2h6.89A4,4,0,0,1,24,43Zm16-6H8V35.36a5,5,0,0,1,1.88-3.9l.87-.7A6,6,0,0,0,13,26.08V18a11,11,0,0,1,22,0v8.08a6,6,0,0,0,2.25,4.69l.87.7A5,5,0,0,1,40,35.36Z" />
               </svg>
             </div>
+
+            {/* Dropdown menu with notifications */}
             <ul
               tabIndex={0}
               className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
@@ -109,8 +124,7 @@ function Navbar() {
                   <a
                     className="justify-between"
                     onClick={() => {
-                      // window.location.href = `/${userType}/notifications/${notification.id}`;
-                      // redirect to context .. depending on type of noti
+                      // Redirect to the appropriate notification page
                     }}
                   >
                     {notification.unread ? (
@@ -118,10 +132,13 @@ function Navbar() {
                     ) : (
                       <span>{notification.text}</span>
                     )}
-                    {notification.unread && <span className="badge badge-primary">New</span>}
+                    {notification.unread && (
+                      <span className="badge badge-info">New</span>
+                    )}
                   </a>
                 </li>
               ))}
+              <a className="btn p-0 rounded-none btn-sm btn-ghost italic">Mark all as read</a>
             </ul>
           </div>
         )}
@@ -155,11 +172,12 @@ function Navbar() {
             </svg>
           </label>
         )}
-        <label className="swap swap-rotate">
+
+        <label className="swap swap-rotate group">
           {/* this hidden checkbox controls the state */}
           <input
             type="checkbox"
-            className="theme-controller "
+            className="theme-controller"
             value="night"
             onChange={toggleTheme}
             checked={theme === "dark"}
@@ -167,7 +185,7 @@ function Navbar() {
 
           {/* sun icon */}
           <svg
-            className="swap-off h-10 w-10 fill-current hover:fill-primary hover:stroke-primary hover:scale-110"
+            className="swap-off h-10 w-10 fill-current group-hover:fill-primary group-hover:stroke-primary group-hover:scale-105"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
           >
@@ -176,7 +194,7 @@ function Navbar() {
 
           {/* moon icon */}
           <svg
-            className="swap-on h-10 w-10 fill-current hover:fill-primary hover:stroke-primary hover:scale-110"
+            className="swap-on h-10 w-10 fill-current group-hover:fill-primary group-hover:stroke-primary group-hover:scale-105"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
           >
