@@ -8,6 +8,7 @@ const LeftLayoutStoreOrders = ({ onSearch, onSort, onFilter }) => {
     accepted: true,
     "out for delivery": true,
     delivered: true,
+    rejected: true,
   });
 
   const handleSearchChange = (e) => {
@@ -39,6 +40,7 @@ const LeftLayoutStoreOrders = ({ onSearch, onSort, onFilter }) => {
       accepted: true,
       "out for delivery": true,
       delivered: true,
+      rejected: true,
     };
     setOrderStates(defaultStates);
     onFilter({ orderStates: defaultStates });
