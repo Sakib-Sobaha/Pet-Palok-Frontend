@@ -6,8 +6,42 @@ import logo from "../images/logo_cropped.png";
 import { fetchUserData } from "./api-fetch-functions/fetch-whoami";
 import ShoppingCartIcon from "./icons/shopping-carticon";
 
+const notifications = [
+  {
+    id: 1,
+    userType: "user",
+    receiverId: 1,
+    type: "ORDER_ACCEPTED",
+    text: "Your order has been accepted",
+    unread: true,
+    mainContext: 1,
+    timeStamp: "2021-10-10T10:10:10",
+  },
+  {
+    id: 2,
+    userType: "user",
+    receiverId: 1,
+    type: "ORDER_DELIVERED",
+    text: "Your order has been delivered",
+    unread: true,
+    mainContext: 1,
+    timeStamp: "2021-10-10T10:10:10",
+  },
+  {
+    id: 3,
+    userType: "user",
+    receiverId: 1,
+    type: "ORDER_CANCELLED",
+    text: "Your order has been cancelled",
+    unread: false,
+    mainContext: 1,
+    timeStamp: "2021-10-10T10:10:10",
+  },
+];
+
 function Navbar() {
   const userType = localStorage.getItem("userType");
+  const token = localStorage.getItem("authToken");
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,7 +84,47 @@ function Navbar() {
       </div>
       {user?.email}
 
+
+      {/* notifications , cart, theme */}
       <div className="flex-1 pr-4 justify-end">
+        {localStorage.getItem("authToken") !== null && (
+          <div className="dropdown dropdown-bottom">
+            <div tabIndex={0} role="button" className=" m-0">
+              <svg
+                data-name="Layer 1"
+                id="Layer_1"
+                viewBox="0 0 48 48"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-7 fill-current stroke-current mr-4 hover:cursor-pointer mt-0 hover:fill-primary hover:stroke-primary hover:scale-110"
+              >
+                <path d="M40.62,28.34l-.87-.7A2,2,0,0,1,39,26.08V18A15,15,0,0,0,26.91,3.29a3,3,0,0,0-5.81,0A15,15,0,0,0,9,18v8.08a2,2,0,0,1-.75,1.56l-.87.7a9,9,0,0,0-3.38,7V37a4,4,0,0,0,4,4h8.26a8,8,0,0,0,15.47,0H40a4,4,0,0,0,4-4V35.36A9,9,0,0,0,40.62,28.34ZM24,43a4,4,0,0,1-3.44-2h6.89A4,4,0,0,1,24,43Zm16-6H8V35.36a5,5,0,0,1,1.88-3.9l.87-.7A6,6,0,0,0,13,26.08V18a11,11,0,0,1,22,0v8.08a6,6,0,0,0,2.25,4.69l.87.7A5,5,0,0,1,40,35.36Z" />
+              </svg>
+            </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+            >
+              {notifications.map((notification) => (
+                <li key={notification.id}>
+                  <a
+                    className="justify-between"
+                    onClick={() => {
+                      // window.location.href = `/${userType}/notifications/${notification.id}`;
+                      // redirect to context .. depending on type of noti
+                    }}
+                  >
+                    {notification.unread ? (
+                      <span className="font-semibold">{notification.text}</span>
+                    ) : (
+                      <span>{notification.text}</span>
+                    )}
+                    {notification.unread && <span className="badge badge-primary">New</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {userType?.toLowerCase() == "user" && (
           <label
             className="mr-4 hover:cursor-pointer"
@@ -67,7 +141,7 @@ function Navbar() {
               viewBox="0 0 128 128"
               style={{ enableBackground: "new 0 0 128 128" }}
               xmlSpace="preserve"
-              className="h-8 w-8 fill-current stroke-current"
+              className="h-8 w-8 fill-current stroke-current hover:fill-primary hover:stroke-primary hover:scale-110"
               strokeWidth="2.5"
             >
               <style>{`.st0{display:none}.st1{display:inline}.st2{}`}</style>
@@ -85,7 +159,7 @@ function Navbar() {
           {/* this hidden checkbox controls the state */}
           <input
             type="checkbox"
-            className="theme-controller"
+            className="theme-controller "
             value="night"
             onChange={toggleTheme}
             checked={theme === "dark"}
@@ -93,7 +167,7 @@ function Navbar() {
 
           {/* sun icon */}
           <svg
-            className="swap-off h-10 w-10 fill-current"
+            className="swap-off h-10 w-10 fill-current hover:fill-primary hover:stroke-primary hover:scale-110"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
           >
@@ -102,7 +176,7 @@ function Navbar() {
 
           {/* moon icon */}
           <svg
-            className="swap-on h-10 w-10 fill-current"
+            className="swap-on h-10 w-10 fill-current hover:fill-primary hover:stroke-primary hover:scale-110"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
           >
