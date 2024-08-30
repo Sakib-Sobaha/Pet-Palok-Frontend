@@ -52,6 +52,7 @@ const MiddleLayoutSellerProfile = ({ sellerId }) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const[loading, setLoading] = useState(true); // State to handle loading
+  const [seller_id, setSellerId] = useState(sellerId);
   
   const [seller, setSeller] = useState({});
 
@@ -87,7 +88,7 @@ const MiddleLayoutSellerProfile = ({ sellerId }) => {
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
       {/* {JSON.stringify(seller)} */}
       <EditProfileModal element_id="edit_profile_seller" _seller={seller}/>
-      <EditPasswordModal element_id="edit_password" />
+      <EditPasswordModal element_id="edit_password" userId={seller_id} />
 
       <SectionDivider title="Profile Details" icon="" />
 

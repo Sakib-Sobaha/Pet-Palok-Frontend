@@ -106,6 +106,7 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const[loading, setLoading] = useState(true); // State to handle loading
   const [vet, setVet] = useState(null);
+  const [vet_id, setVetId] = useState(vetId);
 
   const fetchVet = async () => {
     const token = localStorage.getItem("authToken");
@@ -136,7 +137,7 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
       <EditProfileModal element_id="edit_profile_vet" />
-      <EditPasswordModal element_id="edit_password" />
+      <EditPasswordModal element_id="edit_password" userId={vet_id} />
       <BookAppointment element_id="book_appointment" vet={vet} />
       {/* Your content for MiddleLayout */}
       <SectionDivider title="Profile Details" icon="" />

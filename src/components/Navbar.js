@@ -5,6 +5,8 @@ import Dropdown from "./Dropdown";
 import logo from "../images/logo_cropped.png";
 import { fetchUserData } from "./api-fetch-functions/fetch-whoami";
 import ShoppingCartIcon from "./icons/shopping-carticon";
+import axios from 'axios';
+
 
 function Navbar() {
   const userType = localStorage.getItem("userType");
@@ -12,6 +14,7 @@ function Navbar() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const { theme, toggleTheme } = useContext(ThemeContext); // Use theme context
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const userType = localStorage.getItem("userType");
@@ -20,7 +23,7 @@ function Navbar() {
       const data = await fetchUserData(`/${userType}/whoami`); // Use the reusable fetch function
       if (data) {
         setUser(data);
-        // setUserId(data.id); // Pass the user ID to the parent component if needed
+        setUserId(data.id); // Pass the user ID to the parent component if needed
       }
       setLoading(false);
     };
@@ -28,7 +31,61 @@ function Navbar() {
     fetchUser();
   }, []);
 
-  const handleLogout = () => {
+  // const updateUserStatus = async (status) => {
+  //   const userType = localStorage.getItem("userType");
+  //   const token = localStorage.getItem("authToken");
+  //   try {
+  //     // fetch the logged in userId
+
+  //     await axios.patch(`${process.env.REACT_APP_API_URL}/${userType}/update-status/${userId}`, {
+  //       status: status,
+  //     });
+  //   } catch (error) {
+  //     console.error("Failed to update satsus", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   updateUserStatus("offline");
+  //   return () => {
+  //     updateUserStatus("offline");
+  //   };
+  // }, []);
+
+  const updateUserStatus = async (status) => {
+    const userType = localStorage.getItem("userType");
+    try {
+      // Construct the URL for the API request
+      const url = `${process.env.REACT_APP_API_URL}/${userType}/update-status/${userId}`;
+      console.log(url);
+  
+      // Get the Bearer token from local storage
+      const token = localStorage.getItem("authToken");
+  
+      // Make the API request with the Authorization header
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status }), // Send the status in the body
+      });
+  
+      // Handle the response
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+  
+      console.log("Status updated successfully");
+    } catch (error) {
+      console.error("Error updating user status:", error);
+    }
+  };
+  
+
+  const handleLogout = async () => {
+    await updateUserStatus("offline");
     localStorage.removeItem("authToken");
     localStorage.removeItem("userType");
     window.location.href = "/login";

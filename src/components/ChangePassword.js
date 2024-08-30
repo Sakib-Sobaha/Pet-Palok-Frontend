@@ -1,6 +1,7 @@
 import { React, useState } from "react";
+import axios from "axios";
 
-function ChangePassword() {
+function ChangePassword({userId}) {
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -18,7 +19,7 @@ function ChangePassword() {
     }));
   };
 
-  const handleConfirm = (e) => {
+  const handleConfirm = async (e) => {
     if (passwords.newPassword !== passwords.confirmPassword) {
       alert("New Password and Confirm Password do not match!");
       setError(true);
@@ -36,11 +37,52 @@ function ChangePassword() {
         setError(false);
       }, 3000);
     } else {
-      alert("Password Changed Successfully!");
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 3000);
+      try {
+        const url = `${process.env.REACT_APP_API_URL}/user/updatePassword/${userId}`;
+        const token = localStorage.getItem("authToken");
+        const userType = localStorage.getItem("userType");
+
+
+
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/${userType}/updatePassword/${userId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              currentPassword: passwords.currentPassword,
+              newPassword: passwords.newPassword,
+            }),
+          }
+        );
+        console.log({
+          currentPassword: passwords.currentPassword,
+          newPassword: passwords.newPassword,
+        });
+        console.log(response);
+        if(response.status === 200){
+          alert("Password Changed Successfully!");
+          setSuccess(true);
+          setError("");
+          
+        } else {
+          alert("Error changing password. Please try again.");
+          setError(true);
+          setTimeout(() => {
+            setError(false);
+          }, 3000);
+        }
+      } catch (error) {
+        console.error("Error changing password:", error);
+        setError(true);
+        setTimeout(() => {
+          setError(false);
+        }, 3000);
+      }
+      
     }
   };
 
@@ -75,6 +117,7 @@ function ChangePassword() {
             name="currentPassword"
             value={passwords.currentPassword}
             onChange={handlePasswordChange}
+            placeholder="Current Password"
           />
         </label>
       </div>
@@ -101,6 +144,7 @@ function ChangePassword() {
             name="newPassword"
             value={passwords.newPassword}
             onChange={handlePasswordChange}
+            placeholder="New Password"
           />
         </label>
       </div>
@@ -126,6 +170,7 @@ function ChangePassword() {
             name="confirmPassword"
             value={passwords.confirmPassword}
             onChange={handlePasswordChange}
+            placeholder="Confirm New Password"
           />
         </label>
       </div>

@@ -32,6 +32,7 @@ const MiddleLayoutUserProfile = ({ userId }) => {
   const [user, setUser] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user_id, setUserId] = useState(userId);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -82,7 +83,7 @@ const MiddleLayoutUserProfile = ({ userId }) => {
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
       <EditProfileModal element_id="edit_profile_user" _user={user} />
-      <EditPasswordModal element_id="edit_password" />
+      <EditPasswordModal element_id="edit_password" userId={user_id}/>
 
       <SectionDivider title="Profile Details" icon="" />
 
