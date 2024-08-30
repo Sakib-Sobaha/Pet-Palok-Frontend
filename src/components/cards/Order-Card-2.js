@@ -18,9 +18,9 @@ const getTypeColor = (type) => {
   }
 };
 
-const acceptOrderAPI = async (token, orderId) => {
+const fetchSellerByIdAPI = async (token, sellerId) => {
   try {
-    const url = `${process.env.REACT_APP_API_URL}/order/accept/${orderId}`;
+    const url = `${process.env.REACT_APP_API_URL}/seller/getSellerById/${sellerId}`;
     const headers = new Headers({
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -47,41 +47,7 @@ const acceptOrderAPI = async (token, orderId) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Failed to increment accept order:", error);
-    return null;
-  }
-};
-
-const changeOrderStatusAPI = async (token, orderId, statusLink) => {
-  try {
-    const url = `${process.env.REACT_APP_API_URL}/order/${statusLink}/${orderId}`;
-    const headers = new Headers({
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    });
-
-    const requestOptions = {
-      method: "GET",
-      headers: headers,
-    };
-
-    const response = await fetch(url, requestOptions);
-
-    if (response.status === 401) {
-      handleLogout(); // Token is likely expired, logout the user
-    }
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `Network response was not ok. Status: ${response.status}, ${errorText}`
-      );
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to increment change order status:", error);
+    console.error("Failed to fetch seller by id:", error);
     return null;
   }
 };
@@ -121,6 +87,7 @@ const fetchItemByIdAPI = async (token, itemId) => {
 };
 
 function OrderCard({ order_ }) {
+  const [seller, setSeller] = useState(null);
   const [order, setOrder] = useState(order_);
   const [items, setItems] = useState([]);
   const [timeLeft, setTimeLeft] = useState({
@@ -132,6 +99,7 @@ function OrderCard({ order_ }) {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
+
     const fetchItems = async () => {
       const itemIds = Object.keys(order.itemCountMap);
       try {
@@ -141,7 +109,15 @@ function OrderCard({ order_ }) {
           })
         );
 
-        setItems(fetchedItems.filter((item) => item !== null)); // Remove any null items if fetch failed
+        const validItems = fetchedItems.filter((item) => item !== null); // Remove any null items if fetch failed
+        setItems(validItems);
+
+        // Fetch seller info once items are available
+        if (validItems.length > 0) {
+          const sellerId = validItems[0].sellerId; // Assuming all items have the same seller
+          const fetchedSeller = await fetchSellerByIdAPI(token, sellerId);
+          setSeller(fetchedSeller);
+        }
       } catch (error) {
         console.error("Error fetching items:", error);
       }
@@ -175,6 +151,12 @@ function OrderCard({ order_ }) {
     return () => clearInterval(intervalId);
   }, [order.orderedOn]);
 
+  const calculateGrandTotal = () => {
+    return items.reduce((total, item) => {
+      return total + item.pricePerUnit * order.itemCountMap[item.id];
+    }, 0);
+  };
+
   const handleStatusChange = (newStatus) => {
     setOrder((prevOrder) => ({
       ...prevOrder,
@@ -182,75 +164,9 @@ function OrderCard({ order_ }) {
     }));
   };
 
-  const handleRejectOrder = () => {
-   console.log("Rejecting order");
-   handleStatusChange("Rejected");
-    const token = localStorage.getItem("authToken");
-
-    try {
-      // call increment api for backend update
-      changeOrderStatusAPI(token, order.id, "reject");
-    }
-    catch (error) {
-      console.error("Failed to reject order:", error);
-    }
+  const onClick = async () => {
+    console.log("Cancel order clicked");
   };
-
-  const getButtonDetails = () => {
-    console.log(order.status);
-    switch (order.status?.toLowerCase()) {
-      
-      case "pending":
-        return {
-          text: "Accept Order",
-          onClick: () => {
-            handleStatusChange("Accepted");
-            const token = localStorage.getItem("authToken");
-            try {
-              // call increment api for backend update
-              acceptOrderAPI(token, order.id);
-            } catch (error) {
-              console.error("Failed to accept order:", error);
-            }
-          },
-        };
-      case "accepted":
-        return {
-          text: "Out for Delivery",
-          onClick: () => {handleStatusChange("Out for Delivery")
-            const token = localStorage.getItem("authToken");
-            try{
-              changeOrderStatusAPI(token, order.id, "outForDelivery");
-            }
-            catch(error){
-              console.error("Failed to change order status:", error);
-            }
-          },
-        };
-      case "out_for_delivery":
-        return {
-          text: "Mark as Delivered",
-          onClick: () => {handleStatusChange("Delivered")
-            const token = localStorage.getItem("authToken");
-            try{
-              changeOrderStatusAPI(token, order.id, "delivered");
-            }
-            catch(error){
-              console.error("Failed to change order status:", error);
-            }
-          },
-        };
-      case "rejected":
-        return {
-          text: "Rejected",
-          onClick: () => {},
-        };
-      default:
-        return null;
-    }
-  };
-
-  const { text, onClick } = getButtonDetails() || {};
 
   const getBadgeClass = (status) => {
     switch (status?.toLowerCase()) {
@@ -264,8 +180,6 @@ function OrderCard({ order_ }) {
         return "badge-secondary";
       case "delivered":
         return "badge-success";
-      case "rejected":
-        return "badge-error";
       default:
         return "badge-info";
     }
@@ -273,29 +187,18 @@ function OrderCard({ order_ }) {
 
   return (
     <div className="border border-content rounded-lg p-4 mb-4 bg-base-100">
-      {text && (
+      {order.status.toLowerCase() === "pending" && (
         <button
-          className={`btn btn-primary rounded-md float-right ${order.status.toLowerCase() === "rejected" ? "btn-disabled" : ""}`}
+          className="btn btn-primary rounded-md float-right"
           onClick={onClick}
         >
-          {text}
+          Cancel
         </button>
       )}
-      {
-        order.status.toLowerCase() === "pending" && (
-          <button
-           className="btn btn-error rounded-md float-right mr-2"
-            onClick={() => {
-              handleRejectOrder();
-            }}
-          >
-            Reject Order
-          </button>
-        )
-      }
 
       <h2 className="text-xl font-bold mb-2">
         Order Details
+        
         <div className="grid grid-cols-2 gap-4">
           <div>
             Time Passed:
@@ -334,6 +237,16 @@ function OrderCard({ order_ }) {
           </div>
         </div>
       </h2>
+
+      {/* Display Seller's Store Name */}
+      {seller && (
+        <div className="mb-4">
+          {/* <h3 className="text-lg font-semibold">Seller Details:</h3> */}
+          <p>
+            <strong>Ordered from:</strong> {seller.storeName}
+          </p>
+        </div>
+      )}
 
       <div className="mb-4">
         <h3 className="text-lg font-semibold">Delivery Details:</h3>
@@ -390,7 +303,6 @@ function OrderCard({ order_ }) {
             <tbody>
               {items.map((item, index) => (
                 <tr key={item.id}>
-                  {/* Item Name */}
                   {/* Item Image */}
                   <td>
                     <div className="avatar">
@@ -421,7 +333,7 @@ function OrderCard({ order_ }) {
                       </span>
                     </div>
                   </td>
-                  {/* Item ID */}
+                  {/* Available Quantity */}
                   <td className="text-center">{item.totalAvailableCount}</td>
                   {/* Quantity */}
                   <td className="text-center">{order.itemCountMap[item.id]}</td>
@@ -447,6 +359,20 @@ function OrderCard({ order_ }) {
               </tr>
             </tfoot>
           </table>
+          <h1 className="text-sm mr-4 text-right font-semibold">
+            Total: {calculateGrandTotal()} taka
+          </h1>
+          <h1 className="text-sm  mr-4 text-right font-semibold">
+            Delivery Fee: {order.deliveryFee} taka
+          </h1>
+          <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-400" />
+          <h1 className="text-sm mr-4 text-right  font-semibold">
+            Grand Total: {calculateGrandTotal() + order.deliveryFee} taka
+          </h1>
+
+          <h1 className="text-sm mr-4 text-right font-semibold">
+            Payment Method: COD
+            </h1>
         </div>
       </div>
     </div>

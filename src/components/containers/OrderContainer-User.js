@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import OrderCard from "../cards/Order-Card";
+import OrderCard from "../cards/Order-Card-2";
 
 const fetchOrdersFromApi = async (token) => {
-  console.log(token);
-  const url = `${process.env.REACT_APP_API_URL}/order/getOrdersBySellerId`;
+  const url = `${process.env.REACT_APP_API_URL}/order/getOrdersByUserId`;
   const requestOptions = {
     method: "GET",
     headers: {

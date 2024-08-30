@@ -141,9 +141,9 @@ const MiddleLayoutCart = () => {
 
         // Initialize input fields with user data
         if (data) {
-          setName(data.name || "");
+          setName(data.firstname + data.lastname || "");
           setEmail(data.email || "");
-          setPhone(data.phone || "");
+          setPhone(data.phoneNumber || "");
           setAddress(data.address || "");
           setPostOffice(data.postOffice || "");
           setDistrict(data.district || "");
