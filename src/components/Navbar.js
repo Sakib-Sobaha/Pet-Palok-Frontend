@@ -195,7 +195,9 @@ function Navbar() {
                   </a>
                 </li>
               ))}
-              <a className="btn p-0 rounded-none btn-sm btn-ghost italic">Mark all as read</a>
+              <a className="btn p-0 rounded-none btn-sm btn-ghost italic">
+                Mark all as read
+              </a>
             </ul>
           </div>
         )}
@@ -268,6 +270,7 @@ function Navbar() {
             className="input input-bordered w-24 md:w-auto"
           />
         </div>
+
         <div className="dropdown dropdown-end">
           <div
             tabIndex={0}
@@ -275,10 +278,19 @@ function Navbar() {
             className="btn btn-ghost btn-circle avatar"
           >
             <div className="w-10 rounded-full">
-              <img
-                alt={user?.firstname + " " + user?.lastname}
-                src={user?.image}
-              />
+              {localStorage.getItem("userType") === null && (
+                <img
+                  src="https://static-00.iconduck.com/assets.00/user-icon-1024x1024-dtzturco.png"
+                  alt="user"
+                  className="h-5 w-5"
+                />
+              )}
+              {localStorage.getItem("userType") !== null && (
+                <img
+                  alt={user?.firstname + " " + user?.lastname}
+                  src={user?.image}
+                />
+              )}
             </div>
           </div>
           <ul
