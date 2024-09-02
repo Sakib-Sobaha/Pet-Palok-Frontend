@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import SectionDivider from "./Section-Divider";
 import Rating from "./Rating";
-import ReviewContainer from "./ReviewContainer";
+import ReviewContainer from "./containers/ReviewContainer.js";
 import QuestionContainer from "./QuestionContainer.js";
 import AddToCart from "./modals/add-to-cart";
 // import LoadingAnimation from "./LoadingAnimation"; // Assume this is the loading animation component
@@ -219,10 +219,16 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
             </p>
             <Rating className="" rating={item?.rating || 0} />
           </div>
-          <SectionDivider title="Ratings and Reviews" icon="https://cdn-icons-png.freepik.com/256/12377/12377209.png?semt=ais_hybrid" />
+          <SectionDivider
+            title="Ratings and Reviews"
+            icon="https://cdn-icons-png.freepik.com/256/12377/12377209.png?semt=ais_hybrid"
+          />
           <ReviewContainer />
-          <SectionDivider title="Ask a Question?" icon="https://cdn-icons-png.flaticon.com/512/5471/5471074.png" />
-          <QuestionContainer _itemId={item.id}/>
+          <SectionDivider
+            title="Ask a Question?"
+            icon="https://cdn-icons-png.flaticon.com/512/5471/5471074.png"
+          />
+          <QuestionContainer _itemId={item.id} />
         </>
       )}
     </div>
