@@ -106,7 +106,7 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
         <>
           <SectionDivider
             title="Item Details"
-            icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpExR1OOTeRPHKERhKamUGQ-6A_ozTtxz0ig&s"
+            icon="https://cdn-icons-png.flaticon.com/512/3731/3731110.png"
           />
 
           <div className="grid grid-cols-2 m-1 p-1">
@@ -219,10 +219,10 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
             </p>
             <Rating className="" rating={item?.rating || 0} />
           </div>
-          <SectionDivider title="Ratings and Reviews" icon="**" />
+          <SectionDivider title="Ratings and Reviews" icon="https://cdn-icons-png.freepik.com/256/12377/12377209.png?semt=ais_hybrid" />
           <ReviewContainer />
-          <SectionDivider title="Ask a Question?" icon="**" />
-          <QuestionContainer />
+          <SectionDivider title="Ask a Question?" icon="https://cdn-icons-png.flaticon.com/512/5471/5471074.png" />
+          <QuestionContainer _itemId={item.id}/>
         </>
       )}
     </div>
