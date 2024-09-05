@@ -36,6 +36,7 @@ import ChatRoom from "./pages/messaging/chat-room.js";
 import UserOrders from "./pages/user/user-orders.js";
 
 import PhotoUpload from "./pages/tests/photo-up-test.js";
+import Verify from "./pages/verify.js";
 
 export default function App() {
   return (
@@ -84,6 +85,7 @@ export default function App() {
 
             <Route exact path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/verify" element={<Verify />} />
             <Route path="/about" element={<About />} />
 
             <Route path="/communities" element={<Communities />} />

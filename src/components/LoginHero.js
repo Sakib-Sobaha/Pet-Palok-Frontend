@@ -78,8 +78,12 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
       const token = data.token;
 
       // Show signup success message and switch to login tab
-      alert("Signup successful! Now Log in with your credentials.");
-      setActiveTab("login");
+      // alert("Signup successful! Now Log in with your credentials.");
+      alert("Signup successful! Please verify your email to continue.");
+      // setActiveTab("login");
+      setTimeout(() => {
+        window.location.href = `/verify?email=${encodeURIComponent(signupEmail)}`;
+      }, 500);
     } catch (error) {
       console.error("Signup error:", error);
     }
