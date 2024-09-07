@@ -104,7 +104,7 @@ const images = [
 
 const MiddleLayoutVetProfile = ({ vetId }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const[loading, setLoading] = useState(true); // State to handle loading
+  const [loading, setLoading] = useState(true); // State to handle loading
   const [vet, setVet] = useState(null);
   const [vet_id, setVetId] = useState(vetId);
 
@@ -130,7 +130,6 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
     fetchVet();
   }, [vetId]);
 
-
   const toggleabout = () => {
     setIsExpanded(!isExpanded);
   };
@@ -138,7 +137,9 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
       <EditProfileModal element_id="edit_profile_vet" />
       <EditPasswordModal element_id="edit_password" userId={vet_id} />
-      <BookAppointment element_id="book_appointment" vet={vet} />
+      {vet && (
+        <BookAppointment element_id={"book_appointment" + vet?.id} _vet={vet} />
+      )}
       {/* Your content for MiddleLayout */}
       <SectionDivider title="Profile Details" icon="" />
 
@@ -151,7 +152,8 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
       {vet ? (
         <>
           <h1 className="text-xl font-bold m-3">
-            Name: <b className="text-4xl">{vet?.firstname + " " + vet?.lastname} </b>
+            Name:{" "}
+            <b className="text-4xl">{vet?.firstname + " " + vet?.lastname} </b>
           </h1>
           <div className="text-lg m-3 grid-cols-2 grid mb-5">
             <p>
@@ -210,7 +212,10 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
               ? vet?.about
               : `${vet?.about.split(" ").slice(0, 30).join(" ")}...`}
             {vet?.about.split(" ").length > 30 && (
-              <button onClick={toggleabout} className="text-blue-600 text-xs ml-0">
+              <button
+                onClick={toggleabout}
+                className="text-blue-600 text-xs ml-0"
+              >
                 {isExpanded ? " See Less" : " See More"}
               </button>
             )}
@@ -242,7 +247,9 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
 
             <button
               className="btn btn-accent mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
-              onClick={() => document.getElementById("edit_password").showModal()}
+              onClick={() =>
+                document.getElementById("edit_password").showModal()
+              }
             >
               <svg
                 class="feather feather-edit"
@@ -276,7 +283,9 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
             <button
               className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
               onClick={() => {
-                document.getElementById("book_appointment").showModal();
+                document
+                  .getElementById("book_appointment" + vet?.id)
+                  .showModal();
               }}
             >
               <svg
@@ -308,20 +317,17 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
               <span>Book Appointment</span>
             </button>
           </div>
-
-          </>
-    ) : (
-      <p>No vet found</p>
-    )}
-          <div className="grid  w-full place-items-center">
-            <p>
-              <span className=" font-bold">Vet's Rating:</span>
-            </p>
-            <Rating className="" rating={4.1} />
-          </div>
-        </div>
-      
-      
+        </>
+      ) : (
+        <p>No vet found</p>
+      )}
+      <div className="grid  w-full place-items-center">
+        <p>
+          <span className=" font-bold">Vet's Rating:</span>
+        </p>
+        <Rating className="" rating={4.1} />
+      </div>
+    </div>
   );
 };
 

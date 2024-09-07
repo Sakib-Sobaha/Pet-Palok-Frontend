@@ -1,60 +1,28 @@
 import React, { useEffect, useState } from "react";
 
-const petData = [
-  {
-    name: "Chokkor",
-    age: 2,
-    type: "Dog",
-    gender: "Male",
-    breed: "Labrador",
-    description: "If a dog chews shoes whose shoes does he choose?",
-    image: "https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_640.jpg",
-  },
-  {
-    name: "Minu",
-    age: 3,
-    type: "Cat",
-    gender: "Female",
-    breed: "Siamese",
-    description: "If a dog chews shoes whose shoes does he choose?",
-    image:
-      "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Mikkiy",
-    age: 1,
-    type: "Bird",
-    gender: "Male",
-    breed: "Parrot",
-    description: "If a dog chews shoes whose shoes does he choose?",
-    image:
-      "https://t3.ftcdn.net/jpg/00/95/29/28/360_F_95292880_GfqmxNb4u8ZxG18i2jkLt6gkAvl8xdz3.jpg",
-  },
-  {
-    name: "Nimo",
-    age: 1,
-    type: "Fish",
-    gender: "Female",
-    breed: "Goldfish",
-    description: "If a dog chews shoes whose shoes does he choose?",
-    image:
-      "https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcRHc-hn-wtBtKuCnyl_aQo3bp6Sqx8G2oIadx2-T3svIVieizMMDT-me2CBv8oksfsn",
-  },
-  {
-    name: "Nantu",
-    age: 1,
-    type: "Rabbit",
-    gender: "Male",
-    breed: "Dwarf Rabbit",
-    description: "If a dog chews shoes whose shoes does he choose?",
-    image:
-      "https://www.treehugger.com/thmb/Ocxi8FYaubDwjOwria6FNpGjJjo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-953005498-4ca60c6c2c5f4b0e881b2746ad5f17ef.jpg",
-  },
-];
+const calculateAge = (dob) => {
+  const birthDate = new Date(dob);
+  const currentDate = new Date();
+
+  const diffInMilliseconds = currentDate - birthDate;
+
+  const ageDate = new Date(diffInMilliseconds); // Convert to date object for easier calculation
+  const years = ageDate.getUTCFullYear() - 1970; // Get the difference in years
+  const months = ageDate.getUTCMonth(); // Get the difference in months
+  const days = ageDate.getUTCDate() - 1; // Get the difference in days
+
+  if (years === 0 && months === 0) {
+    return `${days} days`;
+  }
+  if (years === 0) {
+    return `${months} months, ${days} days`;
+  }
+  return `${years} years, ${months} months, ${days} days`;
+};
 
 const fetchPetData = async (token) => {
-  try{
-    const url = `${process.env.REACT_APP_API_URL}/pets/getAllPets`;
+  try {
+    const url = `${process.env.REACT_APP_API_URL}/pets/myPets`;
     const headers = new Headers({
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -67,7 +35,7 @@ const fetchPetData = async (token) => {
 
     const response = await fetch(url, requestOptions);
 
-    if(!response.ok){
+    if (!response.ok) {
       const errorText = await response.json();
       throw new Error(
         `Network response was not ok. Status: ${response.status}, ${errorText}`
@@ -82,79 +50,6 @@ const fetchPetData = async (token) => {
   }
 };
 
-
-// const vetData = {
-//   firstname: "Sakib",
-//   lastname: "Sobaha",
-//   email: "niloy870@gmail.com",
-//   phone: "01234123456",
-//   password: "pasword",
-//   clinic_name: "Bird Lovers Hospital",
-//   clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
-//   address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-//   postOffice: "Mirpur-2",
-//   district: "Dhaka",
-//   country: "Bangladesh",
-//   DOB: "2020-01-01",
-//   gender: "male",
-//   image:
-//     "https://img.freepik.com/free-photo/veterinarian-checking-dog-medium-shot_23-2149143871.jpg",
-//   about:
-//     "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care of them! If we don't, who will?",
-//   rating_vetvisit: "4",
-// };
-
-// const fetchVetData = async (token, vetId) => {
-//   try {
-//     const url = `${process.env.REACT_APP_API_URL}/vet/getVetById/${vetId}`;
-//     const headers = new Headers({
-//       Authorization: `Bearer ${token}`,
-//       "Content-Type": "application/json",
-//     });
-
-//     const requestOptions = {
-//       method: "GET",
-//       headers: headers,
-//     };
-
-//     const response = await fetch(url, requestOptions);
-
-//     if (!response.ok) {
-//       const errorText = await response.json();
-//       throw new Error(
-//         `Network response was not ok. Status: ${response.status}, ${errorText}`
-//       );
-//     }
-
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.error("Failed to fetch the vet profile:", error);
-//     return null;
-//   }
-// };
-
-const user = {
-  firstname: "Niloy",
-  lastname: "Faiaz",
-  email: "niloy870@gmail.com",
-  phone: "01234123456",
-  password: "pasword",
-  address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-  postOffice: "Mirpur-2",
-  district: "Dhaka",
-  country: "Bangladesh",
-  DOB: "2020-01-01",
-  gender: "male",
-  about:
-    "Chokkor is a cute dog! He is a very good friend! I pass most of my time with him. Soo friendly. My beloved! Doggy doggy doggy dogyy. Cutie pie amar. I love him too too too too much",
-  rating_buysellexch: "4",
-  rating_petkeeping: "5",
-  rating_vet: "3",
-};
-
-
-// fetch the logged in user
 const fetchUserAPI = async (token) => {
   try {
     const url = `${process.env.REACT_APP_API_URL}/user/whoami`;
@@ -162,7 +57,7 @@ const fetchUserAPI = async (token) => {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     });
-    
+
     const requestOptions = {
       method: "GET",
       headers: headers,
@@ -170,7 +65,7 @@ const fetchUserAPI = async (token) => {
 
     const response = await fetch(url, requestOptions);
 
-    if(!response.ok){
+    if (!response.ok) {
       const errorText = await response.text();
       throw new Error(
         `Network response was not ok. Status: ${response.status}, ${errorText}`
@@ -191,15 +86,10 @@ const BookAppointment = ({ element_id, _vet }) => {
   const [appointmentTime, setAppointmentTime] = useState("");
   const [visitType, setVisitType] = useState("offline");
   const [illnessDescription, setIllnessDescription] = useState("");
-  const[loading, setLoading] = useState(true); // State to handle loading
-  const[pets, setPetData] = useState([]);
-  console.log(JSON.stringify(_vet));
+  const [loading, setLoading] = useState(true); // State to handle loading
+  const [petData, setPetData] = useState([]);
   const [vet, setVet] = useState(_vet);
   const [user, setUser] = useState(null);
-
-  // useEffect(() => {
-  //   setVet(_vet);
-  // }, [_vet]);
 
   const fetchPets = async () => {
     const token = localStorage.getItem("authToken");
@@ -222,29 +112,6 @@ const BookAppointment = ({ element_id, _vet }) => {
   useEffect(() => {
     fetchPets();
   }, []);
-  
-
-  // const fetchVet = async () => {
-  //   const token = localStorage.getItem("authToken");
-  //   if (!token) {
-  //     console.error("No auth token found in local storage.");
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   try {
-  //     const data = await fetchVetData(token, vet?.id);
-  //     setVet(data);
-  //   } catch (error) {
-  //     console.error("Failed to fetch vet:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchVet();
-  // }, []);
 
   const fetchUser = async () => {
     const token = localStorage.getItem("authToken");
@@ -264,12 +131,6 @@ const BookAppointment = ({ element_id, _vet }) => {
     }
   };
 
-
-
-
-  const todayDate = new Date().toISOString().split("T")[0];
-
-  // Handler to update selected pet
   const handlePetChange = (e) => {
     const petIndex = e.target.value;
     if (petIndex !== "") {
@@ -279,20 +140,79 @@ const BookAppointment = ({ element_id, _vet }) => {
     }
   };
 
-  // Handler to update visit type
   const handleVisitTypeChange = (e) => {
     setVisitType(e.target.value);
   };
 
+  const handleBookAppointment = async () => {
+    if (
+      !selectedPet ||
+      !appointmentDate ||
+      !appointmentTime ||
+      !illnessDescription
+    ) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.error("No auth token found in local storage.");
+      return;
+    }
+
+    const bookingTime = `${appointmentDate}T${appointmentTime}:00.000+00:00`;
+
+    const requestBody = {
+      vetId: vet?.id,
+      petId: selectedPet?.id,
+      online: visitType === "online",
+      bookingTime: bookingTime,
+      description: illnessDescription,
+    };
+
+    try {
+      const url = `${process.env.REACT_APP_API_URL}/appointmentRequests/create`;
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      });
+
+      const requestOptions = {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(requestBody),
+      };
+
+      setLoading(true);
+      const response = await fetch(url, requestOptions);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Network response was not ok. Status: ${response.status}, ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      alert("Appointment booked successfully!");
+      setLoading(false);
+      window.location.reload();
+      // Optionally close the modal here or reset the form
+    } catch (error) {
+      console.error("Failed to book appointment:", error);
+      alert("Failed to book appointment. Please try again.");
+    }
+  };
+
+  const todayDate = new Date().toISOString().split("T")[0];
+
   return (
     <div>
-      
       <dialog id={element_id} className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Book an Appointment</h3>
           <div className="grid grid-cols-1 gap-4">
-            {/* Vet Information */}
-            {JSON.stringify(_vet)}
             <div>
               <label className="label">
                 <span className="label-text">Vet Name</span>
@@ -311,19 +231,6 @@ const BookAppointment = ({ element_id, _vet }) => {
               <input
                 type="text"
                 value={vet?.clinic_name}
-                className="input input-bordered w-full"
-                readOnly
-              />
-            </div>
-
-            {/* User Information */}
-            <div>
-              <label className="label">
-                <span className="label-text">User Name</span>
-              </label>
-              <input
-                type="text"
-                value={`${user?.firstname} ${user?.lastname}`}
                 className="input input-bordered w-full"
                 readOnly
               />
@@ -351,22 +258,22 @@ const BookAppointment = ({ element_id, _vet }) => {
             </div>
 
             {/* Pet Details */}
+            <h1 className="text-xl font-bold mb-0">Pet Details</h1>
             {selectedPet && (
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="label">
-                    <span className="label-text">Pet Age</span>
+                    <span className="label-text">Age</span>
                   </label>
-
                   <input
                     className="input input-bordered w-full"
-                    value={selectedPet.age}
+                    value={calculateAge(selectedPet.dob)}
                     readOnly
                   />
                 </div>
                 <div>
                   <label className="label">
-                    <span className="label-text">Pet Type</span>
+                    <span className="label-text">Type</span>
                   </label>
                   <input
                     className="input input-bordered w-full"
@@ -376,7 +283,7 @@ const BookAppointment = ({ element_id, _vet }) => {
                 </div>
                 <div>
                   <label className="label">
-                    <span className="label-text">Pet Breed</span>
+                    <span className="label-text">Breed</span>
                   </label>
                   <input
                     className="input input-bordered w-full"
@@ -386,7 +293,7 @@ const BookAppointment = ({ element_id, _vet }) => {
                 </div>
                 <div>
                   <label className="label">
-                    <span className="label-text">Pet Gender</span>
+                    <span className="label-text">Gender</span>
                   </label>
                   <input
                     className="input input-bordered w-full"
@@ -454,28 +361,27 @@ const BookAppointment = ({ element_id, _vet }) => {
                 className="input input-bordered w-full"
               />
             </div>
-          </div>
 
-          {/* Appointment Time (Conditional Rendering) */}
-          {/* {visitType === "online" && ( */}
-          <div>
-            <label className="label">
-              <span className="label-text">Appointment Time</span>
-            </label>
-            <input
-              type="time"
-              value={appointmentTime}
-              onChange={(e) => setAppointmentTime(e.target.value)}
-              className="input input-bordered w-full"
-            />
+            {/* Appointment Time */}
+            <div>
+              <label className="label">
+                <span className="label-text">Appointment Time</span>
+              </label>
+              <input
+                type="time"
+                value={appointmentTime}
+                onChange={(e) => setAppointmentTime(e.target.value)}
+                className="input input-bordered w-full"
+              />
+            </div>
           </div>
-          {/* )} */}
 
           <div className="modal-action">
-            <button className="btn btn-accent">Book Appointment</button>
+            <button className="btn btn-accent" onClick={handleBookAppointment} disabled={loading}>
+              {loading ? "Booking Appointment..." : "Book Appointment"}
+            </button>
 
             <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
               <button className="btn btn-error">Close</button>
             </form>
           </div>
