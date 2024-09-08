@@ -75,12 +75,13 @@ const fetchVetAPI = async (token) => {
   }
 };
 
-const VetCardContainer = ({ sortCriteria, searchTerm, ratingRange, setVetId }) => {
+const VetCardContainer = ({ sortCriteria, searchTerm, ratingRange}) => {
   const [vetData, setVetData] = useState([]);
   const [vet, setVet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(6);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [vetId, setVetId] = useState(null);
 
   const fetchVets = async () => {
     const token = localStorage.getItem("authToken");
@@ -102,29 +103,29 @@ const VetCardContainer = ({ sortCriteria, searchTerm, ratingRange, setVetId }) =
     }
   };
 
-  const fetchVet = async () => {
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      console.error("No auth token found in local storage.");
-      setLoading(false);
-      return;
-    }
+  // const fetchVet = async () => {
+  //   const token = localStorage.getItem("authToken");
+  //   if (!token) {
+  //     console.error("No auth token found in local storage.");
+  //     setLoading(false);
+  //     return;
+  //   }
 
-    try {
-      setLoading(true);
-      const data = await fetchVetAPI(token);
-      setVet(data);
-      setVetId(data.id);
-    } catch (error) {
-      console.error("Fetch error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     setLoading(true);
+  //     const data = await fetchVetAPI(token);
+  //     setVet(data);
+  //     setVetId(data.id);
+  //   } catch (error) {
+  //     console.error("Fetch error:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchVet();
-  }, []);
+  // useEffect(() => {
+  //   fetchVet();
+  // }, []);
 
   useEffect(() => {
     fetchVets();
@@ -134,7 +135,8 @@ const VetCardContainer = ({ sortCriteria, searchTerm, ratingRange, setVetId }) =
     // Filtering by search term
     const filteredData = vetData.filter(
       (vet) =>
-        (vet?.firstname.concat(" " + vet?.lastname))
+        // (vet?.firstname.concat(" " + vet?.lastname))
+        (`${vet?.firstname || ""} ${vet?.lastname || ""}`)
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
         vet?.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
