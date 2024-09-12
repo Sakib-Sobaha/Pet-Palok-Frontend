@@ -89,7 +89,7 @@ const DailyScheduleModal = ({
     <div>
       {isOpen && (
         <dialog id={element_id} className="modal" open>
-          <div className="modal-box">
+          <div className="modal-box  w-11/12 max-w-2xl">
             <button
               className="btn btn-error btn-sm float-right"
               onClick={onClose}
@@ -97,13 +97,13 @@ const DailyScheduleModal = ({
               X
             </button>
             <h3 className="font-bold text-lg ">
-              Daily Schedule for 
-               {": " + tarikh.format("DD MMMM, YYYY")}
+              Daily Schedule for
+              {": " + tarikh.format("DD MMMM, YYYY")}
             </h3>
 
             <div className="overflow-x-auto">
               <table className="table">
-                {/* head */}
+                {/* Table Head */}
                 <thead>
                   <tr>
                     <th>Time</th>
@@ -112,62 +112,38 @@ const DailyScheduleModal = ({
                     <th>Medium</th>
                   </tr>
                 </thead>
+
+                {/* Table Body */}
                 <tbody>
                   {hourlyAppointments.map((hourlySlot, index) => (
                     <tr key={index} className="hover:bg-base-200">
-                      <td>
+                      <td className="align-top">
                         {index}:00 - {index + 1}:00
                       </td>
-                      <td colSpan={5}>
+                      <td className="align-top">
                         {hourlySlot.length > 0 ? (
                           <div className="flex flex-col gap-1">
                             {hourlySlot.map((appointment) => (
-                              <div
-                                key={appointment.id}
-                                className="flex items-center gap-3"
-                              >
-                                <div>
-                                  <span className="font-bold">
-                                    {isExpanded ||
-                                    appointment.description.split(" ").length <=
-                                      lenMax
-                                      ? appointment.description
-                                      : `${appointment.description
-                                          .split(" ")
-                                          .slice(0, lenMax)
-                                          .join(" ")}...`}
-                                    {appointment.description.split(" ").length >
-                                      lenMax && (
-                                      <button
-                                        onClick={toggleDescription}
-                                        className="text-primary "
-                                      >
-                                        {isExpanded ? "See Less" : "See More"}
-                                      </button>
-                                    )}
-                                  </span>
-                                  <br />
-                                  <span className="badge badge-warning badge-sm">
-                                    {pet.type}
-                                  </span>
-                                  <span className="ml-2 badge badge-info badge-sm">
-                                    {pet.breed}
-                                  </span>
-                                </div>
-                                <div>
-                                  <div className="font-bold">
-                                    {user.firstname + " " + user.lastname}
-                                  </div>
-
-                                  <div className="text-sm opacity-50">
-                                    {pet.name}
-                                  </div>
-                                </div>
-                                <div>
-                                  <span className="badge badge-ghost badge-sm">
-                                    {appointment.medium}
-                                  </span>
-                                </div>
+                              <div key={appointment.id}>
+                                <span className="font-bold">
+                                  {isExpanded ||
+                                  appointment.description.split(" ").length <=
+                                    lenMax
+                                    ? appointment.description
+                                    : `${appointment.description
+                                        .split(" ")
+                                        .slice(0, lenMax)
+                                        .join(" ")}...`}
+                                  {appointment.description.split(" ").length >
+                                    lenMax && (
+                                    <button
+                                      onClick={toggleDescription}
+                                      className="text-primary ml-1"
+                                    >
+                                      {isExpanded ? "See Less" : "See More"}
+                                    </button>
+                                  )}
+                                </span>
                               </div>
                             ))}
                           </div>
@@ -177,10 +153,48 @@ const DailyScheduleModal = ({
                           </span>
                         )}
                       </td>
+                      <td className="align-top">
+                        {hourlySlot.length > 0 ? (
+                          hourlySlot.map((appointment) => (
+                            <div key={appointment.id} className="mb-2">
+                              <div className="font-bold">
+                                {user.firstname + " " + user.lastname}
+                              </div>
+                              <div className="text-sm opacity-50 italic">
+                                {pet.name}
+                              </div>
+                              <div className="flex mt-1">
+                                <span className="badge badge-warning badge-sm">
+                                  {pet.type}
+                                </span>
+                                <span className="ml-2 badge badge-info badge-sm">
+                                  {pet.breed}
+                                </span>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-sm text-gray-500">-</span>
+                        )}
+                      </td>
+                      <td className="align-top">
+                        {hourlySlot.length > 0 ? (
+                          hourlySlot.map((appointment) => (
+                            <div key={appointment.id} className="mb-2">
+                              <span className="badge badge-ghost badge-sm">
+                                {appointment.medium}
+                              </span>
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-sm text-gray-500">-</span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
-                {/* foot */}
+
+                {/* Table Foot */}
                 <tfoot>
                   <tr>
                     <th>Time</th>

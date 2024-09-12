@@ -5,41 +5,8 @@ import Dropdown from "./Dropdown";
 import logo from "../images/logo_cropped.png";
 import { fetchUserData } from "./api-fetch-functions/fetch-whoami";
 import ShoppingCartIcon from "./icons/shopping-carticon";
-import axios from 'axios';
-
-
-const notifications = [
-  {
-    id: 1,
-    userType: "user",
-    receiverId: 1,
-    type: "ORDER_ACCEPTED",
-    text: "Your order has been accepted",
-    unread: true,
-    mainContext: 1,
-    timeStamp: "2021-10-10T10:10:10",
-  },
-  {
-    id: 2,
-    userType: "user",
-    receiverId: 1,
-    type: "ORDER_DELIVERED",
-    text: "Your order has been delivered",
-    unread: true,
-    mainContext: 1,
-    timeStamp: "2021-10-10T10:10:10",
-  },
-  {
-    id: 3,
-    userType: "user",
-    receiverId: 1,
-    type: "ORDER_CANCELLED",
-    text: "Your order has been cancelled",
-    unread: false,
-    mainContext: 1,
-    timeStamp: "2021-10-10T10:10:10",
-  },
-];
+import axios from "axios";
+import Notification from "./Notification";
 
 function Navbar() {
   const userType = localStorage.getItem("userType");
@@ -49,6 +16,14 @@ function Navbar() {
   const [loading, setLoading] = useState(true);
   const { theme, toggleTheme } = useContext(ThemeContext); // Use theme context
   const [userId, setUserId] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+
+  const fetchNotifications = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/notifications/${userType}/fetch`;
+    const data = await fetchData(token, url);
+    console.log(data);
+    setNotifications(data);
+  };
 
   useEffect(() => {
     const userType = localStorage.getItem("userType");
@@ -63,6 +38,7 @@ function Navbar() {
     };
 
     fetchUser();
+    fetchNotifications();
   }, []);
 
   // const updateUserStatus = async (status) => {
@@ -86,37 +62,85 @@ function Navbar() {
   //   };
   // }, []);
 
+  const fetchData = async (token, url) => {
+    try {
+      setLoading(true);
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Failed to fetch data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const updateUserStatus = async (status) => {
     const userType = localStorage.getItem("userType");
     try {
       // Construct the URL for the API request
       const url = `${process.env.REACT_APP_API_URL}/${userType}/update-status/${userId}`;
       console.log(url);
-  
+
       // Get the Bearer token from local storage
       const token = localStorage.getItem("authToken");
-  
+
       // Make the API request with the Authorization header
       const response = await fetch(url, {
-        method: "PATCH",
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ status }), // Send the status in the body
       });
-  
+
       // Handle the response
       if (!response.ok) {
         throw new Error("Failed to update status");
       }
-  
+
       console.log("Status updated successfully");
     } catch (error) {
       console.error("Error updating user status:", error);
     }
   };
-  
+
+  // Mark all notifications as read and update state
+  const markAllAsRead = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/notifications/${userType}/markAllAsRead`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to mark notifications as read");
+      }
+
+      // Directly update the notifications in the state to set unread to false
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) => ({
+          ...notification,
+          unread: false,
+        }))
+      );
+    } catch (error) {
+      console.error("Failed to mark notifications as read", error);
+    }
+  };
 
   const handleLogout = async () => {
     await updateUserStatus("offline");
@@ -140,10 +164,11 @@ function Navbar() {
         />
       </div>
       {user?.email}
+      {notifications?.length}
 
       {/* notifications , cart, theme */}
       <div className="flex-1 pr-4 justify-end">
-        {localStorage.getItem("authToken") !== null && (
+        {localStorage.getItem("authToken") !== null && notifications && (
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} role="button" className="m-0 indicator">
               {/* Badge showing the count of unread notifications */}
@@ -178,26 +203,15 @@ function Navbar() {
             >
               {notifications.map((notification) => (
                 <li key={notification.id}>
-                  <a
-                    className="justify-between"
-                    onClick={() => {
-                      // Redirect to the appropriate notification page
-                    }}
-                  >
-                    {notification.unread ? (
-                      <span className="font-semibold">{notification.text}</span>
-                    ) : (
-                      <span>{notification.text}</span>
-                    )}
-                    {notification.unread && (
-                      <span className="badge badge-info">New</span>
-                    )}
-                  </a>
+                  <Notification _notification={notification} />
                 </li>
               ))}
-              <a className="btn p-0 rounded-none btn-sm btn-ghost italic">
+              <button
+                className="btn p-0 rounded-none btn-sm btn-ghost italic"
+                onClick={markAllAsRead}
+              >
                 Mark all as read
-              </a>
+              </button>
             </ul>
           </div>
         )}

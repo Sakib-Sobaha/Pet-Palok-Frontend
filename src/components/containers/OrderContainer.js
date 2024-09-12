@@ -79,7 +79,14 @@ function OrderContainer({ searchTerm, sortOption, filters }) {
   
   
   // Sort orders based on sort option
-  const sortedOrders = filteredOrders.sort((a, b) => {
+  const sortedOrders1 = filteredOrders.sort((a, b) => {
+    
+      return new Date(b.orderedOn) - new Date(a.orderedOn);
+    
+    return 0;
+  });
+
+  const sortedOrders = sortedOrders1.sort((a, b) => {
     if (sortOption === "orderDateOldToNew") {
       return new Date(a.orderedOn) - new Date(b.orderedOn);
     } else if (sortOption === "orderDateNewToOld") {
@@ -91,13 +98,16 @@ function OrderContainer({ searchTerm, sortOption, filters }) {
   return (
     <div className="bg bg-base-200 m-0 p-2 pt-4 rounded-xl">
       {loading ? (
-        <div className="text-center">Loading...</div>
+        <div className="text-center">
+          
+          <span className="loading loading-lg loading-ring text-primary"></span>
+        </div>
       ) : (
         <>
-          <p>searchTerm: {searchTerm}</p>
+          {/* <p>searchTerm: {searchTerm}</p>
           <p>filters: {JSON.stringify(filters.orderStates)}</p>
-          <p>sortOption: {sortOption}</p>
-          <h1 className="text-2xl font-bold mb-3 ml-2">Order Container</h1>
+          <p>sortOption: {sortOption}</p> */}
+          <h1 className="text-2xl font-bold mb-3 ml-2">Store Orders</h1>
           <div className="flex flex-col">
             {sortedOrders.map((order) => (
               <OrderCard key={order.id} order_={order} />

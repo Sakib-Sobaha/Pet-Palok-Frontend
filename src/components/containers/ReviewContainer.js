@@ -6,11 +6,11 @@ const handleLogout = () => {
   window.location.href = "/login"; // Redirect to the login page
 };
 
-const ReviewContainer = () => {
+const ReviewContainer = ({id}) => {
   const [reviews, setReviews] = useState([]); // Renamed state to 'reviews'
-  const marketItemId = "66c85294cf5b6e5ee3204a79"; // Provided market item ID
+  // const marketItemId = "66c85294cf5b6e5ee3204a79"; // Provided market item ID
   const token = localStorage.getItem("authToken"); // Replace with actual token
-  const url = `${process.env.REACT_APP_API_URL}/review/getByItem/${marketItemId}`;
+  const url = `${process.env.REACT_APP_API_URL}/review/getByItem/${id}`;
 
   // Fetch reviews from API
   const fetchData = async (url) => {

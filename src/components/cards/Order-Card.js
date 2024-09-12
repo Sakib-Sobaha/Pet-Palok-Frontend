@@ -240,6 +240,19 @@ function OrderCard({ order_ }) {
             }
           },
         };
+        case "out for delivery":
+        return {
+          text: "Mark as Delivered",
+          onClick: () => {handleStatusChange("Delivered")
+            const token = localStorage.getItem("authToken");
+            try{
+              changeOrderStatusAPI(token, order.id, "delivered");
+            }
+            catch(error){
+              console.error("Failed to change order status:", error);
+            }
+          },
+        };
       case "rejected":
         return {
           text: "Rejected",

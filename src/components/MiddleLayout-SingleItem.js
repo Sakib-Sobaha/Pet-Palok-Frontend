@@ -223,7 +223,7 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
             title="Ratings and Reviews"
             icon="https://cdn-icons-png.freepik.com/256/12377/12377209.png?semt=ais_hybrid"
           />
-          <ReviewContainer />
+          <ReviewContainer id={item?.id}/>
           <SectionDivider
             title="Ask a Question?"
             icon="https://cdn-icons-png.flaticon.com/512/5471/5471074.png"
