@@ -19,6 +19,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.25.0",
     "react-scripts": "^5.0.1",
+    "react-stomp": "^5.1.0",
     "react-tooltip": "^5.28.0",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",

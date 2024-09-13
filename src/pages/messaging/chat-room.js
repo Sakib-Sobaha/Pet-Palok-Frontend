@@ -6,9 +6,11 @@ import MiddleLayout from "../../components/ChatRoom.js"
 
 function ChatBox ()
 {
-    return(
+      return(
         <LayoutLRM
+        left={<LeftLayout/>}
         middle={<MiddleLayout />}
+        right={<RightLayout />}
       />
     );
 }
