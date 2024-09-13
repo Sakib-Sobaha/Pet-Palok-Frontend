@@ -149,7 +149,7 @@ const Verification = ({type, title, text, icon, verifyURL, resendURL}) => {
             <div className="flex justify-center space-x-4 mb-6">
               {otp.map((data, index) => (
                 <input
-                  className="w-12 h-12 text-center border-2 border-pink-700 rounded-full focus:outline-none focus:border-purple-700"
+                  className="w-12 h-12 text-center border-2 border-primary rounded-full focus:outline-none focus:border-secondary"
                   type="text"
                   maxLength="1"
                   key={index}
@@ -161,7 +161,7 @@ const Verification = ({type, title, text, icon, verifyURL, resendURL}) => {
             </div>
 
             {/* Resend OTP */}
-            <p className="text-gray-600 mb-4 text-center font-serif">
+            <p className="text-primary-content dark:text-current mb-4 text-center font-serif">
               {timer > 0 ? (
                 `Resend OTP in ${timer}s`
               ) : (

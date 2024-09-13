@@ -54,6 +54,7 @@ const addToCartReq = async (token, itemId, count) => {
 };
 
 const AddToCart = ({ element_id, _item }) => {
+  console.log("modal of ", _item.id);
   const [item, setItem] = useState(_item);
   const [count, setCount] = useState(1);
 

@@ -135,8 +135,7 @@ const VetCardContainer = ({ sortCriteria, searchTerm, ratingRange}) => {
     // Filtering by search term
     const filteredData = vetData.filter(
       (vet) =>
-        // (vet?.firstname.concat(" " + vet?.lastname))
-        (`${vet?.firstname || ""} ${vet?.lastname || ""}`)
+        (vet?.firstname + (" " + vet?.lastname))
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
         vet?.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||

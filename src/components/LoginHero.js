@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -15,6 +16,7 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await fetch(loginURL, {
         method: "POST",
         headers: {
@@ -48,6 +50,9 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
     } catch (error) {
       console.error("Login error:", error);
       setLoginError("An error occurred during login. Please try again."); // Set error message on catch
+    }
+    finally{
+      setLoading(false);
     }
   };
 
@@ -215,7 +220,7 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
             </form>
           )}
           {/* Display Error Alert for Login */}
-          {loginError && (
+          {!loading && loginError && (
             <div role="alert" className="alert alert-error">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -235,7 +240,7 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
           )}
 
           {/* Display Success Alert for Login */}
-          {showSuccessAlert && (
+          {!loading && showSuccessAlert && (
             <div role="alert" className="alert alert-success ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -252,6 +257,12 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
               </svg>
               <span>Login successful! Redirecting...</span>
               <span className="loading loading-spinner loading-lg"></span>
+            </div>
+          )}
+          {loading &&
+          (
+            <div className="grid place-items-center grid-cols-1">
+            <span className="loading loading-lg loading-infinity text-primary align-middle"></span>
             </div>
           )}
         </div>

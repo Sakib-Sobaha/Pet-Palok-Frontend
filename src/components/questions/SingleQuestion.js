@@ -73,7 +73,6 @@ const fetchUserByIDAPI = async (token, userId) => {
   }
 };
 
-// Utility function to calculate time ago in "h m ago" format
 const timeAgo = (timestamp) => {
   const now = new Date();
   const then = new Date(timestamp);

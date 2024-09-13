@@ -25,7 +25,7 @@ function VetCard({ vet }) {
 
   return (
     <div className="card card-compact bg-base-100 w-64 shadow-xl m-1 hover:scale-105 transition-transform duration-300 hover:shadow-lg">
-      {vet && <BookAppointment element_id="book_appointment" _vet={vet} />}
+      {vet && <BookAppointment element_id={"book_appointment"+ vet.id } _vet={vet} />}
       {/* <BookAppointment element_id="book_appointment" vet={vet} /> */}
       <figure>
         <img
@@ -67,7 +67,7 @@ function VetCard({ vet }) {
           </button>
           <button className="btn btn-accent rounded-lg"
             onClick={() => {
-              document.getElementById("book_appointment").showModal();
+              document.getElementById("book_appointment"+vet?.id).showModal();
               handleBookAppointment(vet);
             }}
           >Book Appoinment</button>

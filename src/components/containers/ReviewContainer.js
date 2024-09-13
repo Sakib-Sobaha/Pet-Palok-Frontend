@@ -1,41 +1,65 @@
-import React from "react";
-import SingleReivew from "./reviews/single-review";
+import React, { useEffect, useState } from "react";
+import SingleReivew from "../reviews/single-review";
 
-// const reivews = [
-//   {
-//     id: 122,
-//     reviewer: "Niloy",
-//     rating: 4,
-//     date: "22-03-2024",
-//     review_text: "Nice product, my doggy loves it",
-//     anonymouse: false,
-//   },
-//   {
-//     id: 123,
-//     reviewer: "Suvro",
-//     rating: 5,
-//     time: "22-03-2024",
-//     review_text: "bai product ta onek helpful silo",
-//     anonymouse: true,
-//   },
-//   {
-//     id: 122,
-//     reviewer: "Niloy",
-//     rating: 1,
-//     time: "22-01-2024",
-//     review_text: "Baje product, keu kinben na",
-//     anonymouse: true,
-//   },
-// ];
+const handleLogout = () => {
+  localStorage.removeItem("authToken");
+  window.location.href = "/login"; // Redirect to the login page
+};
 
-const ReviewContainer = () => {
+const ReviewContainer = ({id}) => {
+  const [reviews, setReviews] = useState([]); // Renamed state to 'reviews'
+  // const marketItemId = "66c85294cf5b6e5ee3204a79"; // Provided market item ID
+  const token = localStorage.getItem("authToken"); // Replace with actual token
+  const url = `${process.env.REACT_APP_API_URL}/review/getByItem/${id}`;
+
+  // Fetch reviews from API
+  const fetchData = async (url) => {
+    const headers = new Headers({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    });
+
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    };
+
+    try {
+      const response = await fetch(url, requestOptions);
+
+      if (response.status === 401) {
+        handleLogout(); // Token is likely expired, logout the user
+      }
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Network response was not ok. Status: ${response.status}, ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      setReviews(data); // Set the fetched reviews to state
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchData(url);
+  }, [url]);
+
   return (
     <div>
       <div className="collapse bg-accent">
         <input type="checkbox" />
         <div className="collapse-title text-xl font-medium flex">
-          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8 mr-4 fill-current stroke-current" strokeWidth="1.5"
+          <svg
+            viewBox="0 0 64 64"
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-8 w-8 mr-4 fill-current stroke-current"
+            strokeWidth="1.5"
           >
             <title />
             <g id="Review">
@@ -53,9 +77,13 @@ const ReviewContainer = () => {
           View Reviews
         </div>
         <div className="collapse-content">
-          {/* <p>hello</p> */}
-          <SingleReivew anonymous={false} />
-          <SingleReivew />
+          {reviews.length > 0 ? (
+            reviews.map((review) => (
+              <SingleReivew key={review.id} _review={review} />
+            ))
+          ) : (
+            <p>No reviews available.</p>
+          )}
         </div>
       </div>
     </div>

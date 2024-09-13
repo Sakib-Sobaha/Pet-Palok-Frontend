@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import UserStatusIcon from '../components/video/UserStatus';
+import React, { useEffect, useState } from "react";
+import UserStatusIcon from "../components/video/UserStatus";
 
-import { HandleNewMeeting } from '../components/video/HandleMeeting';
-import { HandleJoinMeeting } from './video/HandleJoinMeeting';
-
-
+import { HandleNewMeeting } from "../components/video/HandleMeeting";
+import { HandleJoinMeeting } from "./video/HandleJoinMeeting";
+import PendingReviews from "./containers/PendingReviewContainer";
+import SectionDivider from "./Section-Divider";
 const fetchData = async () => {
   const token = localStorage.getItem("authToken");
   if (!token) {
@@ -17,7 +17,7 @@ const fetchData = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     console.log(JSON.stringify(response));
@@ -36,36 +36,37 @@ const fetchData = async () => {
 };
 
 const fetchVetData = async () => {
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      console.error("No auth token found in local storage.");
-      return [];
-    }
-  
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/vet/getVets`, {
+  const token = localStorage.getItem("authToken");
+  if (!token) {
+    console.error("No auth token found in local storage.");
+    return [];
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/vet/getVets`,
+      {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-      });
-      console.log(JSON.stringify(response));
-  
-      if (!response.ok) {
-        console.error("Failed to fetch users");
-        return;
       }
-  
-      const data = await response.json();
-      return data; // Assuming the response is an array of users
-    } catch (error) {
-      console.error("Fetch error:", error);
-      return [];
+    );
+    console.log(JSON.stringify(response));
+
+    if (!response.ok) {
+      console.error("Failed to fetch users");
+      return;
     }
-  };
 
-
+    const data = await response.json();
+    return data; // Assuming the response is an array of users
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return [];
+  }
+};
 
 const MiddleLayoutSellerHome = () => {
   const [users, setUsers] = useState([]);
@@ -81,29 +82,24 @@ const MiddleLayoutSellerHome = () => {
     loadUsers();
   }, []);
 
-    useEffect(() => {
-        const loadVets = async () => {
-            const vetsData = await fetchVetData();
-            setVets(vetsData);
-        };
-    
-        loadVets();
-        }
-    , []);
+  useEffect(() => {
+    const loadVets = async () => {
+      const vetsData = await fetchVetData();
+      setVets(vetsData);
+    };
 
-  
-  
-
-  
-
-  
+    loadVets();
+  }, []);
 
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
+      
+      <PendingReviews />
+
       {/* Display users */}
       <h1 className="text-xl font-bold mb-4">User List</h1>
       <ul>
-        {users.length > 0 ? (
+        {users && users.length > 0 ? (
           users.map((user) => (
             <li key={user.id} className="mb-2">
               {user.firstname} - {user.email}
@@ -127,7 +123,6 @@ const MiddleLayoutSellerHome = () => {
         )}
       </ul>
 
-
       <div className="image-container">
         <img
           src="https://images.idgesg.net/images/article/2020/04/zoom_video_conferencing_online_meeting_remote_workers_one_user_connected_via_laptop_with_a_grid_of_twelve_participants_on_screen_2400x1600-100837446-large.jpg?auto=webp&quality=85,70"
@@ -138,8 +133,8 @@ const MiddleLayoutSellerHome = () => {
 
       <div className="main">
         <div className="new-meeting">
-          <button 
-            id="newMeetingBtn" 
+          <button
+            id="newMeetingBtn"
             className="btn btn-primary mb-4"
             onClick={HandleNewMeeting}
           >
@@ -155,8 +150,8 @@ const MiddleLayoutSellerHome = () => {
               onChange={(e) => setMeetingId(e.target.value)}
               className="input input-bordered mr-2"
             />
-            <button 
-              id="joinMeetingBtn" 
+            <button
+              id="joinMeetingBtn"
               className="btn btn-secondary"
               onClick={HandleJoinMeeting}
             >
@@ -177,9 +172,7 @@ const MiddleLayoutSellerHome = () => {
                   </span>
                   {/* <UserStatusIcon status={user.status} /> */}
                   {user.firstname} - {user.email}
-                  
                 </li>
-                
               ))
             ) : (
               <li>No users found</li>
@@ -199,9 +192,7 @@ const MiddleLayoutSellerHome = () => {
                   </span>
                   {/* <UserStatusIcon status={user.status} /> */}
                   {vet.firstname} - {vet.email}
-                  
                 </li>
-                
               ))
             ) : (
               <li>No vets found</li>
@@ -209,8 +200,6 @@ const MiddleLayoutSellerHome = () => {
           </ul>
         </div>
       </div>
-
-
     </div>
   );
 };
