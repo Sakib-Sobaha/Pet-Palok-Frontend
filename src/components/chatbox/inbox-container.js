@@ -93,8 +93,11 @@ const fetchVetData = async () => {
   };
 
 
-const InboxContainer = () => {
+const InboxContainer = ({onSelectUser}) => {
   const [users, setUsers] = React.useState([]);
+  const [selectedUser, setSelectedUser] = React.useState(null);
+  const [userDetails, setUserDetails] = React.useState(null);
+  const [loadingDetails, setLoadingDetails] = React.useState(false);
   const [vets, setVets] = React.useState([]);
   const [sellers, setSellers] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -153,6 +156,40 @@ const InboxContainer = () => {
     }
     , []);
 
+    const handleUserClick = async (user) => {
+      setSelectedUser(user);
+      // onSelectUser(user);
+      setLoadingDetails(true);
+      const token = localStorage.getItem("authToken");
+  
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/user/getUserById/${user.id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        if (!response.ok) {
+          console.error("Failed to fetch user details");
+          return;
+        }
+  
+        const data = await response.json();
+        setUserDetails(data);
+        console.log(data);
+        onSelectUser(userDetails);
+      } catch (error) {
+        console.error("Fetch error:", error);
+      } finally {
+        setLoadingDetails(false);
+      }
+    }
+
 
   return (
     <div>
@@ -182,7 +219,13 @@ const InboxContainer = () => {
             <ul id="userList">
               {users.length > 0 ? (
                 users.map((user) => (
-                  <li key={user.id} className="mb-4 flex items-center">
+                  <li 
+                    key={user.id} 
+                    className={`mb-4 flex items-center cursor-pointer ${selectedUser?.id === user.id ? "bg-gray-200" : ""}`}
+                    onClick={() => handleUserClick(user)}
+                  >
+                  
+                  
                     {/* Circle with user image and online status indicator */}
                     <div className="relative">
                       <img
