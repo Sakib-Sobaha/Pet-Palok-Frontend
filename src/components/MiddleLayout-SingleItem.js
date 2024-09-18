@@ -63,7 +63,7 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   const [images, setImages] = useState([]);
-
+  const [store, setStore] = useState(null);
   const token = localStorage.getItem("authToken");
 
   useEffect(() => {
@@ -76,6 +76,38 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
       }
       setLoading(false);
     };
+
+    const fetchStore = async () => {
+      const url = `${process.env.REACT_APP_API_URL}/seller/getSellerById/${item?.sellerId}`;
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      });
+      await fetch(url, {
+        method: "GET",
+        headers: headers,
+      })
+        .then((response) => {
+          if (response.status === 401) {
+            handleLogout(); // Token is likely expired, logout the user
+          }
+          if (!response.ok) {
+            const errorText = response.text();
+            throw new Error(
+              `Network response was not ok. Status: ${response.status}, ${errorText}`
+            );
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setStore(data);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch store", error);
+        });
+    };
+
+    fetchStore();
 
     fetchData();
   }, [_itemId, token]);
@@ -130,7 +162,7 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
               )}
 
               <h1 className="text-4xl font-bold m-3 pl-3">{item?.name}</h1>
-              <div className="text-lg m-3 grid-cols-2 grid mb-5 rounded-lg p-2 pl-3">
+              <div className="text-lg m-3 grid-cols-2 grid mb-0 rounded-lg p-2 pl-3">
                 <p>
                   <span className="font-bold">Quantity:</span> {item?.quantity}
                 </p>
@@ -166,12 +198,29 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
                 </p>
 
                 <p></p>
-                <p>
+                {/* <p>
                   <span className="font-semibold text-info">
                     {item?.sell_count} sold
                   </span>
-                </p>
+                </p> */}
               </div>
+
+              <div className="text-center flex place-items-center align-middle mb-2">
+                <div className="avatar ml-16 mr-2">
+                  <div className="mask mask-squircle w-10">
+                    <img src={store?.image} />
+                  </div>
+                </div>{" "}
+                <div
+                  className="font-bold hover:text-primary hover:scale-105 cursor-pointer"
+                  onClick={() => {
+                    window.location.href = `/seller/profile/${store?.id}`;
+                  }}
+                >
+                  {store?.storeName}
+                </div>
+              </div>
+
               <div className="flex">
                 <button
                   className="btn btn-primary w-40 rounded-lg p-2 justify-center m-1 ml-4"
@@ -223,7 +272,7 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
             title="Ratings and Reviews"
             icon="https://cdn-icons-png.freepik.com/256/12377/12377209.png?semt=ais_hybrid"
           />
-          <ReviewContainer id={item?.id}/>
+          <ReviewContainer id={item?.id} />
           <SectionDivider
             title="Ask a Question?"
             icon="https://cdn-icons-png.flaticon.com/512/5471/5471074.png"

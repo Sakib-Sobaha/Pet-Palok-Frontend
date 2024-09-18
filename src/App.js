@@ -54,6 +54,8 @@ export default function App() {
 
             <Route path="/user/petbsx" element={<PetBSX />} />
             <Route path="/user/orders" element={<UserOrders />} />
+            <Route path="/user/appointments" element={<Appointments />} />
+
 
             <Route path="/user/lost-and-found" element={<LostAndFound />} />
 

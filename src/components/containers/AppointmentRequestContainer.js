@@ -10,13 +10,14 @@ function AppointmentRequestContainer({ text }) {
     // Fetch appointment requests data when the component mounts
     const fetchAppointmentRequests = async () => {
       const token = localStorage.getItem("authToken");
+      const userType = localStorage.getItem("userType");
       if (!token) {
         console.error("No auth token found in local storage.");
         return;
       }
 
       try {
-        const url = `${process.env.REACT_APP_API_URL}/appointmentRequests/vet/myRequests`;
+        const url = `${process.env.REACT_APP_API_URL}/appointmentRequests/${userType}/myRequests`;
         const headers = new Headers({
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -63,7 +64,7 @@ function AppointmentRequestContainer({ text }) {
           itemsToShow.map((item, index) => (
             <AppointmentRequest
               key={index}
-              appointmentRequest={item}
+              _appointmentRequest={item}
             />
           ))
         )}

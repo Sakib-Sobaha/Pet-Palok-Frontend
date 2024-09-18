@@ -142,6 +142,28 @@ function Navbar() {
     }
   };
 
+  const clearAll = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/notifications/${userType}/clearAll`;
+
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete notifications");
+      }
+
+      // Directly update the notifications in the state to set unread to false
+      setNotifications([]);
+    } catch (error) {
+      console.error("Failed to mark notifications as read", error);
+    }
+  };
+
   const handleLogout = async () => {
     await updateUserStatus("offline");
     localStorage.removeItem("authToken");
@@ -199,19 +221,35 @@ function Navbar() {
             {/* Dropdown menu with notifications */}
             <ul
               tabIndex={0}
-              className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+              className="dropdown-content menu bg-base-100 rounded-box z-[1] w-80  p-2 shadow"
             >
-              {notifications.map((notification) => (
-                <li key={notification.id}>
-                  <Notification _notification={notification} />
-                </li>
-              ))}
               <button
                 className="btn p-0 rounded-none btn-sm btn-ghost italic"
                 onClick={markAllAsRead}
               >
                 Mark all as read
               </button>
+              <button
+                className="btn p-0 rounded-none btn-sm btn-ghost italic"
+                onClick={clearAll}
+              >
+                Clear All{" "}
+              </button>
+
+              {notifications
+                .sort((a, b) => {
+                  // Sort by unread status first, unread (true) should come first
+                  if (a.unread !== b.unread) {
+                    return a.unread ? -1 : 1;
+                  }
+                  // If both have the same unread status, sort by timestamp (newest first)
+                  return new Date(b.timestamp) - new Date(a.timestamp);
+                })
+                .map((notification) => (
+                  <li key={notification.id}>
+                    <Notification _notification={notification} />
+                  </li>
+                ))}
             </ul>
           </div>
         )}
