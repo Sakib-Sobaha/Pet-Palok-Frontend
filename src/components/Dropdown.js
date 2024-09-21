@@ -13,6 +13,7 @@ function Dropdown({_user}) {
     { name: "Pets", href: "/user/pets" },
     { name: "Marketplace", href: "/marketplace" },
     { name: "Vet Directory", href: "/vetdirectory" },
+    { name: "Appointments", href: "/user/appointments" },
     { name: "Lost and Found", href: "/user/lost-and-found" },
     { name: "Communities", href: "/communities" },
     { name: "My Orders", href: "/user/orders" },

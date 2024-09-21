@@ -1,74 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import dayjs from "dayjs"; // For handling dates
+
 import DayScheduleModal from "../modals/daily-schedule-modal";
 
-const appointmentRequests = [
-  {
-    id: 1,
-    vetId: 2,
-    userId: 4,
-    petId: 1,
-    request_date: "2024-08-01",
-    booking_date: "2024-08-01",
-    booking_time: "10:00",
-    description:
-      "Check up, the dog has been coughing. I tried to give him some medicine but it doesn't seem to work. At last, I decided to bring him to the vet.",
-    status: "confirmed",
-    medium: "offline",
-  },
-  {
-    id: 2,
-    vetId: 3,
-    userId: 5,
-    petId: 2,
-    request_date: "2024-08-01",
-    booking_date: "2024-08-15",
-    booking_time: "14:00",
-    description: "Regular vaccination visit.",
-    status: "confirmed",
-    medium: "online",
-  },
-  {
-    id: 3,
-    vetId: 2,
-    userId: 4,
-    petId: 1,
-    request_date: "2024-01-01",
-    booking_date: "2024-08-09",
-    booking_time: "18:00",
-    description: "Follow-up visit for cough treatment.",
-    status: "confirmed",
-    medium: "offline",
-  },
-  {
-    id: 4,
-    vetId: 2,
-    userId: 4,
-    petId: 1,
-    request_date: "2024-01-01",
-    booking_date: "2024-08-09",
-    booking_time: "16:00",
-    description: "hudai taka beshi tai tore dite aisi ar dekhaite.",
-    status: "confirmed",
-    medium: "offline",
-  },
-  {
-    id: 4,
-    vetId: 2,
-    userId: 4,
-    petId: 1,
-    request_date: "2024-01-01",
-    booking_date: "2024-08-09",
-    booking_time: "17:00",
-    description: "hudai taka beshi tai tore dite aisi ar dekhaite.",
-    status: "confirmed",
-    medium: "offline",
-  },
-  // Add more sample appointments as needed
-];
-
 function Calendar() {
-  // current date mane currently active date er mash/date
+  const [loading, setLoading] = useState(false); // State to manage loading
+  const [appointments, setAppointments] = useState([]);
   const [currentDate, setCurrentDate] = useState(dayjs());
   const today = dayjs();
 
@@ -100,9 +38,19 @@ function Calendar() {
     const dateString = currentDate.format(
       `YYYY-MM-${String(day).padStart(2, "0")}`
     );
-    return appointmentRequests.filter(
-      (appointment) => appointment.booking_date === dateString
-    );
+
+    // console.log("dates:"+JSON.stringify(appointments.len));
+    return appointments.filter((appointment) => {
+      console.log(
+        "booking time check before :) " +
+          JSON.stringify(appointment.bookingTime)
+      );
+      const bookingDate = dayjs(appointment.bookingTime).format("YYYY-MM-DD");
+      console.log("booking date check:" + bookingDate);
+      console.log("booking time check after ->" + appointment.bookingTime);
+
+      return bookingDate === dateString;
+    });
   };
 
   const handleDayClick = (day) => {
@@ -114,94 +62,158 @@ function Calendar() {
     setIsModalOpen(false);
   };
 
-  return (
-    <div className="p-4">
-      {/* {console.log(daysArray[0])} */}
-      <div className="flex justify-between items-center mb-4">
-        <button
-          onClick={previousMonth}
-          className="bg-gray-300 px-2 py-1 rounded hover:bg-gray-400"
-        >
-          Previous
-        </button>
-        <h2 className="text-xl font-semibold">
-          {currentDate.format("MMMM YYYY")}
-        </h2>
-        <button
-          onClick={nextMonth}
-          className="bg-gray-300 px-2 py-1 rounded hover:bg-gray-400"
-        >
-          Next
-        </button>
+  useEffect(() => {
+    // Fetch appointment requests data when the component mounts
+    const fetchAppointments = async () => {
+      setLoading(true);
+      const token = localStorage.getItem("authToken");
+      const userType = localStorage.getItem("userType");
+      if (!token) {
+        console.error("No auth token found in local storage.");
+        return;
+      }
+
+      try {
+        const url = `${process.env.REACT_APP_API_URL}/appointments/${userType}/fetchAll`;
+        const headers = new Headers({
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        });
+
+        const requestOptions = {
+          method: "GET",
+          headers: headers,
+        };
+
+        const response = await fetch(url, requestOptions);
+
+        if (!response.ok) {
+          const errorText = await response.json();
+          throw new Error(
+            `Network response was not ok. Status: ${response.status}, ${errorText}`
+          );
+        }
+
+        const data = await response.json();
+        setAppointments(data); // Set the fetched data to state
+      } catch (error) {
+        console.error("Failed to fetch appointment requests:", error);
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
+      }
+    };
+
+    fetchAppointments();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <span className="loading loading-dots text-error"></span>
       </div>
-
-      <div className="grid grid-cols-7 gap-2 text-center">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((bar) => (
-          <div key={bar} className="font-bold">
-            {bar}
+    );
+  } else
+    return (
+      <div>
+        <div className="p-4">
+          <div className="flex justify-between items-center mb-4">
+            <button
+              onClick={previousMonth}
+              className=" px-2 py-1 btn btn-ghost border-gray-500 rounded-lg"
+            >
+              Previous
+            </button>
+            <h2 className="text-xl font-semibold">
+              {currentDate.format("MMMM YYYY")}
+            </h2>
+            <button
+              onClick={nextMonth}
+              className="px-2 py-1 btn btn-ghost border-gray-500 rounded-lg"
+            >
+              Next
+            </button>
           </div>
-        ))}
 
-        {daysArray.map((day, index) => (
-          <div
-            key={index}
-            className={`h-20 border cursor-pointer hover:scale-105 hover:bg-primary p-1 ${
-              day
-                ? currentDate.date(day).isSame(dayjs(), "day")
-                  ? "bg-warning" // If it's today
-                  : "bg-base-100" // If it's a normal day
-                : "bg-base-300" // If it's not a real day
-            } flex flex-col justify-between`}
-            onClick={() => {
-              //   document.getElementById("daily_schedule_modal").showModal();
-              handleDayClick(day);
-            }}
-          >
-            {day && (
-              <>
-                <div className="cursor-pointer">
-                  <span className="text-sm font-bold">{day}</span>
+          <div className="grid grid-cols-7 gap-2 text-center">
+            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((bar) => (
+              <div key={bar} className="font-bold">
+                {bar}
+              </div>
+            ))}
 
-                  <div className="relative flex flex-col gap-1 h-full">
-                    {appointmentsForDay(day).length > 0 && (
-                      <>
-                        {/* Show the first appointment */}
-                        <div className="bg-secondary text-content text-xs rounded p-1">
-                          {appointmentsForDay(day)[0].booking_time} -{" "}
-                          {appointmentsForDay(day)[0].description.slice(0, 12)}
-                        </div>
+            {daysArray.map((day, index) => (
+              <div
+                key={index}
+                className={`h-20 border cursor-pointer hover:scale-105 hover:bg-primary hover:text-gray-800 p-1 ${
+                  day
+                    ? currentDate.date(day).isSame(dayjs(), "day")
+                      ? "bg-warning text-gray-800" // If it's today
+                      : "bg-base-100" // If it's a normal day
+                    : "bg-base-300" // If it's not a real day
+                } flex flex-col justify-between`}
+                onClick={() => {
+                  handleDayClick(day);
+                }}
+              >
+                {day && (
+                  <>
+                    <div className="cursor-pointer">
+                      <span className="text-sm font-bold">{day}</span>
 
-                        {/* Show a badge if there are additional appointments */}
-                        {appointmentsForDay(day).length > 1 && (
-                          <div className="absolute inset-0 flex items-end justify-end p-2">
-                            <div className="indicator">
-                              <span className="indicator-item badge badge-secondary">
-                                +{appointmentsForDay(day).length - 1}
-                              </span>
+                      <div className="relative flex flex-col gap-1 h-full">
+                        {appointmentsForDay(day).length > 0 && (
+                          <>
+                            {/* Show the first appointment */}
+                            <div className="bg-secondary text-content text-xs rounded p-1">
+                              {new Date(
+                                appointmentsForDay(day)[0].bookingTime
+                              ).toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true, // Ensures 12-hour format with AM/PM
+                                timeZone: "UTC", // Forces UTC timezone
+                              })}
+                              {appointmentsForDay(day)[0].description.slice(
+                                0,
+                                12
+                              ) + "..."}
                             </div>
-                          </div>
+
+                            {/* Show a badge if there are additional appointments */}
+                            {appointmentsForDay(day).length > 1 && (
+                              <div className="absolute inset-0 flex items-end justify-end p-2">
+                                <div className="indicator">
+                                  <span className="indicator-item badge badge-secondary">
+                                    +{appointmentsForDay(day).length - 1}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </>
                         )}
-                      </>
-                    )}
-                  </div>
-                </div>
-              </>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+
+            {selectedDate && (
+              <DayScheduleModal
+                element_id="daily_schedule_modal"
+                tarikh={selectedDate}
+                appointments={appointmentsForDay(selectedDate.date())}
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+              />
             )}
           </div>
-        ))}
-
-        {selectedDate && (
-          <DayScheduleModal
-            element_id="daily_schedule_modal"
-            tarikh={selectedDate}
-            appointments={appointmentsForDay(selectedDate.date())}
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-          />
-        )}
+        </div>
+        <div className=" overflow-x-auto">
+          {/* {console.log(JSON.stringify(appointments))} */}
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
 export default Calendar;

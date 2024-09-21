@@ -73,27 +73,49 @@ const PendingReview = ({ _review }) => {
     );
   } else
     return (
-      <div className="card bg-white image-full w-72 h-60 m-1 shadow-lg">
-        {item && <WriteReview element_id={"review" + item.id} _item={item} _pendingReview={review}/>}
-        <figure>
-          <img
-            src={item.images[0]}
-            alt="item"
-            className="image-full opacity-90 bg-blend-overlay"
-          />
-        </figure>
-        <div className="card-body bg-transparent">
-          <h2 className="card-title">{item.name}</h2>
-          {/* <p>If a dog chews shoes whose shoes does he choose?</p> */}
-          <div className="card-actions justify-center ">
-            <button
-              className="btn btn-accent"
-              onClick={() => {
-                document.getElementById("review" + item.id).showModal();
-              }}
-            >
-              Review Now
-            </button>
+      <div className="relative card w-72 h-60 m-1 shadow-lg">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-80"
+          style={{
+            backgroundImage: `url(${item.images[0]})`,
+          }}
+        ></div>
+
+        {/* Semi-transparent Overlay */}
+        <div className="absolute inset-0 bg-primary opacity-80"></div>
+
+        {/* Main Content */}
+        <div className="relative z-10 p-4">
+          {item && (
+            <WriteReview
+              element_id={"review" + item.id}
+              _item={item}
+              _pendingReview={review}
+            />
+          )}
+
+          <div className="card-body bg-transparent">
+            <h2 className="card-title text-white dark:text-gray-200">{item.name}</h2>
+
+            <div className="card-actions justify-center flex">
+              <button
+                className="btn btn-accent rounded-md w-32"
+                onClick={() => {
+                  document.getElementById("review" + item.id).showModal();
+                }}
+              >
+                Review Now
+              </button>
+              <button className="btn btn-secondary rounded-md w-32"
+                onClick={() => {
+                  window.location.href = `/marketplace/item/${item.id}`;
+                }
+                }
+              >
+                View Item
+              </button>
+            </div>
           </div>
         </div>
       </div>

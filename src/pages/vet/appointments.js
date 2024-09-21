@@ -9,7 +9,7 @@ function Appointments() {
   return (
     <div>
       <LayoutLRM
-        left={<LeftLayout type="vet" />}
+        left={<LeftLayout type="" />}
         middle={<MiddleLayout />}
         right={<RightLayout />}
       />
