@@ -93,7 +93,7 @@ const fetchVetData = async () => {
   };
 
 
-const InboxContainer = ({onSelectUser}) => {
+const InboxContainer = () => {
   const [users, setUsers] = React.useState([]);
   const [selectedUser, setSelectedUser] = React.useState(null);
   const [userDetails, setUserDetails] = React.useState(null);
@@ -182,7 +182,7 @@ const InboxContainer = ({onSelectUser}) => {
         const data = await response.json();
         setUserDetails(data);
         console.log(data);
-        onSelectUser(userDetails);
+        // onSelectUser(userDetails);
       } catch (error) {
         console.error("Fetch error:", error);
       } finally {

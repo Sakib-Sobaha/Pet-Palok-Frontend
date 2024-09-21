@@ -7,15 +7,11 @@ import MiddleLayout from "../../components/ChatRoom.js"
 
 const ChatBox = () => 
 {
-  const [selectedUserDetails, setSelectedUserDetails] = useState(null);
-
-  const handleUserSelection = (userDetails) => {
-    setSelectedUserDetails(userDetails);
-  }
+  
       return(
         <LayoutLRM
-        left={<LeftLayout onSelect={handleUserSelection}/>}
-        middle={<MiddleLayout userDetails={selectedUserDetails}/>}
+        // left={<LeftLayout/>}
+        middle={<MiddleLayout />}
         right={<RightLayout />}
       />
     );

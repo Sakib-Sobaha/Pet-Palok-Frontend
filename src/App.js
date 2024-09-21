@@ -79,6 +79,8 @@ export default function App() {
 
             <Route path="/chatbox" element={<ChatBox />} />
             <Route path="/chatroom" element={<ChatRoom />} />
+            <Route path="/ws/**" render={() => null} />
+            <Route path="*" render={() => <div>Page not found</div>} />
 
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
