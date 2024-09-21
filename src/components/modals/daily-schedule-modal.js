@@ -1,61 +1,4 @@
-import React from "react";
-import { useState } from "react";
-
-const pet = {
-  name: "Chokkor",
-  age: new Date().getFullYear() - new Date("2020-01-01").getFullYear(),
-  type: "Animal",
-  breed: "Dog",
-  DOB: "2020-01-01",
-  gender: "male",
-  description:
-    "Chokkor is a cute dog! He is a very good friend! I pass most of my time with him. Soo friendly. My beloved! Doggy doggy doggy dogyy. Cutie pie amar. I love him too too too too much",
-};
-
-const vet = {
-  firstname: "Sakib",
-  lastname: "Sobaha",
-
-  email: "niloy870@gmail.com",
-  phone: "01234123456",
-
-  password: "pasword",
-
-  clinic_name: "Bird Lovers Hostpital",
-  clinic_address: "Block-A, Road-1, Mirpur-10, Dhaka-1216, Bangladesh",
-
-  address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-  postOffice: "Mirpur-2",
-  district: "Dhaka",
-  country: "Bangladesh",
-
-  DOB: "2020-01-01",
-  gender: "male",
-
-  about:
-    "I am a worker for pets. Love working with them. Pets are our biggest friends. So we must take care for them! If we dont, who will?",
-
-  rating_vetvisit: "4",
-};
-
-const user = {
-  firstname: "Niloy",
-  lastname: "Faiaz",
-  email: "niloy870@gmail.com",
-  phone: "01234123456",
-  password: "pasword",
-  address: "10/1, Monipur, Mirpur-2, Dhaka-1216",
-  postOffice: "Mirpur-2",
-  district: "Dhaka",
-  country: "Bangladesh",
-  DOB: "2020-01-01",
-  gender: "male",
-  about:
-    "Chokkor is a cute dog! He is a very good friend! I pass most of my time with him. Soo friendly. My beloved! Doggy doggy doggy dogyy. Cutie pie amar. I love him too too too too much",
-  rating_buysellexch: "4",
-  rating_petkeeping: "5",
-  rating_vet: "3",
-};
+import React, { useEffect, useState } from "react";
 
 const DailyScheduleModal = ({
   element_id,
@@ -64,20 +7,23 @@ const DailyScheduleModal = ({
   isOpen,
   onClose,
 }) => {
-  // Function to format appointments into hour intervals
+  const userType = localStorage.getItem("userType");
+  const [user, setUser] = useState(null);
+  const [pet, setPet] = useState(null);
+  const [vet, setVet] = useState(null);
+
   const getHourlyAppointments = () => {
     const hourlyAppointments = Array.from({ length: 24 }, () => []);
 
     appointments.forEach((appointment) => {
-      const appointmentHour = parseInt(appointment.booking_time.split(":")[0]);
-      hourlyAppointments[appointmentHour].push(appointment);
+      const appointmentHour = new Date(appointment.bookingTime).getUTCHours();
+      hourlyAppointments[appointmentHour]?.push(appointment);
     });
 
     return hourlyAppointments;
   };
 
   const hourlyAppointments = getHourlyAppointments();
-
   const lenMax = 15;
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -85,35 +31,145 @@ const DailyScheduleModal = ({
     setIsExpanded(!isExpanded);
   };
 
+  useEffect(() => {
+    const userUrl = `${process.env.REACT_APP_API_URL}/user/getUserById/${appointments[0].userId}`;
+    const petUrl = `${process.env.REACT_APP_API_URL}/pets/${appointments[0].petId}`;
+    const vetUrl = `${process.env.REACT_APP_API_URL}/vet/getVetById/${appointments[0].vetId}`;
+
+    const fetchUser = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        console.error("No auth token found in local storage.");
+        return;
+      }
+
+      try {
+        const headers = new Headers({
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        });
+
+        const requestOptions = {
+          method: "GET",
+          headers: headers,
+        };
+
+        const response = await fetch(userUrl, requestOptions);
+
+        if (!response.ok) {
+          const errorText = await response.json();
+          throw new Error(
+            `Network response was not ok. Status: ${response.status}, ${errorText}`
+          );
+        }
+
+        const data = await response.json();
+        setUser(data);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    const fetchPet = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        console.error("No auth token found in local storage.");
+        return;
+      }
+
+      try {
+        const headers = new Headers({
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        });
+
+        const requestOptions = {
+          method: "GET",
+          headers: headers,
+        };
+
+        const response = await fetch(petUrl, requestOptions);
+
+        if (!response.ok) {
+          const errorText = await response.json();
+          throw new Error(
+            `Network response was not ok. Status: ${response.status}, ${errorText}`
+          );
+        }
+
+        const data = await response.json();
+        setPet(data);
+      } catch (error) {
+        console.error("Failed to fetch pet:", error);
+      }
+    };
+
+    const fetchVet = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        console.error("No auth token found in local storage.");
+        return;
+      }
+
+      try {
+        const headers = new Headers({
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        });
+
+        const requestOptions = {
+          method: "GET",
+          headers: headers,
+        };
+
+        const response = await fetch(vetUrl, requestOptions);
+
+        if (!response.ok) {
+          const errorText = await response.json();
+          throw new Error(
+            `Network response was not ok. Status: ${response.status}, ${errorText}`
+          );
+        }
+
+        const data = await response.json();
+        setVet(data);
+      } catch (error) {
+        console.error("Failed to fetch vet:", error);
+      }
+    };
+
+    fetchUser();
+    fetchPet();
+    fetchVet();
+  }, [appointments]);
+
   return (
     <div>
       {isOpen && (
         <dialog id={element_id} className="modal" open>
-          <div className="modal-box  w-11/12 max-w-2xl">
+          <div className="modal-box w-11/12 max-w-3xl">
             <button
               className="btn btn-error btn-sm float-right"
               onClick={onClose}
             >
               X
             </button>
-            <h3 className="font-bold text-lg ">
-              Daily Schedule for
-              {": " + tarikh.format("DD MMMM, YYYY")}
+            <h3 className="font-bold text-lg">
+              Daily Schedule for {": " + tarikh.format("DD MMMM, YYYY")}
             </h3>
 
             <div className="overflow-x-auto">
               <table className="table">
-                {/* Table Head */}
                 <thead>
                   <tr>
                     <th>Time</th>
                     <th>Description</th>
-                    <th>User & Pet</th>
+                    <th>{userType === "user" ? "Vet" : "User & Pet"}</th>
+                    {userType === "user" && <th>Pet</th>}
                     <th>Medium</th>
                   </tr>
                 </thead>
 
-                {/* Table Body */}
                 <tbody>
                   {hourlyAppointments.map((hourlySlot, index) => (
                     <tr key={index} className="hover:bg-base-200">
@@ -153,36 +209,110 @@ const DailyScheduleModal = ({
                           </span>
                         )}
                       </td>
+
+                      {/* Vet details for users, User & Pet details for vets */}
                       <td className="align-top">
-                        {hourlySlot.length > 0 ? (
-                          hourlySlot.map((appointment) => (
-                            <div key={appointment.id} className="mb-2">
-                              <div className="font-bold">
-                                {user.firstname + " " + user.lastname}
+                        {userType === "user" ? (
+                          hourlySlot.length > 0 ? (
+                            hourlySlot.map((appointment) => (
+                              <div key={appointment.id} className="mb-2">
+                                <div className="flex">
+                                  <div className="avatar mr-4">
+                                    <div className="mask mask-squircle w-16">
+                                      <img src={vet?.profileImage} alt="" />
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <div className="font-bold">
+                                      {vet?.firstname + " " + vet?.lastname}
+                                    </div>
+                                    <div className="text-sm opacity-50 italic">
+                                      {vet?.clinic_name}
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                              <div className="text-sm opacity-50 italic">
-                                {pet.name}
-                              </div>
-                              <div className="flex mt-1">
-                                <span className="badge badge-warning badge-sm">
-                                  {pet.type}
-                                </span>
-                                <span className="ml-2 badge badge-info badge-sm">
-                                  {pet.breed}
-                                </span>
-                              </div>
-                            </div>
-                          ))
+                            ))
+                          ) : (
+                            <span className="text-sm text-gray-500">-</span>
+                          )
                         ) : (
-                          <span className="text-sm text-gray-500">-</span>
+                          hourlySlot.length > 0 ? (
+                            hourlySlot.map((appointment) => (
+                              <div key={appointment.id} className="mb-2">
+                                <div className="flex">
+                                  <div className="avatar mr-4">
+                                    <div className="mask mask-squircle w-16">
+                                      <img src={pet?.images[0]} alt="" />
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <div className="font-bold">
+                                      {user?.firstname + " " + user?.lastname}
+                                    </div>
+                                    <div className="text-sm opacity-50 italic">
+                                      {pet?.name}
+                                    </div>
+                                    <div className="flex mt-1">
+                                      <span className="badge badge-warning badge-sm">
+                                        {pet?.type}
+                                      </span>
+                                      <span
+                                        className="ml-2 badge badge-info inline-block badge-sm"
+                                        style={{
+                                          whiteSpace: "nowrap",
+                                          overflow: "hidden",
+                                          textOverflow: "ellipsis",
+                                        }}
+                                      >
+                                        {pet?.breed}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-sm text-gray-500">-</span>
+                          )
                         )}
                       </td>
+
+                      {/* Pet details for users */}
+                      {userType === "user" && (
+                        <td className="align-top">
+                          {hourlySlot.length > 0 ? (
+                            hourlySlot.map((appointment) => (
+                              <div key={appointment.id} className="mb-2">
+                                <div className="flex">
+                                  <div className="avatar mr-4">
+                                    <div className="mask mask-squircle w-16">
+                                      <img src={pet?.images[0]} alt="" />
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <div className="font-bold">
+                                      {pet?.name}
+                                    </div>
+                                    <div className="text-sm opacity-50 italic">
+                                      {pet?.type} - {pet?.breed}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-sm text-gray-500">-</span>
+                          )}
+                        </td>
+                      )}
+
                       <td className="align-top">
                         {hourlySlot.length > 0 ? (
                           hourlySlot.map((appointment) => (
                             <div key={appointment.id} className="mb-2">
                               <span className="badge badge-ghost badge-sm">
-                                {appointment.medium}
+                                {appointment.online ? "Online" : "Offline"}
                               </span>
                             </div>
                           ))
@@ -194,12 +324,12 @@ const DailyScheduleModal = ({
                   ))}
                 </tbody>
 
-                {/* Table Foot */}
                 <tfoot>
                   <tr>
                     <th>Time</th>
                     <th>Description</th>
-                    <th>User & Pet</th>
+                    <th>{userType === "user" ? "Vet" : "User & Pet"}</th>
+                    {userType === "user" && <th>Pet</th>}
                     <th>Medium</th>
                   </tr>
                 </tfoot>
@@ -208,7 +338,6 @@ const DailyScheduleModal = ({
 
             <div className="modal-action">
               <button className="btn btn-primary">Add</button>
-
               <button className="btn btn-error" onClick={onClose}>
                 Close
               </button>

@@ -165,6 +165,7 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
         );
       }
 
+
       if (filter && filter.types.length > 0) {
         filtered = filtered.filter((pet) => filter.types.includes(pet.type));
       }
@@ -172,6 +173,9 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
       if (filter && filter.min !== undefined && filter.max !== undefined) {
         filtered = filtered.filter((pet) => {
           const age = calculateAge(pet.dob);
+          if(age === 0 && filter.min ===1) {
+            return true;
+          }
           return age >= filter.min && age <= filter.max;
         });
       }
@@ -182,6 +186,7 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
         filtered.sort((a, b) => b.age - a.age);
       }
 
+      console.log("Filtered pets:", filtered);
       return filtered;
     };
 
@@ -202,6 +207,7 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
           className="w-10 h-10 inline-block mr-3"
         />
         Pet Profiles
+        {petData.length}
       </h1>
       {loading ? (
         <div className="flex justify-center items-center h-48">

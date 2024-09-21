@@ -225,12 +225,6 @@ function Navbar() {
             >
               <button
                 className="btn p-0 rounded-none btn-sm btn-ghost italic"
-                onClick={markAllAsRead}
-              >
-                Mark all as read
-              </button>
-              <button
-                className="btn p-0 rounded-none btn-sm btn-ghost italic"
                 onClick={clearAll}
               >
                 Clear All{" "}
@@ -250,6 +244,12 @@ function Navbar() {
                     <Notification _notification={notification} />
                   </li>
                 ))}
+              <button
+                className="btn p-0 rounded-none btn-sm btn-ghost italic"
+                onClick={markAllAsRead}
+              >
+                Mark all as read
+              </button>
             </ul>
           </div>
         )}
