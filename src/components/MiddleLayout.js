@@ -68,7 +68,7 @@ const fetchVetData = async () => {
   }
 };
 
-const MiddleLayoutSellerHome = () => {
+const MiddleLayoutUserHome = () => {
   const [users, setUsers] = useState([]);
   const [vets, setVets] = useState([]);
   const [meetingId, setMeetingId] = useState("");
@@ -204,4 +204,4 @@ const MiddleLayoutSellerHome = () => {
   );
 };
 
-export default MiddleLayoutSellerHome;
+export default MiddleLayoutUserHome;

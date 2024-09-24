@@ -69,7 +69,7 @@ const CreatePetProfile = ({ element_id, user_id }) => {
       // Send the new pet data to the server
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://localhost:8080/api/v1/pets/create-pet",
+        `${process.env.REACT_APP_API_URL}/pets/create-pet`,
         {
           method: "POST",
           headers: {

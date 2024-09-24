@@ -35,8 +35,7 @@ import Communities from "./pages/communities/communities.js";
 import ChatRoom from "./pages/messaging/chat-room.js";
 import UserOrders from "./pages/user/user-orders.js";
 import AI from "./pages/ai/openai.js";
-
-
+import SingleAppointment from "./pages/vet/single-appointment.js";
 import PhotoUpload from "./pages/tests/photo-up-test.js";
 import Verify from "./pages/verify.js";
 
@@ -57,6 +56,7 @@ export default function App() {
             <Route path="/user/petbsx" element={<PetBSX />} />
             <Route path="/user/orders" element={<UserOrders />} />
             <Route path="/user/appointments" element={<Appointments />} />
+            <Route path="/appointment/:appointmentId" element={<SingleAppointment />} />
 
 
             <Route path="/user/lost-and-found" element={<LostAndFound />} />

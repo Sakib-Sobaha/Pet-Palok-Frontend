@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PetCardContainer from './containers/PetCardContainer';
+import PetCardContainer from './containers/PetCardContainer-User';
 import CreatePetProfile from './modals/create-pet-profile';
 
 const MiddleLayoutPets = ({ searchTerm, filter, sortOrder }) => {

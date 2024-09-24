@@ -8,139 +8,69 @@ const DailyScheduleModal = ({
   onClose,
 }) => {
   const userType = localStorage.getItem("userType");
-  const [user, setUser] = useState(null);
-  const [pet, setPet] = useState(null);
-  const [vet, setVet] = useState(null);
-
-  const getHourlyAppointments = () => {
-    const hourlyAppointments = Array.from({ length: 24 }, () => []);
-
-    appointments.forEach((appointment) => {
-      const appointmentHour = new Date(appointment.bookingTime).getUTCHours();
-      hourlyAppointments[appointmentHour]?.push(appointment);
-    });
-
-    return hourlyAppointments;
-  };
-
-  const hourlyAppointments = getHourlyAppointments();
-  const lenMax = 15;
+  const [appointmentDetails, setAppointmentDetails] = useState({});
   const [isExpanded, setIsExpanded] = useState(false);
+  const lenMax = 15;
 
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);
   };
 
+  const getHourlyAppointments = () => {
+    const hourlyAppointments = Array.from({ length: 24 }, () => []);
+    appointments.forEach((appointment) => {
+      const appointmentHour = new Date(appointment.bookingTime).getUTCHours();
+      hourlyAppointments[appointmentHour]?.push(appointment);
+    });
+    return hourlyAppointments;
+  };
+
+  const hourlyAppointments = getHourlyAppointments();
+
   useEffect(() => {
-    const userUrl = `${process.env.REACT_APP_API_URL}/user/getUserById/${appointments[0].userId}`;
-    const petUrl = `${process.env.REACT_APP_API_URL}/pets/${appointments[0].petId}`;
-    const vetUrl = `${process.env.REACT_APP_API_URL}/vet/getVetById/${appointments[0].vetId}`;
-
-    const fetchUser = async () => {
+    // Fetch all details for each appointment and store them in the state
+    const fetchAppointmentDetails = async (appointment) => {
       const token = localStorage.getItem("authToken");
-      if (!token) {
-        console.error("No auth token found in local storage.");
-        return;
-      }
+      if (!token) return;
+
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      });
 
       try {
-        const headers = new Headers({
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        });
+        const userUrl = `${process.env.REACT_APP_API_URL}/user/getUserById/${appointment.userId}`;
+        const petUrl = `${process.env.REACT_APP_API_URL}/pets/${appointment.petId}`;
+        const vetUrl = `${process.env.REACT_APP_API_URL}/vet/getVetById/${appointment.vetId}`;
 
-        const requestOptions = {
-          method: "GET",
-          headers: headers,
-        };
+        const [userResponse, petResponse, vetResponse] = await Promise.all([
+          fetch(userUrl, { method: "GET", headers }),
+          fetch(petUrl, { method: "GET", headers }),
+          fetch(vetUrl, { method: "GET", headers }),
+        ]);
 
-        const response = await fetch(userUrl, requestOptions);
-
-        if (!response.ok) {
-          const errorText = await response.json();
-          throw new Error(
-            `Network response was not ok. Status: ${response.status}, ${errorText}`
-          );
+        if (!userResponse.ok || !petResponse.ok || !vetResponse.ok) {
+          throw new Error("Error fetching details");
         }
 
-        const data = await response.json();
-        setUser(data);
+        const [user, pet, vet] = await Promise.all([
+          userResponse.json(),
+          petResponse.json(),
+          vetResponse.json(),
+        ]);
+
+        setAppointmentDetails((prevDetails) => ({
+          ...prevDetails,
+          [appointment.id]: { user, pet, vet },
+        }));
       } catch (error) {
-        console.error("Failed to fetch user:", error);
+        console.error("Failed to fetch appointment details:", error);
       }
     };
 
-    const fetchPet = async () => {
-      const token = localStorage.getItem("authToken");
-      if (!token) {
-        console.error("No auth token found in local storage.");
-        return;
-      }
-
-      try {
-        const headers = new Headers({
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        });
-
-        const requestOptions = {
-          method: "GET",
-          headers: headers,
-        };
-
-        const response = await fetch(petUrl, requestOptions);
-
-        if (!response.ok) {
-          const errorText = await response.json();
-          throw new Error(
-            `Network response was not ok. Status: ${response.status}, ${errorText}`
-          );
-        }
-
-        const data = await response.json();
-        setPet(data);
-      } catch (error) {
-        console.error("Failed to fetch pet:", error);
-      }
-    };
-
-    const fetchVet = async () => {
-      const token = localStorage.getItem("authToken");
-      if (!token) {
-        console.error("No auth token found in local storage.");
-        return;
-      }
-
-      try {
-        const headers = new Headers({
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        });
-
-        const requestOptions = {
-          method: "GET",
-          headers: headers,
-        };
-
-        const response = await fetch(vetUrl, requestOptions);
-
-        if (!response.ok) {
-          const errorText = await response.json();
-          throw new Error(
-            `Network response was not ok. Status: ${response.status}, ${errorText}`
-          );
-        }
-
-        const data = await response.json();
-        setVet(data);
-      } catch (error) {
-        console.error("Failed to fetch vet:", error);
-      }
-    };
-
-    fetchUser();
-    fetchPet();
-    fetchVet();
+    appointments.forEach((appointment) => {
+      fetchAppointmentDetails(appointment);
+    });
   }, [appointments]);
 
   return (
@@ -180,7 +110,7 @@ const DailyScheduleModal = ({
                         {hourlySlot.length > 0 ? (
                           <div className="flex flex-col gap-1">
                             {hourlySlot.map((appointment) => (
-                              <div key={appointment.id}>
+                              <div key={appointment.id} className="">
                                 <span className="font-bold">
                                   {isExpanded ||
                                   appointment.description.split(" ").length <=
@@ -212,69 +142,83 @@ const DailyScheduleModal = ({
 
                       {/* Vet details for users, User & Pet details for vets */}
                       <td className="align-top">
-                        {userType === "user" ? (
-                          hourlySlot.length > 0 ? (
-                            hourlySlot.map((appointment) => (
+                        {hourlySlot.length > 0 ? (
+                          hourlySlot.map((appointment) => {
+                            const details = appointmentDetails[appointment.id];
+                            return details ? (
                               <div key={appointment.id} className="mb-2">
-                                <div className="flex">
-                                  <div className="avatar mr-4">
-                                    <div className="mask mask-squircle w-16">
-                                      <img src={vet?.profileImage} alt="" />
+                                {userType === "user" ? (
+                                  <div className="flex">
+                                    <div className="avatar mr-4">
+                                      <div className="mask mask-squircle w-16">
+                                        <img
+                                          src={details.vet?.profileImage}
+                                          alt="Vet"
+                                        />
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="font-bold">
+                                        {details.vet?.firstname +
+                                          " " +
+                                          details.vet?.lastname}
+                                      </div>
+                                      <div className="text-sm opacity-50 italic">
+                                        {details.vet?.clinic_name}
+                                      </div>
                                     </div>
                                   </div>
-                                  <div>
-                                    <div className="font-bold">
-                                      {vet?.firstname + " " + vet?.lastname}
+                                ) : (
+                                  <div className="flex">
+                                    <div className="avatar mr-4">
+                                      <div className="mask mask-squircle w-16">
+                                        <img
+                                          src={details.pet?.images[0]}
+                                          alt="Pet"
+                                        />
+                                      </div>
                                     </div>
-                                    <div className="text-sm opacity-50 italic">
-                                      {vet?.clinic_name}
+                                    <div>
+                                      <div className="font-bold">
+                                        {details.user?.firstname +
+                                          " " +
+                                          details.user?.lastname}
+                                      </div>
+                                      <div className="text-sm opacity-50 italic">
+                                        {details.pet?.name}
+                                      </div>
+                                      <div className="flex mt-1">
+                                        <h1
+                                          className="badge badge-warning text-xs font-semibold"
+                                          style={{
+                                            padding: "0.5em 1em",
+                                            lineHeight: "1.2",
+                                          }}
+                                        >
+                                          {details.pet?.type}
+                                        </h1>
+                                        <h1
+                                          className="font-semibold text-xs badge badge-lg badge-info"
+                                          style={{
+                                            padding: "0.5em 1em",
+                                            lineHeight: "1.2",
+                                          }}
+                                        >
+                                          {details.pet?.breed}
+                                        </h1>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
+                                )}
                               </div>
-                            ))
-                          ) : (
-                            <span className="text-sm text-gray-500">-</span>
-                          )
+                            ) : (
+                              <span className="text-sm text-gray-500">
+                                Loading...
+                              </span>
+                            );
+                          })
                         ) : (
-                          hourlySlot.length > 0 ? (
-                            hourlySlot.map((appointment) => (
-                              <div key={appointment.id} className="mb-2">
-                                <div className="flex">
-                                  <div className="avatar mr-4">
-                                    <div className="mask mask-squircle w-16">
-                                      <img src={pet?.images[0]} alt="" />
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <div className="font-bold">
-                                      {user?.firstname + " " + user?.lastname}
-                                    </div>
-                                    <div className="text-sm opacity-50 italic">
-                                      {pet?.name}
-                                    </div>
-                                    <div className="flex mt-1">
-                                      <span className="badge badge-warning badge-sm">
-                                        {pet?.type}
-                                      </span>
-                                      <span
-                                        className="ml-2 badge badge-info inline-block badge-sm"
-                                        style={{
-                                          whiteSpace: "nowrap",
-                                          overflow: "hidden",
-                                          textOverflow: "ellipsis",
-                                        }}
-                                      >
-                                        {pet?.breed}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <span className="text-sm text-gray-500">-</span>
-                          )
+                          <span className="text-sm text-gray-500">-</span>
                         )}
                       </td>
 
@@ -282,25 +226,37 @@ const DailyScheduleModal = ({
                       {userType === "user" && (
                         <td className="align-top">
                           {hourlySlot.length > 0 ? (
-                            hourlySlot.map((appointment) => (
-                              <div key={appointment.id} className="mb-2">
-                                <div className="flex">
-                                  <div className="avatar mr-4">
-                                    <div className="mask mask-squircle w-16">
-                                      <img src={pet?.images[0]} alt="" />
+                            hourlySlot.map((appointment) => {
+                              const details =
+                                appointmentDetails[appointment.id];
+                              return details ? (
+                                <div key={appointment.id} className="mb-2">
+                                  <div className="flex">
+                                    <div className="avatar mr-4">
+                                      <div className="mask mask-squircle w-16">
+                                        <img
+                                          src={details.pet?.images[0]}
+                                          alt="Pet"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                  <div>
-                                    <div className="font-bold">
-                                      {pet?.name}
-                                    </div>
-                                    <div className="text-sm opacity-50 italic">
-                                      {pet?.type} - {pet?.breed}
+                                    <div>
+                                      <div className="font-bold">
+                                        {details.pet?.name}
+                                      </div>
+                                      <div className="text-sm opacity-50 italic">
+                                        {details.pet?.type} -{" "}
+                                        {details.pet?.breed}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))
+                              ) : (
+                                <span className="text-sm text-gray-500">
+                                  Loading...
+                                </span>
+                              );
+                            })
                           ) : (
                             <span className="text-sm text-gray-500">-</span>
                           )}
@@ -314,6 +270,18 @@ const DailyScheduleModal = ({
                               <span className="badge badge-ghost badge-sm">
                                 {appointment.online ? "Online" : "Offline"}
                               </span>
+                              <span className="badge badge-secondary text-xs badge-xs">
+                                {appointment?.state}
+                              </span>
+
+                              <button
+                                className="btn btn-primary rounded-lg p-1 text-xs px-2"
+                                onClick={() => {
+                                  window.location.href = `/appointment/${appointment.id}`;
+                                }}
+                              >
+                                Go To Appointment
+                              </button>
                             </div>
                           ))
                         ) : (
