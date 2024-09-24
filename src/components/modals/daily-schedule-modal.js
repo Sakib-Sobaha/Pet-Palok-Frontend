@@ -32,6 +32,7 @@ const DailyScheduleModal = ({
   };
 
   useEffect(() => {
+
     const userUrl = `${process.env.REACT_APP_API_URL}/user/getUserById/${appointments[0].userId}`;
     const petUrl = `${process.env.REACT_APP_API_URL}/pets/${appointments[0].petId}`;
     const vetUrl = `${process.env.REACT_APP_API_URL}/vet/getVetById/${appointments[0].vetId}`;
@@ -180,7 +181,7 @@ const DailyScheduleModal = ({
                         {hourlySlot.length > 0 ? (
                           <div className="flex flex-col gap-1">
                             {hourlySlot.map((appointment) => (
-                              <div key={appointment.id}>
+                              <div key={appointment.id} className="">
                                 <span className="font-bold">
                                   {isExpanded ||
                                   appointment.description.split(" ").length <=
@@ -236,45 +237,43 @@ const DailyScheduleModal = ({
                           ) : (
                             <span className="text-sm text-gray-500">-</span>
                           )
-                        ) : (
-                          hourlySlot.length > 0 ? (
-                            hourlySlot.map((appointment) => (
-                              <div key={appointment.id} className="mb-2">
-                                <div className="flex">
-                                  <div className="avatar mr-4">
-                                    <div className="mask mask-squircle w-16">
-                                      <img src={pet?.images[0]} alt="" />
-                                    </div>
+                        ) : hourlySlot.length > 0 ? (
+                          hourlySlot.map((appointment) => (
+                            <div key={appointment.id} className="mb-2">
+                              <div className="flex">
+                                <div className="avatar mr-4">
+                                  <div className="mask mask-squircle w-16">
+                                    <img src={pet?.images[0]} alt="" />
                                   </div>
-                                  <div>
-                                    <div className="font-bold">
-                                      {user?.firstname + " " + user?.lastname}
-                                    </div>
-                                    <div className="text-sm opacity-50 italic">
-                                      {pet?.name}
-                                    </div>
-                                    <div className="flex mt-1">
-                                      <span className="badge badge-warning badge-sm">
-                                        {pet?.type}
-                                      </span>
-                                      <span
-                                        className="ml-2 badge badge-info inline-block badge-sm"
-                                        style={{
-                                          whiteSpace: "nowrap",
-                                          overflow: "hidden",
-                                          textOverflow: "ellipsis",
-                                        }}
-                                      >
-                                        {pet?.breed}
-                                      </span>
-                                    </div>
+                                </div>
+                                <div>
+                                  <div className="font-bold">
+                                    {user?.firstname + " " + user?.lastname}
+                                  </div>
+                                  <div className="text-sm opacity-50 italic">
+                                    {pet?.name}
+                                  </div>
+                                  <div className="flex mt-1">
+                                    <span className="badge badge-warning badge-sm">
+                                      {pet?.type}
+                                    </span>
+                                    <span
+                                      className="ml-2 badge badge-info inline-block badge-sm"
+                                      style={{
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                      }}
+                                    >
+                                      {pet?.breed}
+                                    </span>
                                   </div>
                                 </div>
                               </div>
-                            ))
-                          ) : (
-                            <span className="text-sm text-gray-500">-</span>
-                          )
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-sm text-gray-500">-</span>
                         )}
                       </td>
 
@@ -291,9 +290,7 @@ const DailyScheduleModal = ({
                                     </div>
                                   </div>
                                   <div>
-                                    <div className="font-bold">
-                                      {pet?.name}
-                                    </div>
+                                    <div className="font-bold">{pet?.name}</div>
                                     <div className="text-sm opacity-50 italic">
                                       {pet?.type} - {pet?.breed}
                                     </div>
@@ -314,6 +311,23 @@ const DailyScheduleModal = ({
                               <span className="badge badge-ghost badge-sm">
                                 {appointment.online ? "Online" : "Offline"}
                               </span>
+                              <span className="badge badge-secondary text-xs badge-xs">
+                                {appointment?.state}
+                              </span>
+
+                              {/* {appointment?.state === "SCHEDULED" && ( */}
+                                <>
+                                  <button className="btn btn-primary rounded-lg p-1 text-xs px-2"
+                                    onClick={
+                                      () => {
+                                        window.location.href = `/appointment/${appointment.id}`;
+                                      }
+                                    }
+                                  >
+                                    Go To Appointment
+                                  </button>
+                                </>
+                              {/* )} */}
                             </div>
                           ))
                         ) : (

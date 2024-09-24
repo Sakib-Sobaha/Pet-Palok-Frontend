@@ -45,7 +45,17 @@ function Calendar() {
         "booking time check before :) " +
           JSON.stringify(appointment.bookingTime)
       );
-      const bookingDate = dayjs(appointment.bookingTime).format("YYYY-MM-DD");
+      {}
+
+      const bookingDate = dayjs(new Date(appointment.bookingTime).toLocaleDateString(
+        "en-US",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          timeZone: "UTC", // Forces UTC timezone
+        }
+      )).format("YYYY-MM-DD");
       console.log("booking date check:" + bookingDate);
       console.log("booking time check after ->" + appointment.bookingTime);
 
