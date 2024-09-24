@@ -198,11 +198,13 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
                 </p>
 
                 <p></p>
-                {/* <p>
+                <p>
                   <span className="font-semibold text-info">
-                    {item?.sell_count} sold
+                    {item?.sold} sold
                   </span>
-                </p> */}
+                </p>
+                {/* <span className="text-xs overflow-auto">
+                {JSON.stringify(item)}</span> */}
               </div>
 
               <div className="text-center flex place-items-center align-middle mb-2">

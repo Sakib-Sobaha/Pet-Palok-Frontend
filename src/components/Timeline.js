@@ -3,7 +3,13 @@ import React from "react";
 function Timeline({ timelineData }) {
   return (
     <ul className="timeline justify-center">
-      {timelineData.map((item) => (
+      {timelineData.length === 0 && (
+        <li>
+          <div className="timeline-start timeline-box text-xs">No data available</div>
+          </li>
+          )}
+
+      {timelineData.length !== 0 && timelineData.map((item) => (
         <li key={item.id}>
             <hr/>
           <div className="timeline-start timeline-box text-xs">{item.date}</div>

@@ -4,6 +4,7 @@ import React from "react";
 import SectionDivider from "./Section-Divider";
 import Timeline from "./Timeline";
 import ViewImageModal from "./modals/view-image-modal";
+import UploadImageModal from "./modals/upload-image-pet";
 
 const calculateAge = (dob) => {
   const birthDate = new Date(dob);
@@ -211,6 +212,12 @@ const MiddleLayoutPetProfile = ({ petId }) => {
               </div>
             ))}
           </div>
+          <UploadImageModal element_id="upload_image_pet" petId={petId} />
+          <button className="btn btn-primary mt-5"
+            onClick={() => {
+              document.getElementById("upload_image_pet").showModal();
+            }}
+          >Upload Image</button>
         </>
       ) : (
         <p>No pet data found.</p>

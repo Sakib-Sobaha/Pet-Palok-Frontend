@@ -50,7 +50,9 @@ function AppointmentRequestContainer({ text }) {
   }, []);
 
   // Determine the number of items to show based on the state
-  const itemsToShow = showAll ? appointmentRequests : appointmentRequests.slice(0, 6);
+  const itemsToShow = showAll
+    ? appointmentRequests
+    : appointmentRequests.slice(0, 6);
 
   return (
     <div className="bg bg-base-200 m-0 p-0 mb-4 rounded-xl">
@@ -61,12 +63,16 @@ function AppointmentRequestContainer({ text }) {
             <div className="loader"></div> {/* Add a loading spinner or text */}
           </div>
         ) : (
-          itemsToShow.map((item, index) => (
-            <AppointmentRequest
-              key={index}
-              _appointmentRequest={item}
-            />
-          ))
+          appointmentRequests.length === 0 ? (
+            <div className="flex justify-center items-center h-full">
+              <p>No appointment requests </p>
+            </div>
+          ) : 
+          itemsToShow.map((item, index) =>
+            (
+              <AppointmentRequest key={index} _appointmentRequest={item} />
+            )
+          )
         )}
       </div>
       <div className="flex justify-center mt-4">
