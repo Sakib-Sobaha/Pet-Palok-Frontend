@@ -1,5 +1,7 @@
 // App.js
 import React from "react";
+import "@fontsource/cascadia-code"; // Defaults to weight 400.
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeContext.js"; // Import ThemeProvider
 import { UserProvider } from "./components/UserContext.js"; // Import UserProvider

@@ -57,7 +57,12 @@ export default function MiddleLayoutGPT() {
         <div className="flex flex-col w-full max-w-md mx-auto py-4">
             <div className="flex-1 overflow-y-auto">
                 {messages.map((msg, index) => (
-                    <div key={index} className={`whitespace-pre-wrap ${msg.role === "user" ? "text-blue-500" : "text-green-500"}`}>
+                    <div 
+                        key={index} 
+                        className={`whitespace-pre-wrap my-2 p-4 rounded-lg 
+                                    ${msg.role === "user" ? "bg-blue-100 text-blue-800 shadow-md font-serif" : "bg-white text-black shadow-lg font-serif"} 
+                                    ${msg.role === "ai" ? "transform transition-transform hover:scale-105" : ""}`}
+                    >
                         {msg.role === "user" ? "User: " : "AI: "}
                         {msg.content}
                     </div>
@@ -67,12 +72,12 @@ export default function MiddleLayoutGPT() {
             <form onSubmit={handleSubmit} className="flex mt-4">
                 <input
                     type="text"
-                    className="input input-bordered w-full max-w-xs"
+                    className="input input-bordered w-full max-w-xs font-serif"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Type your message..."
                 />
-                <button type="submit" className="ml-2 p-2 bg-blue-500 text-white rounded">Send</button>
+                <button type="submit" className="btn btn-outline btn-secondary">Send</button>
             </form>
         </div>
     );
