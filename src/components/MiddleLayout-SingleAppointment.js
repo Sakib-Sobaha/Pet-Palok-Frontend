@@ -47,54 +47,110 @@ function MiddleLayoutSingleAppointment({ _id }) {
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);
   };
+  // Handle file upload
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    // setPrescriptionFile(file); // Set the file immediately for the state
 
     if (file) {
       try {
+        // FileReader to read the file as a data URL (optional for local display)
         const reader = new FileReader();
+        reader.readAsDataURL(file); // Optional: use if you want to display the file locally
 
-        // Read the file as a data URL (optional, if you need to display it locally)
-        reader.readAsDataURL(file);
-
-        // Upload the file to Supabase and get the URL
-        const urls = await uploadFiles([file]); // Assuming this function uploads and returns URLs
+        // Upload the file to Supabase (or wherever) and get the URL
+        const urls = await uploadFiles([file]);
 
         if (urls && urls.length > 0) {
           const fileUrl = urls[0]; // Get the first file URL
           console.log("File uploaded to Supabase:", fileUrl);
 
-          // Update the appointment object with the new prescription file URL
+          // Update prescriptionFile state
+          setPrescriptionFile(fileUrl);
+
+          // Immediately update the appointment object with the new prescription file URL
           setAppointment((prevState) => ({
             ...prevState,
-            prescriptionFile: fileUrl, // Use the uploaded file's URL
+            prescriptionFile: fileUrl, // Use fileUrl directly, do not rely on state yet
           }));
 
-          setPrescriptionFile(fileUrl); // Update the prescriptionFile state with the URL
+          console.log("Updated prescriptionFile URL:", fileUrl);
 
-          console.log("Updated prescriptionFile URL:", prescriptionFile);
+          // Show alert for successful upload
+          alert("File uploaded successfully!");
 
-          // Call saveAppointment after the file is successfully uploaded
-          await saveAppointment(); // Ensure saveAppointment is called after setting the URL
+          // Only call saveAppointment **after** file is uploaded and state is updated
+          await saveAppointment(fileUrl); // Pass the file URL directly
         }
       } catch (error) {
         console.error("Error uploading file:", error);
       }
+    } else {
+      // If no file is uploaded, still save other changes
+      await saveAppointment(prescriptionFile); // Pass the current state value directly
     }
-    saveAppointment(); // Add this to save the data when changed
   };
 
-  const removeFile = () => {};
-
+  const removeFile = () => {
+    // If you want to remove the file from the backend, handle that here
+    setPrescriptionFile(""); // Reset prescriptionFile state
+    setAppointment((prevState) => ({
+      ...prevState,
+      prescriptionFile: "", // Update appointment object as well
+    }));
+    alert("File removed successfully!");
+  };
   const toggleDescription2 = () => {
     setIsExpanded2(!isExpanded2);
   };
 
-  const saveAppointment = async () => {
+  const sendLinkHandler = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/notifications/meetingStarted`;
+    const headers = new Headers({
+      Authorization: `Bearer ${authToken}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    });
+    const body = JSON.stringify({
+      appointmentId: appointment.id,
+      meetingLink: meetingId,
+    });
+    console.log(body);
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: body,
+      });
+
+      // Check if the response status is OK
+      if (response.ok) {
+        // Attempt to parse the response if it's not empty
+        const contentType = response.headers.get("content-type");
+        let data;
+        if (contentType && contentType.includes("application/json")) {
+          data = await response.json();
+          console.log(data); // Process JSON data
+        } else {
+          console.log("Non-JSON response or empty body");
+        }
+
+        alert("Meeting link sent successfully");
+      } else {
+        console.error(`Error: ${response.statusText}`);
+        alert("Failed to send meeting link");
+      }
+    } catch (error) {
+      console.error("Error sending meeting link:", error);
+      alert("Error sending meeting link");
+    }
+  };
+
+  // Save appointment and handle form submission
+  const saveAppointment = async (fileUrl) => {
     const url = `${process.env.REACT_APP_API_URL}/appointments/update/${appointment.id}`;
 
-    // Ensure medications is a map of strings as expected by the backend
+    // Ensure medications are formatted as a map of strings
     const formattedMedications = medications.reduce((acc, med) => {
       if (med.name && med.dosage) {
         acc[med.name] = med.dosage;
@@ -102,11 +158,12 @@ function MiddleLayoutSingleAppointment({ _id }) {
       return acc;
     }, {});
 
+    // Prepare the appointment data
     const appointmentData = {
       prescription: prescription,
-      medications: formattedMedications, // Should be a map, not an array
-      tests: tests, // Should already be a list of strings
-      prescriptionFile: prescriptionFile, // Send null if no file
+      medications: formattedMedications, // Should be a map
+      tests: tests, // Already a list of strings
+      prescriptionFile: fileUrl || prescriptionFile || null, // Use fileUrl directly or fallback to state
     };
 
     const headers = new Headers({
@@ -116,6 +173,7 @@ function MiddleLayoutSingleAppointment({ _id }) {
     });
 
     console.log(JSON.stringify(appointmentData)); // For debugging
+
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -128,7 +186,7 @@ function MiddleLayoutSingleAppointment({ _id }) {
       }
 
       const updatedAppointment = await response.json();
-      setAppointment(updatedAppointment);
+      setAppointment(updatedAppointment); // Update the state with the new appointment data
     } catch (error) {
       console.error("Error updating appointment:", error);
     }
@@ -210,11 +268,6 @@ function MiddleLayoutSingleAppointment({ _id }) {
       fetchVet();
     }
   }, [appointment]);
-  // useEffect(() => {
-  //   if (appointment?.prescription) {
-  //     setPrescriptionFile(appointment.prescription);
-  //   }
-  // }, [appointment]);
 
   // Handlers for dynamic medication input
   const handleMedicationChange = (index, key, value) => {
@@ -313,8 +366,18 @@ function MiddleLayoutSingleAppointment({ _id }) {
               {pet?.name}
             </h1>
             <h1 className="font-semibold">Age: {calculateAge(pet?.dob)}</h1>
-            <h1 className="badge badge-warning font-semibold">{pet?.type}</h1>
-            <h1 className="font-semibold badge badge-info">{pet?.breed}</h1>
+            <h1
+              className="badge badge-warning font-semibold"
+              style={{ padding: "0.5em 1em", lineHeight: "1.2" }}
+            >
+              {pet?.type}
+            </h1>
+            <h1
+              className="font-semibold badge badge-info"
+              style={{ padding: "0.5em 1em", lineHeight: "1.2" }}
+            >
+              {pet?.breed}
+            </h1>
           </div>
         </div>
 
@@ -412,7 +475,7 @@ function MiddleLayoutSingleAppointment({ _id }) {
           </div>
         </div>
 
-        {appointment?.online && (
+        {isEditable && appointment?.online && (
           <button className="btn btn-secondary w-32">Join Meeting</button>
         )}
 
@@ -530,60 +593,78 @@ function MiddleLayoutSingleAppointment({ _id }) {
           </label>
         )}
       </div>
-      {isEditable && appointment?.prescriptionFile !== "" && (
-        <div>
-          <button
-            className="btn btn-primary flex w-56 ml-6 mb-1"
-            onClick={() => window.open(appointment?.prescriptionFile, "_blank")}
-          >
-            <svg
-              class="feather feather-download"
-              fill="none"
-              height="24"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              width="24"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
+      {appointment?.prescriptionFile !== "" &&
+        appointment?.prescriptionFile !== null && (
+          <div>
+            <button
+              className="btn btn-primary flex w-56 ml-6 mb-1"
+              onClick={() =>
+                window.open(appointment?.prescriptionFile, "_blank")
+              }
             >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" x2="12" y1="15" y2="3" />
-            </svg>
-            Download Prescription
-          </button>
-        </div>
-      )}
+              <svg
+                class="feather feather-download"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" x2="12" y1="15" y2="3" />
+              </svg>
+              Download Prescription
+            </button>
+          </div>
+        )}
 
       {isEditable && (
         <>
           {localStorage.getItem("userType") === "vet" && (
-            <button
-              id="newMeetingBtn"
-              className="btn btn-primary w-56 mb-4 ml-6"
-              onClick={handleOnClickNewMeeting}
-            >
-              <svg
-                version="1.1"
-                viewBox="0 0 24 24"
-                // xml:space="preserve"
-                // xmlns="http://www.w3.org/2000/svg"
-                // xmlns:xlink="http://www.w3.org/1999/xlink"
-                className="h-4 w-4"
+            <div>
+              <button
+                id="newMeetingBtn"
+                className="btn btn-primary w-56 mb-4 ml-6 mr-2"
+                onClick={handleOnClickNewMeeting}
               >
-                <g id="info" />
-                <g id="icons">
-                  <path
-                    d="M12,1C5.9,1,1,5.9,1,12s4.9,11,11,11s11-4.9,11-11S18.1,1,12,1z M17,14h-3v3c0,1.1-0.9,2-2,2s-2-0.9-2-2v-3H7   c-1.1,0-2-0.9-2-2c0-1.1,0.9-2,2-2h3V7c0-1.1,0.9-2,2-2s2,0.9,2,2v3h3c1.1,0,2,0.9,2,2C19,13.1,18.1,14,17,14z"
-                    id="add"
-                  />
-                </g>
-              </svg>
-              Create a New Meeting
-            </button>
+                <svg
+                  version="1.1"
+                  viewBox="0 0 24 24"
+                  // xml:space="preserve"
+                  // xmlns="http://www.w3.org/2000/svg"
+                  // xmlns:xlink="http://www.w3.org/1999/xlink"
+                  className="h-4 w-4"
+                >
+                  <g id="info" />
+                  <g id="icons">
+                    <path
+                      d="M12,1C5.9,1,1,5.9,1,12s4.9,11,11,11s11-4.9,11-11S18.1,1,12,1z M17,14h-3v3c0,1.1-0.9,2-2,2s-2-0.9-2-2v-3H7   c-1.1,0-2-0.9-2-2c0-1.1,0.9-2,2-2h3V7c0-1.1,0.9-2,2-2s2,0.9,2,2v3h3c1.1,0,2,0.9,2,2C19,13.1,18.1,14,17,14z"
+                      id="add"
+                    />
+                  </g>
+                </svg>
+                Create a New Meeting
+              </button>
+              <br />
+
+              <input
+                type="text"
+                placeholder="Meeting ID"
+                id="meetingName"
+                value={meetingId}
+                onChange={(e) => setMeetingId(e.target.value)}
+                className="input input-bordered mr-2 ml-6"
+              />
+              <button className="btn btn-secondary" onClick={sendLinkHandler}>
+                Send Link
+              </button>
+            </div>
           )}
 
           {localStorage.getItem("userType") === "user" && (

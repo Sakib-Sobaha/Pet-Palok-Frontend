@@ -8,12 +8,12 @@ const RightLayout = () => {
   return (
     <div className="flex-1 bg-base-100 p-4 min-h-screen h-full rounded-lg">
       {/* Your content for RightLayout */}
-      <button
+      {/* <button
         className="btn btn-outline btn-secondary dark:bg-transparent"
         onClick={handleChatRoomRedirect} // Call the function on button click
       >
         Enter ChatRoom
-      </button>
+      </button> */}
       {/* Right Layout */}
     </div>
   );

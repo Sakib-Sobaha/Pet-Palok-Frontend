@@ -207,7 +207,7 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
           className="w-10 h-10 inline-block mr-3"
         />
         Pet Profiles
-        {petData.length}
+        {/* {petData.length} */}
       </h1>
       {loading ? (
         <div className="flex justify-center items-center h-48">

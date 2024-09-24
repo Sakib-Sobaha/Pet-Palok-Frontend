@@ -26,9 +26,11 @@ const Notification = ({ _notification }) => {
   }, [_notification]);
 
   const handleClick = () => {
-    // Logic for redirecting to the appropriate notification page
-    // Example: window.location.href = notification.link;
-    console.log("Redirecting to notification page:", notification.link);
+    if (notification.type === "APPOINTMENT_LINK_HOLDER") {
+      console.log("Redirecting to appointment page:", notification.mainContextId);
+      window.open(notification.mainContextId, "_blank");
+    }
+    console.log("hello" + JSON.stringify(notification));
   };
 
   return (
