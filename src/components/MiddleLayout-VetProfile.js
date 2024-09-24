@@ -66,7 +66,7 @@ const timelineData = [
 
 const fetchData = async (token, vetId) => {
   try {
-    const url = `http://localhost:8080/api/v1/vet/getVetById/${vetId}`;
+    const url = `${process.env.REACT_APP_API_URL}/vet/getVetById/${vetId}`;
     const headers = new Headers({
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",

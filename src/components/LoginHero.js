@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import PasswordChecklist from "react-password-checklist";
 
 function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
   const [loading, setLoading] = useState(false);
@@ -194,6 +195,8 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
                   onChange={(e) => setSignupPassword(e.target.value)}
                 />
               </div>
+
+              
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Confirm Password</span>
@@ -211,6 +214,14 @@ function LoginHero({ type, title, text, icon, loginURL, signupURL }) {
                     Passwords do not match
                   </p>
                 )}
+
+                <PasswordChecklist
+                  rules={["minLength", "specialChar", "number", "capital", "lowercase", "match"]}
+                  minLength={8}
+                  value={signupPassword}
+                  valueAgain={signupConfirmPassword}
+                  onChange={(isValid) => {}}
+                />
               </div>
               <div className="form-control mt-6">
                 <button type="submit" className="btn btn-primary">

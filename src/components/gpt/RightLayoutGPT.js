@@ -1,6 +1,6 @@
 import React from "react";
 
-const RightLayout = () => {
+const RightLayoutGPT = () => {
   const handleChatRoomRedirect = () => {
     window.location.href = "http://localhost:3000/chatroom"; // Redirect to chatroom
   };
@@ -29,4 +29,4 @@ const RightLayout = () => {
   );
 };
 
-export default RightLayout;
+export default RightLayoutGPT;
