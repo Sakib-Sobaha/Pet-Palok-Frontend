@@ -113,7 +113,7 @@ function AppointmentRequestCard({ appointmentRequest }) {
 
           <div>
             <h2 className="text-xs font-semibold text-accent float-right">
-              Clinic: {vet?.clinicName}
+              Clinic: {vet?.clinic_name}
             </h2>
 
             <div className="float-left grid grid-cols-4 gap-2 justify-normal place-items-center text-base-content">

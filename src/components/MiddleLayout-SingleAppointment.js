@@ -328,7 +328,14 @@ function MiddleLayoutSingleAppointment({ _id }) {
       <div className="card-body">
         <div>
           <h2 className="card-title font-bold float-right text-accent">
-            Vet: {vet?.firstname + " " + vet?.lastname}
+            <h2
+              className="card-title font-bold float-right text-accent cursor-pointer hover:scale-105 hover:text-primary"
+              onClick={() => {
+                window.location.href = `/vet/profile/${vet?.id}`;
+              }}
+            >
+              Vet: {vet?.firstname + " " + vet?.lastname}
+            </h2>{" "}
             <div
               className={`avatar ${vet?.status === "online" ? "online" : ""}`}
             >
@@ -345,7 +352,14 @@ function MiddleLayoutSingleAppointment({ _id }) {
                 <img src={user?.image} />
               </div>
             </div>
-            Applicant: {user?.firstname + " " + user?.lastname}
+            <h2
+              className="card-title font-bold float-left cursor-pointer hover:scale-105 hover:text-primary"
+              onClick={() => {
+                window.location.href = `/user/profile/${user?.id}`;
+              }}
+            >
+              Applicant: {user?.firstname + " " + user?.lastname}
+            </h2>{" "}
           </h2>
         </div>
 
@@ -361,7 +375,12 @@ function MiddleLayoutSingleAppointment({ _id }) {
               </div>
             </div>
 
-            <h1 className="text-sm font-semibold">
+            <h1
+              className="text-sm font-semibold cursor-pointer hover:scale-105 hover:text-primary"
+              onClick={() => {
+                window.location.href = `/user/pets/${pet?.id}`;
+              }}
+            >
               <span className="font-bold">Pet Name: </span>
               {pet?.name}
             </h1>
