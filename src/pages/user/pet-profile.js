@@ -10,10 +10,9 @@ function PetProfile() {
   const petId = useParams().petId;
   return (
     <div>
-
       <LayoutLRM
-        left={<LeftLayout  />}
-        middle={<MiddleLayout petId={petId}/>}
+        left={<LeftLayout />}
+        middle={<MiddleLayout petId={petId} />}
         right={<RightLayout />}
       />
     </div>

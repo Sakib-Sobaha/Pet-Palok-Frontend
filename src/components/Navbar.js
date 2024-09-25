@@ -7,6 +7,7 @@ import { fetchUserData } from "./api-fetch-functions/fetch-whoami";
 import ShoppingCartIcon from "./icons/shopping-carticon";
 import axios from "axios";
 import Notification from "./Notification";
+import SearchBar from "./Search/Search-Bar";
 
 function Navbar() {
   const userType = localStorage.getItem("userType");
@@ -315,13 +316,7 @@ function Navbar() {
       </div>
 
       <div className="flex-none gap-2">
-        <div className="form-control">
-          <input
-            type="text"
-            placeholder="Search"
-            className="input input-bordered w-24 md:w-auto"
-          />
-        </div>
+        <SearchBar />
 
         <div className="dropdown dropdown-end">
           <div

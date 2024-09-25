@@ -40,6 +40,7 @@ import AI from "./pages/ai/openai.js";
 import SingleAppointment from "./pages/vet/single-appointment.js";
 import PhotoUpload from "./pages/tests/photo-up-test.js";
 import Verify from "./pages/verify.js";
+import Store from "./pages/seller/store.js";
 
 export default function App() {
   return (
@@ -76,6 +77,7 @@ export default function App() {
             <Route path="/seller/home" element={<SellerHome />} />
             <Route path="/seller/my-products" element={<SellerMyProducts />} />
             <Route path="/seller/orders" element={<StoreOrders />} />
+            <Route path="/store/:storeId" element={<Store />} />
 
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/marketplace/item/:itemId" element={<SingleItem />} />

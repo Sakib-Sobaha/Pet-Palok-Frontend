@@ -119,7 +119,7 @@ function Calendar() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-full">
-        <span className="loading loading-dots text-error"></span>
+        <span className="loading loading-dots"></span>
       </div>
     );
   } else

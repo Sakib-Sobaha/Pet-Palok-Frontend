@@ -475,9 +475,9 @@ function MiddleLayoutSingleAppointment({ _id }) {
           </div>
         </div>
 
-        {isEditable && appointment?.online && (
+        {/* {isEditable && appointment?.online && (
           <button className="btn btn-secondary w-32">Join Meeting</button>
-        )}
+        )} */}
 
         {/* Prescription */}
         <div>
