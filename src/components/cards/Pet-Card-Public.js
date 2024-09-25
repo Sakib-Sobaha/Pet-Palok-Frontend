@@ -37,19 +37,19 @@ function PetCard({ pet }) {
 
   const { years, months } = calculateAge(pet?.dob);
 
-  useEffect(() => {
-    const userType = localStorage.getItem("userType");
-    const fetchUser = async () => {
-      setLoading(true);
-      const data = await fetchUserData(`/${userType}/whoami`); // Use the reusable fetch function
-      if (data) {
-        setUser(data);
-        setUserId(data.id); // Pass the user ID to the parent component if needed
-      }
-      setLoading(false);
-    };
-    fetchUser();
-  }, []);
+//   useEffect(() => {
+//     const userType = localStorage.getItem("userType");
+//     const fetchUser = async () => {
+//       setLoading(true);
+//       const data = await fetchUserData(`/${userType}/whoami`); // Use the reusable fetch function
+//       if (data) {
+//         setUser(data);
+//         setUserId(data.id); // Pass the user ID to the parent component if needed
+//       }
+//       setLoading(false);
+//     };
+//     fetchUser();
+//   }, []);
 
   if (loading)
     return (
@@ -123,38 +123,7 @@ function PetCard({ pet }) {
             >
               Visit Profile
             </button>
-            {user && user.id === pet.ownerId && (
-              <button
-                className="btn btn-error rounded-lg"
-                onClick={() => {
-                  console.log("Delete pet");
-                  // Implement the delete functionality here
-                  const deleteUrl = `${process.env.REACT_APP_API_URL}/pets/delete/${pet.id}`;
-                  fetch(deleteUrl, {
-                    method: "DELETE",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
-                  })
-                    .then((response) => {
-                      if (response.ok) {
-                        console.log("Pet deleted successfully");
-                        alert("Pet deleted successfully");
-                        // Implement the redirect functionality here
-                        window.location.href = "/user/pets";
-                      } else {
-                        console.error("Failed to delete pet");
-                      }
-                    })
-                    .catch((error) => {
-                      console.error("Failed to delete pet", error);
-                    });
-                }}
-              >
-                Delete Pet
-              </button>
-            )}
+            
           </div>
         </div>
       </div>

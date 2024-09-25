@@ -138,12 +138,12 @@ const VetCardContainer = ({ sortCriteria, searchTerm, ratingRange}) => {
         (vet?.firstname + (" " + vet?.lastname))
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
-        vet?.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet?.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet?.postOffice.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet?.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet?.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vet?.clinic_name.toLowerCase().includes(searchTerm.toLowerCase())
+        vet?.lastname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet?.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet?.postOffice?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet?.district?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet?.country?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vet?.clinic_name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     // Filtering by rating range

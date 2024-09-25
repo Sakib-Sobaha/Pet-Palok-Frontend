@@ -8,6 +8,8 @@ import EditPasswordModal from "./modals/edit-password";
 import EditProfileModal from "./modals/edit-profile-vet";
 import BookAppointment from "./modals/book-appointment";
 
+import VetReviews from "./containers/Vet-Review-Container";
+
 // Function to fetch the vet profile by vetId
 const fetchData = async (token, vetId) => {
   try {
@@ -289,7 +291,10 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
       {/* <SectionDivider title="Timeline" icon="" />
       <Timeline /> */}
       <SectionDivider title="Ratings" icon="" />
-      <Rating />
+      <div className="place-items-center justify-center grid mb-4">
+        <Rating rating={vet.rating_vetvisit} />
+      </div>
+      <VetReviews vetId = {vet.id}/>
     </div>
   );
 };

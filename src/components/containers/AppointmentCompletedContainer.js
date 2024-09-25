@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import AppointmentCompleted from "../cards/AppointmentCompleted-card";
 
-
 function AppointmentCompletedContainer({ text }) {
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [appointments, setAppointments] = useState([]);
   // Determine the number of items to show based on the state
-  const itemsToShow = showAll
-    ? appointments
-    : appointments.slice(0, 6);
+  const itemsToShow = showAll ? appointments : appointments.slice(0, 6);
   useEffect(() => {
     // Fetch appointment requests data when the component mounts
     const fetchAppointments = async () => {
@@ -22,7 +19,7 @@ function AppointmentCompletedContainer({ text }) {
       }
 
       try {
-        const url = `${process.env.REACT_APP_API_URL}/appointments/${userType}/fetchAll`;
+        const url = `${process.env.REACT_APP_API_URL}/appointments/completed`;
         const headers = new Headers({
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -61,6 +58,12 @@ function AppointmentCompletedContainer({ text }) {
       <div className="bg bg-base-200 m-0 p-0 mb-4 rounded-xl">
         <h1 className="text-3xl font-bold ml-3">{text}</h1>
         <div className="grid grid-cols-1 gap-1 align-middle overflow-y-auto h-[60vh]">
+          {itemsToShow.length === 0 && (
+            <div className="flex justify-center items-center h-full">
+              No completed appointments yet.
+              {/* <img src="https://img.freepik.com/free-vector/hand-drawn-flat-design-shrug-illustration_23-2149318820.jpg" className="object-contain" alt="No completed appointments found" /> */}
+            </div>
+          )}
           {itemsToShow.map((item, index) => (
             <AppointmentCompleted
               key={index}

@@ -5,7 +5,6 @@ const handleLogout = () => {
   localStorage.removeItem("authToken");
   window.location.href = "/login"; // Redirect to the login page
 };
-
 const timeAgo = (timestamp) => {
   const now = new Date();
   const then = new Date(timestamp);
@@ -69,7 +68,7 @@ function SingleReivew({ _review }) {
     fetchData(fetchUserUrl);
   }, [token, fetchUserUrl]);
   return (
-    <div className="border border-content rounded-lg mb-2 p-2 flex items-center">
+    <div className="border border-content rounded-lg mb-2 p-2 flex items-center text-left">
       {!_review.anonymous && (
         <div className="avatar m-2 mr-3">
           <div className="ring-info ring-offset-base-100 w-16 rounded-full ring ring-offset-2">
@@ -91,7 +90,7 @@ function SingleReivew({ _review }) {
 
       <div className="w-full">
         <div className="float-right">
-          <Rating rating={_review.itemRating} className="h-20" />
+          <Rating rating={_review.vetRating} className="h-20" />
         </div>
         <div className="">
           <h1 className="font-bold text-content">
@@ -101,7 +100,7 @@ function SingleReivew({ _review }) {
           </h1>
         </div>
         {/* Render review text */}
-        <h1 className="font-semibold">{_review.itemReview}</h1>
+        <h1 className="font-semibold">{_review.vetReview}</h1>
         <div className="flex">
           <svg
             viewBox="0 0 32 32"

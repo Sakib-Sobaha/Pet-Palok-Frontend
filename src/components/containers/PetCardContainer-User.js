@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PetCard from "../cards/Pet-Card";
+import PetCard from "../cards/Pet-Card-Public";
 
 const handleLogout = () => {
   localStorage.removeItem("authToken");
@@ -25,7 +25,7 @@ function calculateAge(dob) {
 // Function to fetch pet data from the API
 const fetchData = async (token, id) => {
   try {
-    const url = `${process.env.REACT_APP_API_URL}/pets/petByOwnerId/${id}`;
+    const url = `${process.env.REACT_APP_API_URL}/pets/getAllPets`;
     const headers = new Headers({
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -152,46 +152,46 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
   }, [user]);
 
   useEffect(() => {
-    const filterPets = () => {
-      let filtered = [...petData];
+    // const filterPets = () => {
+    //   let filtered = [...petData];
 
-      if (searchTerm) {
-        filtered = filtered.filter(
-          (pet) =>
-            pet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            pet.breed.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            pet.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            pet.type.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }
+    //   if (searchTerm) {
+    //     filtered = filtered.filter(
+    //       (pet) =>
+    //         pet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         pet.breed.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         pet.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         pet.type.toLowerCase().includes(searchTerm.toLowerCase())
+    //     );
+    //   }
 
 
-      if (filter && filter.types.length > 0) {
-        filtered = filtered.filter((pet) => filter.types.includes(pet.type));
-      }
+    //   if (filter && filter.types.length > 0) {
+    //     filtered = filtered.filter((pet) => filter.types.includes(pet.type));
+    //   }
 
-      if (filter && filter.min !== undefined && filter.max !== undefined) {
-        filtered = filtered.filter((pet) => {
-          const age = calculateAge(pet.dob);
-          if(age === 0 && filter.min ===1) {
-            return true;
-          }
-          return age >= filter.min && age <= filter.max;
-        });
-      }
+    //   if (filter && filter.min !== undefined && filter.max !== undefined) {
+    //     filtered = filtered.filter((pet) => {
+    //       const age = calculateAge(pet.dob);
+    //       if(age === 0 && filter.min ===1) {
+    //         return true;
+    //       }
+    //       return age >= filter.min && age <= filter.max;
+    //     });
+    //   }
 
-      if (sortOrder === "ageLowToHigh") {
-        filtered.sort((a, b) => a.age - b.age);
-      } else if (sortOrder === "ageHighToLow") {
-        filtered.sort((a, b) => b.age - a.age);
-      }
+    //   if (sortOrder === "ageLowToHigh") {
+    //     filtered.sort((a, b) => a.age - b.age);
+    //   } else if (sortOrder === "ageHighToLow") {
+    //     filtered.sort((a, b) => b.age - a.age);
+    //   }
 
-      console.log("Filtered pets:", filtered);
-      return filtered;
-    };
+    //   console.log("Filtered pets:", filtered);
+    //   return filtered;
+    // };
 
-    setFilteredPets(filterPets());
-  }, [petData, searchTerm, filter, sortOrder]);
+    setFilteredPets(petData);
+  }, [petData]);
 
   const toggleVisibility = () => {
     setIsExpanded(!isExpanded);

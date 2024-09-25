@@ -7,6 +7,7 @@ import { fetchUserData } from "./api-fetch-functions/fetch-whoami";
 import ShoppingCartIcon from "./icons/shopping-carticon";
 import axios from "axios";
 import Notification from "./Notification";
+import SearchBar from "./Search/Search-Bar";
 
 function Navbar() {
   const userType = localStorage.getItem("userType");
@@ -185,8 +186,30 @@ function Navbar() {
           }}
         />
       </div>
-      {user?.email}
-      {notifications?.length}
+      {/* {user?.email} */}
+
+      {(userType === "user" || userType === "vet") &&
+        // show firstname and lastname
+        user?.firstname &&
+        user?.lastname && (
+          <div className="flex-1 pr-4 justify-start">
+            <h1 className="text-lg font-bold">
+              {user?.firstname} {user?.lastname}
+            </h1>
+          </div>
+        )}
+        {userType === "seller" &&
+        // show firstname and lastname
+        user?.name && ( 
+          <div className="flex-1 pr-4 justify-start">
+            <h1 className="text-lg font-bold">
+              {user?.name}
+            </h1>
+          </div>
+        )}
+
+
+      {/* {notifications?.length} */}
 
       {/* notifications , cart, theme */}
       <div className="flex-1 pr-4 justify-end">
@@ -315,13 +338,7 @@ function Navbar() {
       </div>
 
       <div className="flex-none gap-2">
-        <div className="form-control">
-          <input
-            type="text"
-            placeholder="Search"
-            className="input input-bordered w-24 md:w-auto"
-          />
-        </div>
+        <SearchBar />
 
         <div className="dropdown dropdown-end">
           <div

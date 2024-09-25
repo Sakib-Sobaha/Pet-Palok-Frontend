@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { drawHistogram } from "../components/chart/draw-histogram"; // Ensure correct path
 import SectionDivider from "./Section-Divider";
 import Rating from "./Rating";
+import StoreProductsContainer from "./containers/StoreProductsContainer";
 import ReviewContainer from "./containers/Seller-Review-Container";
-// import RatingChart from "./chart/RatingChart";
 const handleLogout = () => {
   localStorage.removeItem("authToken");
   window.location.href = "/login"; // Redirect to the login page
@@ -44,9 +44,9 @@ const fetchData = async (token, sellerId) => {
   }
 };
 
-const fetchSellerWhoAMI = async (token) => {
+const fetchSellerAPI = async (token, sellerId) => {
   try {
-    const url = `${process.env.REACT_APP_API_URL}/seller/whoami`;
+    const url = `${process.env.REACT_APP_API_URL}/seller/getSellerById/${sellerId}`;
     const headers = new Headers({
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -78,7 +78,7 @@ const fetchSellerWhoAMI = async (token) => {
   }
 };
 
-const MiddleLayoutSellerHome = () => {
+const MiddleLayoutSellerHome = ({ sellerId }) => {
   const [seller, setSeller] = useState(null);
   const [marketItems, setMarketItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -115,7 +115,7 @@ const MiddleLayoutSellerHome = () => {
 
     try {
       setLoading(true);
-      const data = await fetchSellerWhoAMI(token);
+      const data = await fetchSellerAPI(token, sellerId);
       setSeller(data);
     } catch (error) {
       console.error("Fetch error:", error);
@@ -126,11 +126,11 @@ const MiddleLayoutSellerHome = () => {
 
   useEffect(() => {
     fetchSeller();
-  }, []);
+  }, [sellerId]);
 
-  useEffect(() => {
-    fetchMarketItems();
-  }, [seller?.id]);
+  // useEffect(() => {
+  //   fetchMarketItems();
+  // }, [seller?.id]);
 
   useEffect(() => {
     if (marketItems.length > 0) {
@@ -145,33 +145,68 @@ const MiddleLayoutSellerHome = () => {
     }
   }, [marketItems]); // Depend on marketItems
 
-  return (
-    <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
-      hello
-      {seller && (
-        <div>
-          <h1 className="text-2xl font-bold">Welcome, {seller.name}</h1>
-          <p className="text-lg">Welcome to your Dashboard</p>
+  if (loading)
+    return (
+      <div>
+        <span className="loading loading-dots"></span>
+      </div>
+    );
+  else
+    return (
+      <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
+        {/* {JSON.stringify(seller)} */}
+        <img
+          src="https://thumbs.dreamstime.com/z/pet-shop-background-your-design-pet-shop-background-your-design-vector-illustration-125018422.jpg"
+          alt="store"
+          className="w-full h-52 object-cover rounded-lg mb-2"
+        />
+        <img
+          src={seller?.image}
+          alt="store"
+          className="w-32 h-32 object-cover ring ring-warning rounded-full float-right"
+        />
+        <h1 className="text-3xl font-bold">Welcome to {seller?.storeName}</h1>
+        {seller && (
+          <div>
+            <h1 className="text-xl font-semibold mb-2">I am {seller?.name}</h1>
+
+            <h1 className="italic">
+              <strong>Slogan: </strong>
+              {seller?.slogan}
+            </h1>
+            <button
+              className="btn btn-warning btn-sm mt-2"
+              onClick={() => {
+                window.location.href = `/seller/profile/${sellerId}`;
+              }}
+            >
+              View Profile
+            </button>
+            <button className="btn btn-secondary btn-sm mt-2 mx-1">
+              Send Message
+            </button>
+          </div>
+        )}
+        <SectionDivider
+          title="Store Products"
+          icon="https://cdn-icons-png.flaticon.com/512/962/962669.png"
+        />{" "}
+        <StoreProductsContainer sellerId={sellerId} />
+        <SectionDivider
+          title="Ratings and Reviews"
+          icon="https://cdn-icons-png.freepik.com/256/12377/12377209.png?semt=ais_hybrid"
+        />{" "}
+        <div className="flex flex-col w-full mb-4 mt-2 text-center items-center">
+          Seller Rating:
+          <Rating rating={seller?.rating} />
+          <br />
+          <ReviewContainer sellerId={sellerId} />
         </div>
-      )}
-      <SectionDivider
-        title="Store Stats"
-        icon="https://cdn-icons-png.flaticon.com/512/167/167486.png"
-      />{" "}
-      <canvas id="histogramCanvas" width="800" height="400"></canvas>
-      <SectionDivider
-        title="Ratings and Reviews"
-        icon="https://cdn-icons-png.freepik.com/256/12377/12377209.png?semt=ais_hybrid"
-      />{" "}
-      <div className="flex flex-col w-full mb-4 mt-2 text-center items-center">
-        Overall Rating:
-        <Rating rating={seller?.rating} />
-        <br />
-        <ReviewContainer sellerId={seller?.id} />
+
+        {/* <RatingChart sellerId={sellerId} /> */}
 
       </div>
-    </div>
-  );
+    );
 };
 
 export default MiddleLayoutSellerHome;
