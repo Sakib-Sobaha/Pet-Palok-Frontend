@@ -56,7 +56,7 @@ const LeftLayoutVetDirectory = ({ onSortChange, onSearchChange, onRatingRangeCha
           <p className="font-semibold">From:</p>
           <input
             type="range"
-            min={1}
+            min={0}
             max={5}
             step={0.1}
             value={ratingRange.min}
@@ -72,7 +72,7 @@ const LeftLayoutVetDirectory = ({ onSortChange, onSearchChange, onRatingRangeCha
           <p className="font-semibold">To:</p>
           <input
             type="range"
-            min={1}
+            min={0}
             max={5}
             step={0.1}
             value={ratingRange.max}

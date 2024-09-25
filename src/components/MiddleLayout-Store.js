@@ -5,7 +5,6 @@ import SectionDivider from "./Section-Divider";
 import Rating from "./Rating";
 import StoreProductsContainer from "./containers/StoreProductsContainer";
 import ReviewContainer from "./containers/Seller-Review-Container";
-
 const handleLogout = () => {
   localStorage.removeItem("authToken");
   window.location.href = "/login"; // Redirect to the login page
@@ -203,6 +202,9 @@ const MiddleLayoutSellerHome = ({ sellerId }) => {
           <br />
           <ReviewContainer sellerId={sellerId} />
         </div>
+
+        {/* <RatingChart sellerId={sellerId} /> */}
+
       </div>
     );
 };

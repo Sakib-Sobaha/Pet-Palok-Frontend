@@ -33,13 +33,26 @@ function LandingPage() {
         {/* Content on top of the overlay */}
         <div className="hero-content text-neutral-content text-center relative z-10">
           <div className="max-w-md">
-            <h1 className="mb-10 text-7xl font-bold text-white-100 hover:text-white">Hello there</h1>
-            <p className="mb-5 text-white-100 text-2xl hover:text-white font-bold">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
+            <h1 className="mb-10 text-7xl font-bold text-white hover:text-white">
+              Welcome to PetPalok!
+            </h1>
+            <p className="mb-5 text-white text-2xl font-bold hover:text-white">
+              Discover a community of passionate pet lovers just like you.
+              Whether you're looking to adopt, share stories, or find the best
+              products for your furry friends, we’ve got you covered.
             </p>
-            <button className="btn btn-primary">Get Started</button>
+            <p className="mb-5 text-white text-lg hover:text-white">
+              Join us in celebrating the love and joy pets bring to our lives.
+              Connect with fellow pet enthusiasts, explore valuable resources,
+              and embark on exciting adventures together.
+            </p>
+            <button className="btn btn-primary"
+              onClick={
+                () => {
+                  window.location.href = "/login";
+                }
+              }
+            >Join the Community</button>
           </div>
         </div>
       </div>

@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { drawHistogram } from "../components/chart/draw-histogram"; // Ensure correct path
 import SectionDivider from "./Section-Divider";
 import Rating from "./Rating";
-
+import ReviewContainer from "./containers/Seller-Review-Container";
+// import RatingChart from "./chart/RatingChart";
 const handleLogout = () => {
   localStorage.removeItem("authToken");
   window.location.href = "/login"; // Redirect to the login page
@@ -165,6 +166,9 @@ const MiddleLayoutSellerHome = () => {
       <div className="flex flex-col w-full mb-4 mt-2 text-center items-center">
         Overall Rating:
         <Rating rating={seller?.rating} />
+        <br />
+        <ReviewContainer sellerId={seller?.id} />
+
       </div>
     </div>
   );

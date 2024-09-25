@@ -7,7 +7,7 @@ import LayoutLRM from "../../components/LayoutLRM";
 function VetDirectory() {
   const [sortCriteria, setSortCriteria] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [ratingRange, setRatingRange] = useState({ min: 1, max: 5 });
+  const [ratingRange, setRatingRange] = useState({ min: 0, max: 5 });
 
   const handleSortChange = (newSortCriteria) => {
     setSortCriteria(newSortCriteria);

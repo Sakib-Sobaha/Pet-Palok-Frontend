@@ -74,7 +74,7 @@ const VetCardContainer = ({ sortCriteria, searchTerm, ratingRange }) => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-base-200 rounded-lg">
       <h1 className="text-4xl font-bold mb-2 flex">
         <img
           className="h-10 mt-4 mr-2 w-10 flex"

@@ -51,10 +51,10 @@ function VetCard({ vet }) {
 
         <p className="text-center">
         <b>Visiting Address:</b>
-          {isExpanded || vet?.clinic_address.split(" ").length <= lenMax
+          {isExpanded || vet?.clinic_address?.split(" ").length <= lenMax
             ? vet?.clinic_address
-            : `${vet?.clinic_address.split(" ").slice(0, lenMax).join(" ")}...`}
-          {vet?.clinic_address.split(" ").length > lenMax && (
+            : `${vet?.clinic_address?.split(" ").slice(0, lenMax).join(" ")}...`}
+          {vet?.clinic_address?.split(" ").length > lenMax && (
             <button onClick={toggleclinic_address} className="text-primary ">
               {isExpanded ? "See Less" : "See More"}
             </button>

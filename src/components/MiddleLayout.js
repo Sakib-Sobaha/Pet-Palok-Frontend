@@ -4,6 +4,7 @@ import UserStatusIcon from "../components/video/UserStatus";
 import { HandleNewMeeting } from "../components/video/HandleMeeting";
 import { HandleJoinMeeting } from "./video/HandleJoinMeeting";
 import PendingReviews from "./containers/PendingReviewContainer";
+import PendingAppointmentReviews from "./containers/PendingAppointmentReviewContainer.js";
 import SectionDivider from "./Section-Divider";
 const fetchData = async () => {
   const token = localStorage.getItem("authToken");
@@ -95,6 +96,8 @@ const MiddleLayoutUserHome = () => {
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
       
       <PendingReviews />
+
+      <PendingAppointmentReviews />
 
       {/* Display users */}
       <h1 className="text-xl font-bold mb-4">User List</h1>

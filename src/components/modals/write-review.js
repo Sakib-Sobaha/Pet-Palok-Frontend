@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import RatingInputCustom from "../rating-input-custom";
-import PendingReview from "../cards/PendingReview";
 
 const handleLogout = () => {
   localStorage.removeItem("authToken");

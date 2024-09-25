@@ -186,8 +186,30 @@ function Navbar() {
           }}
         />
       </div>
-      {user?.email}
-      {notifications?.length}
+      {/* {user?.email} */}
+
+      {(userType === "user" || userType === "vet") &&
+        // show firstname and lastname
+        user?.firstname &&
+        user?.lastname && (
+          <div className="flex-1 pr-4 justify-start">
+            <h1 className="text-lg font-bold">
+              {user?.firstname} {user?.lastname}
+            </h1>
+          </div>
+        )}
+        {userType === "seller" &&
+        // show firstname and lastname
+        user?.name && ( 
+          <div className="flex-1 pr-4 justify-start">
+            <h1 className="text-lg font-bold">
+              {user?.name}
+            </h1>
+          </div>
+        )}
+
+
+      {/* {notifications?.length} */}
 
       {/* notifications , cart, theme */}
       <div className="flex-1 pr-4 justify-end">

@@ -317,7 +317,7 @@ const MiddleLayoutCart = () => {
         )}
 
         <div className="w-full overflow-x-auto text-blue-700">
-          user: {JSON.stringify(user)}
+          {/* user: {JSON.stringify(user)} */}
         </div>
       </div>
     );
