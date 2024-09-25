@@ -9,6 +9,10 @@ const RightLayout = () => {
     window.location.href = "http://localhost:3000/gpt"; // Redirect to GPT
   };
 
+  const handlePricePredictorRedirect = () => {
+    window.location.href = "http://localhost:3000/pricePredictor"; // Redirect to PricePredictor
+  }
+
   return (
     <div className="flex-1 bg-base-100 p-4 min-h-screen h-full rounded-lg">
       {/* Your content for RightLayout */}
@@ -24,6 +28,13 @@ const RightLayout = () => {
         onClick={handleGPTRedirect} // Call the function on button click
       >
         Ask GPT
+      </button>
+
+      <button
+        className="btn btn-outline btn-secondary dark:bg-transparent"
+        onClick={handlePricePredictorRedirect} // Call the function on button click
+      >
+        Price Predictor
       </button>
       
       

@@ -37,6 +37,7 @@ import Communities from "./pages/communities/communities.js";
 import ChatRoom from "./pages/messaging/chat-room.js";
 import UserOrders from "./pages/user/user-orders.js";
 import AI from "./pages/ai/openai.js";
+import PricePredictor from "./pages/pricepredict/pricePredict.js";
 import SingleAppointment from "./pages/vet/single-appointment.js";
 import PhotoUpload from "./pages/tests/photo-up-test.js";
 import Verify from "./pages/verify.js";
@@ -86,6 +87,7 @@ export default function App() {
             <Route path="/chatbox" element={<ChatBox />} />
             <Route path="/chatroom" element={<ChatRoom />} />
             <Route path="/gpt" element={<AI />} />
+            <Route path="/pricePredictor" element={<PricePredictor />} />
 
             <Route path="/ws/**" render={() => null} />
             <Route path="*" render={() => <div>Page not found</div>} />

@@ -61,7 +61,7 @@ export default function MiddleLayoutGPT() {
                         key={index} 
                         className={`whitespace-pre-wrap my-2 p-4 rounded-lg 
                                     ${msg.role === "user" ? "bg-blue-100 text-blue-800 shadow-md font-serif" : "bg-white text-black shadow-lg font-serif"} 
-                                    ${msg.role === "ai" ? "transform transition-transform hover:scale-105" : ""}`}
+                                    ${msg.role === "ai" ? "transform transition-transform " : ""}`}
                     >
                         {msg.role === "user" ? "User: " : "AI: "}
                         {msg.content}
