@@ -15,7 +15,7 @@ function Dropdown({_user}) {
     { name: "Vet Directory", href: "/vetdirectory" },
     { name: "Appointments", href: "/user/appointments" },
     { name: "Lost and Found", href: "/user/lost-and-found" },
-    { name: "Communities", href: "/communities" },
+    // { name: "Communities", href: "/communities" },
     { name: "My Orders", href: "/user/orders" },
   ];
 
@@ -32,13 +32,12 @@ function Dropdown({_user}) {
     { name: "Dashboard", href: "/vet/home" },
     { name: "Vet Directory", href: "/vetdirectory" },
     { name: "Appointments", href: "/vet/appointments" },
-    { name: "Visit Requests", href: "/vet/visit-requests" },
   ];
 
   // Common menu items for all account types
   const commonMenuItems = [
     { name: "Home", href: "/landing" },
-    { name: "Settings", href: "/settings" },
+    // { name: "Settings", href: "/settings" },
     { name: "Login/Signup", href: "/login" },
   ];
 
