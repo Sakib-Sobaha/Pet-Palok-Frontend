@@ -292,9 +292,9 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
       <Timeline /> */}
       <SectionDivider title="Ratings" icon="" />
       <div className="place-items-center justify-center grid mb-4">
-        <Rating rating={vet.rating_vetvisit} />
+        <Rating rating={vet?.rating_vetvisit} />
       </div>
-      <VetReviews vetId = {vet.id}/>
+      <VetReviews vetId = {vet?.id}/>
     </div>
   );
 };

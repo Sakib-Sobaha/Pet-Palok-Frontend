@@ -24,7 +24,7 @@ const RightLayout = () => {
       </button>
       */}
       <button
-        className="btn btn-outline btn-secondary dark:bg-transparent"
+          className="btn btn-outline btn-secondary dark:bg-transparent mb-1"
         onClick={handleGPTRedirect} // Call the function on button click
       >
         Ask GPT

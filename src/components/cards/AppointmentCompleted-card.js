@@ -95,7 +95,7 @@ function AppointmentRequestCard({ appointmentRequest }) {
             <h2
               className="card-title font-bold float-right text-accent cursor-pointer hover:scale-105 hover:text-primary"
               onClick={() => {
-                window.location.href = "/vet/profile/:vetid";
+                window.location.href = `/vet/profile/${vet?.id}`;
               }}
             >
               Vet: {vet?.firstname + " " + vet?.lastname}
@@ -104,7 +104,7 @@ function AppointmentRequestCard({ appointmentRequest }) {
             <h2
               className="card-title font-bold float-left cursor-pointer hover:scale-105 hover:text-primary"
               onClick={() => {
-                window.location.href = "/user/profile/:vetid";
+                window.location.href = `/user/profile/${user?.id}`;
               }}
             >
               Applicant: {user?.firstname + " " + user?.lastname}
@@ -120,7 +120,7 @@ function AppointmentRequestCard({ appointmentRequest }) {
               <h1
                 className="text-sm font-semibold cursor-pointer hover:scale-105 hover:text-primary"
                 onClick={() => {
-                  window.location.href = "/user/pets/:id";
+                  window.location.href = `/user/pets/${pet?.id}`;
                 }}
               >
                 <span className="font-bold">Pet Name: </span>
