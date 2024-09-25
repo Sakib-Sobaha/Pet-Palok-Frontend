@@ -55,7 +55,10 @@ const PendingReview = ({ _review }) => {
   useEffect(() => {
     const fetchAppointment = async () => {
       setLoading(true);
-      const fetchedItem = await fetchAppointmentAPI(token, review.appointmentId);
+      const fetchedItem = await fetchAppointmentAPI(
+        token,
+        review.appointmentId
+      );
       if (fetchedItem) {
         setAppointment(fetchedItem);
       }
@@ -76,9 +79,9 @@ const PendingReview = ({ _review }) => {
       <div className="relative card w-72 h-60 m-1 shadow-lg">
         {/* Background Image */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-80"
+          className="absolute inset-0 bg-cover bg-center opacity-100"
           style={{
-            // backgroundImage: `url(${item.images[0]})`,
+            backgroundImage: `url(https://img.freepik.com/premium-vector/beagle-dog-veterinary-visit-medical-clinic-office-puppy-anxiety-therapy-bandage-paw-vet-appointment-veterinarian-young-woman-vector-illustration-isolated-white-background_345238-768.jpg)`,
           }}
         ></div>
 
@@ -96,22 +99,26 @@ const PendingReview = ({ _review }) => {
           )}
 
           <div className="card-body bg-transparent">
-            <h2 className="card-title text-base-content text-sm">{appointment?.description}</h2>
+            <h2 className="card-title text-base-content text-sm">
+              {appointment?.description}
+            </h2>
 
             <div className="card-actions justify-center flex">
               <button
                 className="btn btn-primary rounded-md w-32"
                 onClick={() => {
-                  document.getElementById("review" + appointment.id).showModal();
+                  document
+                    .getElementById("review" + appointment.id)
+                    .showModal();
                 }}
               >
                 Review Now
               </button>
-              <button className="btn btn-secondary rounded-md w-32"
+              <button
+                className="btn btn-secondary rounded-md w-32"
                 onClick={() => {
                   window.location.href = `/appointment/${appointment.id}`;
-                }
-                }
+                }}
               >
                 Go to Appointment
               </button>

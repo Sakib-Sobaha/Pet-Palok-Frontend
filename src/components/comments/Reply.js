@@ -2,9 +2,9 @@ import React, { useState } from "react";
 
 const reply_ = {
     id: 122,
-    author: "Bird Pet Care",
+    author: "Alfayer Rahman",
     time: "22-01-2024",
-    reply_text: "Yes Sir",
+    reply_text: "When did you see him? Can you please provide more information?",
     };
 
 

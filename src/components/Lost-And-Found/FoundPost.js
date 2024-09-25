@@ -18,7 +18,6 @@ const foundPost = {
 
 const images = [
   "https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_640.jpg",
-  "https://www.bhmpics.com/downloads/beautiful-pictures-of-dogs/56.golden_puppy_dog_pictures.jpg",
   "https://static.toiimg.com/photo/109692764/109692764.jpg",
   "https://www.petbarn.com.au/petspot/app/uploads/2016/03/HYG9.2-Blog-Genral-In-Post-800x533px.png",
   "https://hips.hearstapps.com/del.h-cdn.co/assets/cm/15/10/54f94e3f42698_-_dog-stick-del-blog.jpg?crop=1xw:0.7309644670050761xh;center,top&resize=1200:*",

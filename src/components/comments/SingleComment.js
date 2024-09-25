@@ -6,7 +6,7 @@ const review = {
   reviewer: "Niloy Faiaz",
   rating: 1,
   time: "22-01-2024",
-  review_text: "Baje product, keu kinben na",
+  review_text: "I saw him near the School",
 };
 
 function SingleComment({ anonymous = false }) {

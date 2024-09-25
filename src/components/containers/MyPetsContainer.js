@@ -94,7 +94,7 @@ const fetchUserAPI = async (token) => {
 const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
   const [petData, setPetData] = useState([]);
   const [user, setUser] = useState(null);
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [visibleCount, setVisibleCount] = useState(3);
   const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filteredPets, setFilteredPets] = useState([]);
@@ -195,7 +195,7 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
 
   const toggleVisibility = () => {
     setIsExpanded(!isExpanded);
-    setVisibleCount(isExpanded ? 6 : filteredPets.length);
+    setVisibleCount(isExpanded ? 3 : filteredPets.length);
   };
 
   return (
@@ -227,7 +227,7 @@ const PetCardContainer = ({ searchTerm, filter, sortOrder, setUserId }) => {
               <p>No pets found</p>
             )}
           </div>
-          {filteredPets.length > 6 && (
+          {filteredPets.length > 3 && (
             <div className="flex justify-center mt-4">
               <button
                 className="btn btn-primary w-28"
