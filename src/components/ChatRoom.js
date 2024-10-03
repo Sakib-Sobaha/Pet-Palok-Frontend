@@ -615,7 +615,7 @@ const MiddleLayoutChatbox = () => {
       senderId: user.id,
       recipientId: selectedUser?.id,
       content: inputMessage,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
     };
 
     console.log("Chat message:", chatMessage);
@@ -895,7 +895,10 @@ const MiddleLayoutChatbox = () => {
                     >
                       <p>{message.content}</p>
                       <p className="text-xs text-gray-500 mt-1">
-                        {new Date(message.timestamp).toLocaleString()}
+                        {new Date(message.timestamp).toLocaleString(undefined, {
+                          dateStyle: "short",
+                          timeStyle: "short",
+                        })}
                       </p>
                     </div>
                   </div>
