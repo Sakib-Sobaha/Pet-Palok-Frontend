@@ -1,3 +1,13 @@
+# Backend Repository
+[https://github.com/Sakib-Sobaha/Pet-Palok-Backend.git](https://github.com/Sakib-Sobaha/Pet-Palok-Backend.git)
+
+# Frontend URL
+[https://pet-palok.vercel.app](https://pet-palok.vercel.app)
+
+# Backend URL
+[https://pet-palok-backend.onrender.com](https://pet-palok-backend.onrender.com)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
