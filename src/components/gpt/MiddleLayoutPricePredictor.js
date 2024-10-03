@@ -49,7 +49,7 @@ export default function ItemDetailsForm() {
 
             const responseData = await response.json();
             console.log('API Response:', responseData);
-            setModalContent(`Predicted price: ${responseData.price}`);
+            setModalContent(`Predicted price: ${responseData.price*100}`);
             setModalOpen(true);
             // alert('Prediction received: ' + responseData.price);
         } catch (error) {

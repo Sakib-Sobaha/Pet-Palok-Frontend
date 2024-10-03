@@ -94,7 +94,7 @@ const MiddleLayoutSellerProfile = ({ sellerId }) => {
 
       <div className="avatar float-right mb-5 mr-10 mt-2">
         <div className="ring-primary ring-offset-base-100 w-40 h-40 rounded-full aspect-square ring ring-offset-2">
-          <img src={images[0]} alt="Seller Profile" />
+          <img src={seller?.image} alt="Seller Profile" />
         </div>
       </div>
 

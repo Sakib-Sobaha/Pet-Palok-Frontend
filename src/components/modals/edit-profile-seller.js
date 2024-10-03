@@ -188,25 +188,41 @@ const EditProfileSeller = ({ element_id, _seller }) => {
                 readOnly
               />
             </p>
+          </div>
+          <h1 className="pl-3 font-bold text-xl">Store Info:</h1>
+          <div className="text-lg ml-3 m-1 grid-cols-2 gap-3 grid mb-5">
             <p>
               <span className="font-bold">Store Name:</span>
               <input
+                className="input input-bordered w-full"
                 type="text"
-                name="store_name"
+                name="storeName"
                 value={seller?.storeName || ""}
                 onChange={handleChange}
-                className="input input-bordered w-full"
+                
               />
             </p>
             <p>
               <span className="font-bold">Store Address:</span>
               <textarea
+                className="textarea textarea-bordered w-full"
                 type="text"
-                name="store_address"
+                name="storeAddress"
                 value={seller?.storeAddress || ""}
                 onChange={handleChange}
-                className="textarea textarea-bordered w-full"
+                
               ></textarea>
+            </p>
+            <p>
+              <span className="font-bold">Slogan:</span>
+              <input
+                className="input input-bordered w-full"
+                type="text"
+                name="slogan"
+                value={seller?.slogan || ""}
+                onChange={handleChange}
+                
+              />
             </p>
           </div>
 

@@ -16,26 +16,33 @@ const RightLayout = () => {
   return (
     <div className="flex-1 bg-base-100 p-4 min-h-screen h-full rounded-lg">
       {/* Your content for RightLayout */}
-      {/* <button
-        className="btn btn-outline btn-secondary dark:bg-transparent"
-        onClick={handleChatRoomRedirect} // Call the function on button click
-      >
-        Enter ChatRoom
-      </button>
-      */}
-      <button
-          className="btn btn-outline btn-secondary dark:bg-transparent mb-1"
-        onClick={handleGPTRedirect} // Call the function on button click
-      >
-        Ask GPT
-      </button>
+      
+      <div className="mb-1">
+        <button
+          className="btn btn-outline btn-secondary dark:bg-transparent"
+          onClick={handleChatRoomRedirect} // Call the function on button click
+        >
+          Enter ChatRoom
+        </button>
+      </div>
 
-      <button
-        className="btn btn-outline btn-secondary dark:bg-transparent"
-        onClick={handlePricePredictorRedirect} // Call the function on button click
-      >
-        Price Predictor
-      </button>
+      <div className="mb-1">
+        <button
+            className="btn btn-outline btn-secondary dark:bg-transparent"
+          onClick={handleGPTRedirect} // Call the function on button click
+        >
+          Ask GPT
+        </button>
+      </div>
+
+      <div className="mb-1">
+        <button
+          className="btn btn-outline btn-secondary dark:bg-transparent mb-1"
+          onClick={handlePricePredictorRedirect} // Call the function on button click
+        >
+          Price Predictor
+        </button>
+      </div>
       
       
     </div>
