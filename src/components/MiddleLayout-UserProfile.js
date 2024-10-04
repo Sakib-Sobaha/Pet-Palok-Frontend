@@ -93,6 +93,10 @@ const MiddleLayoutUserProfile = ({ userId }) => {
     setIsExpanded(!isExpanded);
   };
 
+  const handleChatRoomRedirect = () => {
+    window.location.href = "http://localhost:3000/chatroom"; // Redirect to chatroom
+  };
+
   const { years, months } = calculateAge(user?.dob);
 
   if (loading) {
@@ -228,7 +232,10 @@ const MiddleLayoutUserProfile = ({ userId }) => {
           ) : null}
 
           {/* Send Message button is always visible */}
-          <button className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2">
+          <button 
+            className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
+            onClick={handleChatRoomRedirect}  
+          >
             <svg
               viewBox="0 0 512 512"
               xmlns="http://www.w3.org/2000/svg"

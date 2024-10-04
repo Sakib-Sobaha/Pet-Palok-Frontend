@@ -48,6 +48,9 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
   const [visitor, setVisitor] = useState(null);
   const userType = localStorage.getItem("userType");
 
+
+  // add check visitor === vet same thing on seller
+
   const fetchVet = async () => {
     const token = localStorage.getItem("authToken");
     if (!token) {
@@ -97,6 +100,10 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
 
   const toggleAbout = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleChatRoomRedirect = () => {
+    window.location.href = "http://localhost:3000/chatroom"; // Redirect to chatroom
   };
 
   if (loading) {
@@ -272,7 +279,10 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
               Book Appointment
             </button>
           )}
-          <button className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2">
+          <button 
+            className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
+            onClick={handleChatRoomRedirect}  
+          >
             <svg
               viewBox="0 0 512 512"
               xmlns="http://www.w3.org/2000/svg"

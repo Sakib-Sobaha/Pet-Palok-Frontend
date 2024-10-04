@@ -96,7 +96,7 @@ function Navbar() {
 
       // Make the API request with the Authorization header
       const response = await fetch(url, {
-        method: "POST",
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -107,6 +107,7 @@ function Navbar() {
       // Handle the response
       if (!response.ok) {
         throw new Error("Failed to update status");
+        console.log("Failed to update status");
       }
 
       console.log("Status updated successfully");

@@ -70,6 +70,10 @@ const MiddleLayoutPetProfile = ({ petId }) => {
   const [loading, setLoading] = useState(true); // State to handle loading
   const [pet, setPet] = useState(null);
   const [timelineData, setTimelineData] = useState([]);
+  const [ownerId, setOwnerId] = useState(null);
+  const [visitor, setVisitor] = useState(null);
+
+  const userType = localStorage.getItem("userType");
 
   const fetchPet = async () => {
     const token = localStorage.getItem("authToken");
@@ -82,6 +86,7 @@ const MiddleLayoutPetProfile = ({ petId }) => {
     try {
       const data = await fetchData(token, petId);
       setPet(data);
+      setOwnerId(data.ownerId);
     } catch (error) {
       console.error("Fetch error:", error);
     } finally {
@@ -113,13 +118,40 @@ const MiddleLayoutPetProfile = ({ petId }) => {
       setTimelineData(data);
     };
 
+    const fetchWhoAmI = async () => {
+      try {
+        setLoading(true);
+        const url = `${process.env.REACT_APP_API_URL}/` + userType + `/whoami`;
+        const token = localStorage.getItem("authToken");
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+        setVisitor(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchTimelineData();      
     fetchPet();
+    fetchWhoAmI();
   }, [petId]);
 
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const isOwner = visitor?.id === ownerId; // Check if the logged-in user is the vet (owner)
 
   if (loading) {
     return (
@@ -213,11 +245,19 @@ const MiddleLayoutPetProfile = ({ petId }) => {
             ))}
           </div>
           <UploadImageModal element_id="upload_image_pet" petId={petId} />
-          <button className="btn btn-primary mt-5"
-            onClick={() => {
-              document.getElementById("upload_image_pet").showModal();
-            }}
-          >Upload Image</button>
+
+          { /* add condition */}
+          {isOwner && (
+            <>
+
+              <button className="btn btn-primary mt-5"
+                onClick={() => {
+                  document.getElementById("upload_image_pet").showModal();
+                }}
+              >Upload Image</button>
+
+            </>
+          )}
         </>
       ) : (
         <p>No pet data found.</p>

@@ -505,6 +505,7 @@ const MiddleLayoutChatbox = () => {
 
   const onMessageReceived = (payload) => {
     const message = JSON.parse(payload.body);
+    console.log("Timestamp:", JSON.stringify(message.timestamp));
     console.log("Message received:", message);
     if (
       (message.senderId === user?.id && message.recipientId === selectedUser?.id) ||
@@ -868,9 +869,14 @@ const MiddleLayoutChatbox = () => {
         <div className="flex-1 flex flex-col">
           {selectedUser ? (
             <>
-              <div className="bg-white p-4 border-b">
-                <h2 className="text-xl font-bold">
-                  Chat with {selectedUser.firstname} {selectedUser.lastname}
+              <div className="bg-base-100 p-4 border-b border-base-content">
+                <h2 className="text-xl font-bold font-serif">
+                  Chat with <p className="hover:scale-105 hover:text-primary hover:cursor-pointer"
+                              onClick={() => {
+                                window.location.href = `user/profile/${selectedUser.id}`;
+                              }}
+                  
+                  > {selectedUser.firstname} {selectedUser.lastname}</p>
                 </h2>
               </div>
               <div
@@ -895,6 +901,7 @@ const MiddleLayoutChatbox = () => {
                     >
                       <p>{message.content}</p>
                       <p className="text-xs text-gray-500 mt-1">
+                        {/* {console.log("Timestamp:", message.timestamp)} */}
                         {new Date(message.timestamp).toLocaleString(undefined, {
                           dateStyle: "short",
                           timeStyle: "short",

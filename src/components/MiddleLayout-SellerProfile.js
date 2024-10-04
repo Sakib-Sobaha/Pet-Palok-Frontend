@@ -53,11 +53,40 @@ const MiddleLayoutSellerProfile = ({ sellerId }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const[loading, setLoading] = useState(true); // State to handle loading
   const [seller_id, setSellerId] = useState(sellerId);
+  const [visitor, setVisitor] = useState(null);
+  const userType = localStorage.getItem("userType");
   
   const [seller, setSeller] = useState({});
 
+  // whoami add check visitor === seller same thing on vet
+
   // Fetch the vet profile on component mount
   useEffect(() => {
+    const fetchWhoAmI = async () => {
+      try {
+        setLoading(true);
+        const url = `${process.env.REACT_APP_API_URL}/` + userType + `/whoami`;
+        const token = localStorage.getItem("authToken");
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+        setVisitor(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+
     const fetchSellerProfile = async () => {
       const token = localStorage.getItem("authToken");
       if(!token){
@@ -77,11 +106,16 @@ const MiddleLayoutSellerProfile = ({ sellerId }) => {
     };
 
     fetchSellerProfile();
+    fetchWhoAmI();
     // console.log("Seller ID:", sellerId);
   }, [sellerId]);
 
   const toggleAbout = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleChatRoomRedirect = () => {
+    window.location.href = "http://localhost:3000/chatroom"; // Redirect to chatroom
   };
 
   return (
@@ -169,55 +203,66 @@ const MiddleLayoutSellerProfile = ({ sellerId }) => {
 
 
           <div className="flex">
-            <button
-              className="btn btn-primary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
-              onClick={() =>
-                document.getElementById("edit_profile_seller").showModal()
-              }
-            >
-              <svg
-                className="feather feather-edit"
-                fill="none"
-                height="24"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-              </svg>
-              <span>Edit Profile</span>
-            </button>
 
-            <button
-              className="btn btn-accent mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
-              onClick={() =>
-                document.getElementById("edit_password").showModal()
-              }
-            >
-              <svg
-                className="feather feather-edit"
-                fill="none"
-                height="24"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-              </svg>
-              <span>Change Password</span>
-            </button>
+            {/* Conditionally render the edit profile and Change password buttons */}
+            {visitor?.id === sellerId ? (
+              <>
+              
+                <button
+                  className="btn btn-primary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
+                  onClick={() =>
+                    document.getElementById("edit_profile_seller").showModal()
+                  }
+                >
+                  <svg
+                    className="feather feather-edit"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                  <span>Edit Profile</span>
+                </button>
 
-            <button className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2">
+                <button
+                  className="btn btn-accent mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
+                  onClick={() =>
+                    document.getElementById("edit_password").showModal()
+                  }
+                >
+                  <svg
+                    className="feather feather-edit"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                  <span>Change Password</span>
+                </button>
+              </>
+            ) : null}
+
+            <button 
+              className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
+              onClick= {handleChatRoomRedirect}  
+            >
+              
               <svg
                 viewBox="0 0 512 512"
                 xmlns="http://www.w3.org/2000/svg"
