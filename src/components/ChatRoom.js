@@ -136,6 +136,12 @@ const MiddleLayoutChatbox = () => {
 
   const chatAreaRef = useRef(null);
 
+  
+
+  const isUser = selectedUser?.role === "USER"; // Check if the logged-in user is the vet (owner)
+  const isVet = selectedUser?.role === "VET"; // Check if the logged-in user is the vet (owner)
+  const isSeller = selectedUser?.role === "SELLER"; // Check if the logged-in user is the vet (owner)
+
   useEffect(() => {
     try {
       setLoading(true);
@@ -869,16 +875,54 @@ const MiddleLayoutChatbox = () => {
         <div className="flex-1 flex flex-col">
           {selectedUser ? (
             <>
-              <div className="bg-base-100 p-4 border-b border-base-content">
-                <h2 className="text-xl font-bold font-serif">
-                  Chat with <p className="hover:scale-105 hover:text-primary hover:cursor-pointer"
-                              onClick={() => {
-                                window.location.href = `user/profile/${selectedUser.id}`;
-                              }}
-                  
-                  > {selectedUser.firstname} {selectedUser.lastname}</p>
-                </h2>
-              </div>
+              {isUser && (
+                <>
+
+                  <div className="bg-base-100 p-4 border-b border-base-content">
+                    <h2 className="text-xl font-bold font-serif">
+                      Chat with <p className="hover:scale-105 hover:text-primary hover:cursor-pointer"
+                                  onClick={() => {
+                                    window.location.href = `user/profile/${selectedUser.id}`;
+                                  }}
+                      
+                      > {selectedUser.firstname} {selectedUser.lastname}</p>
+                    </h2>
+                  </div>
+                  </>
+              )}
+
+              {isVet && (
+                <>
+
+                  <div className="bg-base-100 p-4 border-b border-base-content">
+                    <h2 className="text-xl font-bold font-serif">
+                      Chat with <p className="hover:scale-105 hover:text-primary hover:cursor-pointer"
+                                  onClick={() => {
+                                    window.location.href = `vet/profile/${selectedUser.id}`;
+                                  }}
+                      
+                      > {selectedUser.firstname} {selectedUser.lastname}</p>
+                    </h2>
+                  </div>
+                </>
+              )}
+
+              {isSeller && (
+                <>
+
+                  <div className="bg-base-100 p-4 border-b border-base-content">
+                    <h2 className="text-xl font-bold font-serif">
+                      Chat with <p className="hover:scale-105 hover:text-primary hover:cursor-pointer"
+                                  onClick={() => {
+                                    window.location.href = `seller/profile/${selectedUser.id}`;
+                                  }}
+                      
+                      > {selectedUser.name}</p>
+                    </h2>
+                  </div>
+                </>
+              )}
+
               <div
                 // ref={chatAreaRef}
                 className="flex-1 overflow-y-auto p-4 space-y-4"
