@@ -4,7 +4,7 @@ import { useFileUpload } from "../Supabase/image-uploader"; // Import the custom
 const initialPost = {
   title: "",
   text: "",
-  topics: [],
+  topics: [], // Selected topics
   images: [], // To store uploaded images' URLs
   anonymous: false, // Initial value for anonymous
 };
@@ -13,6 +13,7 @@ const CreatePost = ({ element_id, _community }) => {
   const [community, setCommunity] = useState(_community);
   const [post, setPost] = useState(initialPost); // State for post details
   const [selectedImage, setSelectedImage] = useState(null); // State for image file
+  const [newTopic, setNewTopic] = useState(""); // State for new topic input
   const { uploadFiles, uploading } = useFileUpload(); // Use the custom hook
 
   // Handler to update post properties
@@ -38,6 +39,35 @@ const CreatePost = ({ element_id, _community }) => {
     setSelectedImage(file);
   };
 
+  // Handle checkbox change for community topics
+  // Handle checkbox change for community topics
+  const handleTopicSelection = (topic) => {
+    const lowercaseTopic = topic.toLowerCase(); // Convert to lowercase
+    setPost((prevPost) => {
+      // If the topic is already selected, remove it; otherwise, add it
+      const updatedTopics = prevPost.topics.includes(lowercaseTopic)
+        ? prevPost.topics.filter((t) => t !== lowercaseTopic)
+        : [...prevPost.topics, lowercaseTopic];
+
+      return {
+        ...prevPost,
+        topics: updatedTopics,
+      };
+    });
+  };
+
+  // Handle new topic addition
+  const handleAddNewTopic = () => {
+    const lowercaseNewTopic = newTopic.trim().toLowerCase(); // Convert to lowercase
+    if (lowercaseNewTopic && !post.topics.includes(lowercaseNewTopic)) {
+      setPost((prevPost) => ({
+        ...prevPost,
+        topics: [...prevPost.topics, lowercaseNewTopic],
+      }));
+      setNewTopic(""); // Clear the input field after adding
+    }
+  };
+
   // Function to handle post creation
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,7 +84,6 @@ const CreatePost = ({ element_id, _community }) => {
       const newPostData = {
         ...post,
         images: imageUrl.length > 0 ? imageUrl : [""], // Use the uploaded image URL or an empty string
-        topics: post.topics.split(","), // Convert topics string into an array
         userType: localStorage.getItem("userType"), // Retrieve user type from localStorage
         communityId: community.id, // Use community id passed as a prop
       };
@@ -130,20 +159,63 @@ const CreatePost = ({ element_id, _community }) => {
                 />
               </div>
 
-              {/* Topics */}
+              {/* Topics Selection */}
               <div>
                 <label className="label">
-                  <span className="label-text">Topics</span>
+                  <span className="label-text">Select Topics</span>
                 </label>
-                <input
-                  type="text"
-                  name="topics"
-                  value={post.topics}
-                  onChange={handleChange}
-                  className="input input-bordered w-full"
-                  placeholder="Comma-separated topics (e.g. pets, birds, care)"
-                  required
-                />
+                <div className="grid grid-cols-2 gap-2">
+                  {community?.topics?.map((topic, index) => (
+                    <div key={index}>
+                      <label className="cursor-pointer flex">
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary mr-2"
+                          checked={post.topics.includes(topic.toLowerCase())}
+                          onChange={() => handleTopicSelection(topic.toLowerCase())}
+                        />
+                        <span className="mt-0.5">{topic}</span>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+
+                {/* New Topic Input */}
+                <div className="mt-4">
+                  <label className="label">
+                    <span className="label-text">Add New Topic</span>
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newTopic}
+                      onChange={(e) => setNewTopic(e.target.value)}
+                      className="input input-bordered w-full"
+                      placeholder="Enter new topic"
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={handleAddNewTopic}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+
+                {/* Display Selected Topics */}
+                {post.topics.length > 0 && (
+                  <div className="mt-4">
+                    <h4 className="font-bold">Selected Topics:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {post.topics.map((topic, index) => (
+                        <span key={index} className="badge badge-primary">
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Anonymous Select */}
