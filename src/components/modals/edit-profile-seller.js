@@ -69,14 +69,14 @@ const EditProfileSeller = ({ element_id, _seller }) => {
         slogan: seller.slogan,
         phone: seller.phone,
         address: seller.address,
-        about: seller.about,
-        dob: seller.dob,
-        image: seller.image,
         postOffice: seller.postOffice,
         district: seller.district,
         country: seller.country,
-        gender: seller.gender,
-        role: seller.role
+        about: seller.about,
+        dob: seller.dob,
+        image: seller.image,
+        role: seller.role,
+        gender: seller.gender
       };
 
       console.log("usr" + JSON.stringify(updateSellerRequest));

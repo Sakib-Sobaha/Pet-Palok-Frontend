@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useFileUpload } from "../Supabase/image-uploader"; // Import the custom hook
 
 const initialVet = {
   firstname: "Sakib",
@@ -27,10 +28,24 @@ const images = [
   "https://hips.hearstapps.com/del.h-cdn.co/assets/cm/15/10/54f94e3f42698_-_dog-stick-del-blog.jpg?crop=1xw:0.7309644670050761xh;center,top&resize=1200:*",
 ];
 
-const EditProfileVet = ({ element_id }) => {
-  const [vet, setVet] = useState(initialVet);
+const EditProfileVet = ({ element_id, _vet }) => {
+  const [vet, setVet] = useState(_vet);
+  
+
+  // Sync the vet state with the _vet prop whenever _vet changes
+  useEffect(() => {
+    if (_vet) {
+      setVet(_vet);
+    }
+  }, [_vet]);
+
+  console.log("_vet :) " + JSON.stringify(_vet));
+  console.log("vet: " + JSON.stringify(vet));
+
   const [isExpanded, setIsExpanded] = useState(false);
-  const [imageSrc, setImageSrc] = useState(images[0]);
+  const [imageSrc, setImageSrc] = useState(vet?.image);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const { uploadFiles, uploading } = useFileUpload(); // Use the custom hook
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,13 +59,15 @@ const EditProfileVet = ({ element_id }) => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleSave = () => {
-    console.log("Vet information saved:", vet);
-    // Logic to save vet information, such as an API call, goes here
-  };
 
-  const handleFileChange = (event) => {
+  useEffect(() => {
+    setImageSrc(vet?.image);
+  }, [vet]);
+  
+
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
+    setSelectedImage(file); // Store the selected file
 
     if (file) {
       const reader = new FileReader();
@@ -58,8 +75,82 @@ const EditProfileVet = ({ element_id }) => {
         setImageSrc(reader.result); // Update the state with the data URL
       };
       reader.readAsDataURL(file); // Read the file as a data URL
+
+      // Upload the file to a cloud storage service here
+      const imageUrls = await uploadFiles([file]);
+      console.log("Image URLs:", imageUrls);
+
+      // Update the vet object with the new profile image URL
+      setVet((prevState) => ({
+        ...prevState,
+        image: imageUrls[0], // Assume uploadFiles returns an array of URLs
+      }));
+
     }
   };
+
+  const formatDateToInput = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  
+
+  const handleSave = async () => {
+    console.log("Vet information saved:", vet);
+    // Logic to save vet information, such as an API call, goes here
+
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const updateVetRequest = {
+        firstname: vet.firstname,
+        lastname: vet.lastname,
+        phone: vet.phone,
+        clinic_name: vet.clinic_name,
+        clinic_address: vet.clinic_address,
+        address: vet.address,
+        postOffice: vet.postOffice,
+        district: vet.district,
+        country: vet.country,
+        dob: vet.dob,
+        about: vet.about,
+        image: vet.image,
+        gender: vet.gender
+      };
+
+      console.log("vet: " + JSON.stringify(updateVetRequest));
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/vet/update/${vet.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updateVetRequest),
+        }
+      );
+
+      if(response.ok) {
+        const updatedVet = await response.json();
+        setVet(updatedVet);
+        alert("Vet profile updated successfully!");
+      } else {
+        alert("Failed to update vet profile. Please try again.");
+      }
+    } catch (error) {
+      console.log(error);
+      console.error("Failed to update vet profile:", error);
+      alert("An error occurred while updating. Please try again.");
+    } finally {
+      window.location.reload();
+    };
+
+  };
+
 
   return (
     <div>
@@ -88,7 +179,7 @@ const EditProfileVet = ({ element_id }) => {
               <input
                 type="text"
                 name="firstname"
-                value={vet.firstname}
+                value={vet?.firstname || ""}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -98,7 +189,7 @@ const EditProfileVet = ({ element_id }) => {
               <input
                 type="text"
                 name="lastname"
-                value={vet.lastname}
+                value={vet?.lastname || ""}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -107,8 +198,8 @@ const EditProfileVet = ({ element_id }) => {
               <span className="font-bold">DOB:</span>
               <input
                 type="date"
-                name="DOB"
-                value={vet.DOB}
+                name="dob"
+                value={formatDateToInput(vet?.dob) || ""}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -118,7 +209,7 @@ const EditProfileVet = ({ element_id }) => {
               <select
                 className="select input-bordered w-full max-w-xs"
                 name="gender"
-                value={vet.gender}
+                value={vet?.gender || "female"}
                 onChange={handleChange}
               >
                 <option value="male">Male</option>
@@ -135,7 +226,7 @@ const EditProfileVet = ({ element_id }) => {
               <input
                 type="text"
                 name="phone"
-                value={vet.phone}
+                value={vet?.phone || ""}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -145,9 +236,10 @@ const EditProfileVet = ({ element_id }) => {
               <input
                 type="text"
                 name="email"
-                value={vet.email}
+                value={vet?.email}
                 onChange={handleChange}
                 className="input input-bordered w-full"
+                readOnly
               />
             </p>
             <p>
@@ -155,7 +247,7 @@ const EditProfileVet = ({ element_id }) => {
               <input
                 type="text"
                 name="clinic_name"
-                value={vet.clinic_name}
+                value={vet?.clinic_name || ""}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -165,7 +257,7 @@ const EditProfileVet = ({ element_id }) => {
               <input
                 type="text"
                 name="clinic_address"
-                value={vet.clinic_address}
+                value={vet?.clinic_address || ""}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -179,7 +271,7 @@ const EditProfileVet = ({ element_id }) => {
               <textarea
                 className="textarea textarea-bordered w-full"
                 name="address"
-                value={vet.address}
+                value={vet?.address || ""}
                 onChange={handleChange}
               ></textarea>
             </p>
@@ -188,7 +280,7 @@ const EditProfileVet = ({ element_id }) => {
               <input
                 type="text"
                 name="postOffice"
-                value={vet.postOffice}
+                value={vet?.postOffice || ""}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -198,7 +290,7 @@ const EditProfileVet = ({ element_id }) => {
               <input
                 type="text"
                 name="district"
-                value={vet.district}
+                value={vet?.district || ""}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -208,7 +300,7 @@ const EditProfileVet = ({ element_id }) => {
               <input
                 type="text"
                 name="country"
-                value={vet.country}
+                value={vet?.country || ""}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />
@@ -220,10 +312,10 @@ const EditProfileVet = ({ element_id }) => {
             <textarea
               className="textarea textarea-bordered w-full"
               name="about"
-              value={vet.about}
+              value={vet?.about}
               onChange={handleChange}
             ></textarea>
-            {vet.about.split(" ").length > 30 && (
+            {vet?.about.split(" ").length > 30 && (
               <button
                 onClick={toggleAbout}
                 className="text-blue-600 text-xs ml-0"

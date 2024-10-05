@@ -118,7 +118,7 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
 
   return (
     <div className="flex-1 bg-base-200 rounded-lg p-4 min-h-screen">
-      <EditProfileModal element_id="edit_profile_vet" />
+      <EditProfileModal element_id="edit_profile_vet" _vet={vet} />
       <EditPasswordModal element_id="edit_password" userId={vetId} />
       {vet && (
         <BookAppointment element_id={"book_appointment" + vet?.id} _vet={vet} />
@@ -140,7 +140,7 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
           </h1>
           <div className="text-lg m-3 grid-cols-2 grid mb-5">
             <p>
-              <span className="font-bold">DOB:</span> {vet?.DOB}
+              <span className="font-bold">DOB:</span> {vet?.dob}
             </p>
             <p>
               <span className="font-bold">Gender:</span> {vet?.gender}
