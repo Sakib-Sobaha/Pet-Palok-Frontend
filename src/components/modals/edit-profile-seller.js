@@ -27,6 +27,10 @@ const EditProfileSeller = ({ element_id, _seller }) => {
     }));
   };
 
+  useEffect(() => {
+    setImageSrc(seller?.image);
+  }, [seller]);
+
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     setSelectedImage(file);
@@ -128,7 +132,7 @@ const EditProfileSeller = ({ element_id, _seller }) => {
               />
             </div>
           </div>
-          {seller.id}
+          {/* {seller.id} */}
           <div className="text-lg m-3 grid-cols-2 gap-3 grid mb-5">
             <p>
               <span className="font-bold">First Name:</span>

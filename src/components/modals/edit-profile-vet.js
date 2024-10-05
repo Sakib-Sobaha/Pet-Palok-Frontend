@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const initialVet = {
   firstname: "Sakib",
@@ -30,7 +30,11 @@ const images = [
 const EditProfileVet = ({ element_id }) => {
   const [vet, setVet] = useState(initialVet);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [imageSrc, setImageSrc] = useState(images[0]);
+  const [imageSrc, setImageSrc] = useState(vet?.image);
+
+  useEffect(() => {
+    setImageSrc(vet?.image);
+  }, [vet]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
