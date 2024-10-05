@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useUser } from "./UserContext.js"; // Import useUser hook
 
-function Dropdown({_user}) {
+function Dropdown({ _user }) {
   // Manage account type state (can be 'user', 'seller', or 'vet')
   const [user, setUser] = useState(_user);
   const [accountType, setAccountType] = useState("user");
@@ -38,6 +38,8 @@ function Dropdown({_user}) {
   const commonMenuItems = [
     { name: "Home", href: "/landing" },
     // { name: "Settings", href: "/settings" },
+    { name: "Communities", href: "/communities" },
+
     { name: "Login/Signup", href: "/login" },
   ];
 
@@ -47,16 +49,15 @@ function Dropdown({_user}) {
   const userType = localStorage.getItem("userType");
 
   // if (user) {
-    if (userType === "user") {
-      menuItems = userMenuItems;
-    } else if (userType === "seller") {
-      menuItems = sellerMenuItems;
-    } else if (userType === "vet") {
-      menuItems = vetMenuItems;
-    }
-    else {
-      menuItems = [];
-    }
+  if (userType === "user") {
+    menuItems = userMenuItems;
+  } else if (userType === "seller") {
+    menuItems = sellerMenuItems;
+  } else if (userType === "vet") {
+    menuItems = vetMenuItems;
+  } else {
+    menuItems = [];
+  }
   // } else {
   //   menuItems = [];
   // }

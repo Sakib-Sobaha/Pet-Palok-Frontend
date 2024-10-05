@@ -43,9 +43,13 @@ const EditProfileVet = ({ element_id, _vet }) => {
   console.log("vet: " + JSON.stringify(vet));
 
   const [isExpanded, setIsExpanded] = useState(false);
-  const [imageSrc, setImageSrc] = useState(vet?.image);
   const [selectedImage, setSelectedImage] = useState(null);
   const { uploadFiles, uploading } = useFileUpload(); // Use the custom hook
+  const [imageSrc, setImageSrc] = useState(vet?.image);
+
+  useEffect(() => {
+    setImageSrc(vet?.image);
+  }, [vet]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
