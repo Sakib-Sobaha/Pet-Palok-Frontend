@@ -1,9 +1,10 @@
 // MiddleLayoutSellerHome.js
 import React, { useEffect, useState } from "react";
-import { drawHistogram } from "../components/chart/draw-histogram"; // Ensure correct path
+// import { drawHistogram } from "../components/chart/draw-histogram"; // Ensure correct path
 import SectionDivider from "./Section-Divider";
 import Rating from "./Rating";
 import ReviewContainer from "./containers/Seller-Review-Container";
+import BarChart from "../components/chart/bar-chart";
 // import RatingChart from "./chart/RatingChart";
 const handleLogout = () => {
   localStorage.removeItem("authToken");
@@ -82,6 +83,7 @@ const MiddleLayoutSellerHome = () => {
   const [seller, setSeller] = useState(null);
   const [marketItems, setMarketItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [salesData, setSalesData] = useState([]);
 
   const fetchMarketItems = async () => {
     const token = localStorage.getItem("authToken");
@@ -140,8 +142,10 @@ const MiddleLayoutSellerHome = () => {
         sales: item.sold,
       }));
 
+      setSalesData(histogramData);
+
       // Draw the histogram with the mapped data
-      drawHistogram(histogramData);
+      // drawHistogram(histogramData);
     }
   }, [marketItems]); // Depend on marketItems
 
@@ -158,7 +162,12 @@ const MiddleLayoutSellerHome = () => {
         title="Store Stats"
         icon="https://cdn-icons-png.flaticon.com/512/167/167486.png"
       />{" "}
-      <canvas id="histogramCanvas" width="800" height="400"></canvas>
+      {salesData.length > 0 ? (
+        <>
+          <BarChart data={salesData} />
+        </>
+      ):(<h1>no data</h1>)}
+      {/* <canvas id="histogramCanvas" width="800" height="400"></canvas> */}
       <SectionDivider
         title="Ratings and Reviews"
         icon="https://cdn-icons-png.freepik.com/256/12377/12377209.png?semt=ais_hybrid"
@@ -168,7 +177,6 @@ const MiddleLayoutSellerHome = () => {
         <Rating rating={seller?.rating} />
         <br />
         <ReviewContainer sellerId={seller?.id} />
-
       </div>
     </div>
   );

@@ -42,6 +42,7 @@ import SingleAppointment from "./pages/vet/single-appointment.js";
 import PhotoUpload from "./pages/tests/photo-up-test.js";
 import Verify from "./pages/verify.js";
 import Store from "./pages/seller/store.js";
+import Community from "./pages/communities/single-community.js";
 
 export default function App() {
   return (
@@ -103,6 +104,7 @@ export default function App() {
             <Route path="/about" element={<About />} />
 
             <Route path="/communities" element={<Communities />} />
+            <Route path="/community/:communityId" element={<Community />} />
 
             <Route path="/landing" element={<LandingPage />} />
 
