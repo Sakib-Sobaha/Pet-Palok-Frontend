@@ -748,12 +748,12 @@ const MiddleLayoutChatbox = () => {
                       <li
                         key={user.id}
                         className={`mb-4 flex items-center cursor-pointer ${
-                          selectedUser?.id === user.id ? "bg-gray-200" : ""
+                          selectedUser?.id === user.id ? "bg-base-200 p-1 rounded-lg" : ""
                         }`}
                         onClick={() => handleUserClick(user)}
                       >
                         {/* Circle with user image and online status indicator */}
-                        <div className="relative">
+                        <div className="relative m-1">
                           <img
                             src={user.image || "default_avatar.png"} // Replace 'default_avatar.png' with your default avatar image
                             alt={user.firstname}
@@ -808,12 +808,12 @@ const MiddleLayoutChatbox = () => {
                     <li
                       key={vet.id}
                       className={`mb-4 flex items-center cursor-pointer ${
-                        selectedUser?.id === vet.id ? "bg-gray-200" : ""
+                        selectedUser?.id === vet.id ? "bg-base-200 p-1 rounded-xl" : ""
                       }`}
                       onClick={() => handleVetClick(vet)}
                     >
                       {/* Circle with user image and online status indicator */}
-                      <div className="relative">
+                      <div className="relative m-1">
                         <img
                           src={vet.image || "default_avatar.png"} // Replace 'default_avatar.png' with your default avatar image
                           alt={vet.firstname}
@@ -857,12 +857,12 @@ const MiddleLayoutChatbox = () => {
                     <li
                       key={seller.id}
                       className={`mb-4 flex items-center cursor-pointer ${
-                        selectedUser?.id === seller.id ? "bg-gray-200" : ""
+                        selectedUser?.id === seller.id ? "bg-base-200 rounded-xl p-1" : ""
                       }`}
                       onClick={() => handleSellerClick(seller)}
                     >
                       {/* Circle with seller image and online status indicator */}
-                      <div className="relative">
+                      <div className="relative m-1">
                         <img
                           src={seller.image || "default_avatar.png"} // Replace 'default_avatar.png' with your default avatar image
                           alt={seller.name}
@@ -952,6 +952,7 @@ const MiddleLayoutChatbox = () => {
               {isUser && (
                 <>
                   <div className="bg-base-100 p-4 border-b border-base-content">
+                    
                     <h2 className="text-xl font-bold font-serif">
                       Chat with{" "}
                       <p
@@ -976,7 +977,7 @@ const MiddleLayoutChatbox = () => {
                       <p
                         className="hover:scale-105 hover:text-primary hover:cursor-pointer"
                         onClick={() => {
-                          window.location.href = `vet/profile/${selectedUser.id}`;
+                          window.location.href = `/vet/profile/${selectedUser.id}`;
                         }}
                       >
                         {" "}
@@ -995,7 +996,7 @@ const MiddleLayoutChatbox = () => {
                       <p
                         className="hover:scale-105 hover:text-primary hover:cursor-pointer"
                         onClick={() => {
-                          window.location.href = `seller/profile/${selectedUser.id}`;
+                          window.location.href = `/seller/profile/${selectedUser.id}`;
                         }}
                       >
                         {" "}
@@ -1019,26 +1020,85 @@ const MiddleLayoutChatbox = () => {
                         : "justify-start"
                     }`}
                   >
-                    <div
-                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                        message.senderId === user?.id
-                          ? "bg-blue-300 text-black font-serif"
-                          : "bg-white text-gray-800"
-                      }`}
-                    >
-                      <p>{message.content}</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {/* {console.log("Timestamp:", message.timestamp)} */}
-                        {new Date(message.timestamp).toLocaleString(undefined, {
-                          dateStyle: "short",
-                          timeStyle: "short",
-                        })}
-                      </p>
-                    </div>
+                    {message.senderId === user?.id ? (
+                      <>
+                        <div className="chat chat-end">
+                          <div className="chat-image avatar">
+                            <div className="ring-accent ring-offset-base-100 w-10 rounded-full ring ring-offset-2">
+                              <img
+                                alt="Tailwind CSS chat bubble component"
+                                src={user?.image}
+                              />
+                            </div>
+                          </div>
+                          <div className="chat-bubble chat-bubble-accent">
+                            <p className="text-base-content font-semibold font-serif">
+                              {message.content}
+                            </p>
+                            <p className="text-xs text-base-content mt-1 flex">
+                              {/* {console.log("Timestamp:", message.timestamp)} */}
+                              <svg
+                                viewBox="0 0 32 32"
+                                className="mr-2 fill-current text-content h-4 w-4 mt-1 stroke-current"
+                                strokeWidth="1.5"
+                              >
+                                <g data-name="Layer 15" id="Layer_15">
+                                  <path d="M16,31A15,15,0,1,1,31,16,15,15,0,0,1,16,31ZM16,3A13,13,0,1,0,29,16,13,13,0,0,0,16,3Z" />
+                                  <path d="M20.24,21.66l-4.95-4.95A1,1,0,0,1,15,16V8h2v7.59l4.66,4.65Z" />
+                                </g>
+                              </svg>
+                              {new Date(message.timestamp).toLocaleString(
+                                undefined,
+                                {
+                                  dateStyle: "short",
+                                  timeStyle: "short",
+                                }
+                              )}
+                            </p>{" "}
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="chat chat-start">
+                        <div className="chat-image avatar">
+                          <div className="ring-secondary ring-offset-base-100 w-10 rounded-full ring ring-offset-2">
+                            <img
+                              alt="Tailwind CSS chat bubble component"
+                              src={selectedUser?.image}
+                            />
+                          </div>
+                        </div>
+                        <div className="chat-bubble chat-bubble-secondary">
+                          <p className="text-base-content font-semibold font-serif">
+                            {message.content}
+                          </p>
+                          <p className="text-xs text-base-content mt-1 flex">
+                            <svg
+                              viewBox="0 0 32 32"
+                              className="mr-2 fill-current text-content h-4 w-4 mt-1 stroke-current"
+                              strokeWidth="1.5"
+                            >
+                              <g data-name="Layer 15" id="Layer_15">
+                                <path d="M16,31A15,15,0,1,1,31,16,15,15,0,0,1,16,31ZM16,3A13,13,0,1,0,29,16,13,13,0,0,0,16,3Z" />
+                                <path d="M20.24,21.66l-4.95-4.95A1,1,0,0,1,15,16V8h2v7.59l4.66,4.65Z" />
+                              </g>
+                            </svg>
+                            {/* {console.log("Timestamp:", message.timestamp)} */}
+                            {new Date(message.timestamp).toLocaleString(
+                              undefined,
+                              {
+                                dateStyle: "short",
+                                timeStyle: "short",
+                              }
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
-              <form onSubmit={handleSendMessage} className="p-4 bg-white">
+              <form onSubmit={handleSendMessage} className="p-4 bg-base-100">
                 <div className="flex space-x-2">
                   <input
                     type="text"
@@ -1047,10 +1107,27 @@ const MiddleLayoutChatbox = () => {
                     className="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black-500"
                     placeholder="Type a message..."
                   />
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white rounded-full px-4 py-2 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
+                  <button type="submit" className="btn btn-info">
+                    <svg
+                      enable-background="new 0 0 512 512"
+                      height="512px"
+                      id="Layer_1"
+                      version="1.1"
+                      viewBox="0 0 512 512"
+                      width="512px"
+                      // xml:space="preserve"
+                      // xmlns="http://www.w3.org/2000/svg"
+                      // xmlns:xlink="http://www.w3.org/1999/xlink"
+                      className="w-6 h-6 fill-current stroke-current text-current"
+                      // strokeWidth="2"
+                      // stroke="black"
+                    >
+                      <path
+                        d="M189.547,324.346l87.616,176.304l223.917-490L11.137,245.793L189.547,324.346z M194.754,305.243  l-136.77-60.216L433.599,64.761L194.754,305.243z M276.436,455.383l-67.787-136.416L449.62,76.36L276.436,455.383z"
+                        // fill="#37404D"
+                        // strokeWidth={2}
+                      />
+                    </svg>
                     Send
                   </button>
                 </div>
