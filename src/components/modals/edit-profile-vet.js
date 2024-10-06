@@ -203,7 +203,7 @@ const EditProfileVet = ({ element_id, _vet }) => {
               <input
                 type="date"
                 name="dob"
-                value={formatDateToInput(vet?.dob) || ""}
+                value={vet?.dob || ""}
                 onChange={handleChange}
                 className="input input-bordered w-full"
               />

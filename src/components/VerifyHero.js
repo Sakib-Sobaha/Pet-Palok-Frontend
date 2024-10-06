@@ -53,7 +53,7 @@ const Verification = ({type, title, text, icon, verifyURL, resendURL}) => {
     // Reset the timer and resend OTP logic here
     e.preventDefault();
     try {
-      const response = await fetch(resendURL, {
+      const response = await fetch(`${resendURL}?email=${encodeURIComponent(email)}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
