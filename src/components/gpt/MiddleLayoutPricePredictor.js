@@ -33,6 +33,14 @@ export default function ItemDetailsForm() {
             return;
         }
 
+
+        // Convert 'type' and 'petType' to uppercase
+        const updatedFormData = {
+            ...formData,
+            type: formData.type.toUpperCase(),
+            petType: formData.petType.toUpperCase()
+        };
+
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/price-predictor/predict`, {
                 method: 'POST',
@@ -40,7 +48,7 @@ export default function ItemDetailsForm() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(updatedFormData)
             });
 
             if (!response.ok) {
@@ -49,7 +57,7 @@ export default function ItemDetailsForm() {
 
             const responseData = await response.json();
             console.log('API Response:', responseData);
-            setModalContent(`Predicted price: ${responseData.price*100}`);
+            setModalContent(`Predicted price: ${Math.round(responseData.price)} BDT`);
             setModalOpen(true);
             // alert('Prediction received: ' + responseData.price);
         } catch (error) {

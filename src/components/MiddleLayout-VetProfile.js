@@ -102,8 +102,10 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleChatRoomRedirect = () => {
+  const handleChatRoomRedirect = (profileUser) => {
     window.location.href = "http://localhost:3000/chatroom"; // Redirect to chatroom
+
+    localStorage.setItem("selectedUser", JSON.stringify(profileUser));
   };
 
   if (loading) {
@@ -281,7 +283,7 @@ const MiddleLayoutVetProfile = ({ vetId }) => {
           )}
           <button 
             className="btn btn-secondary mt-3 m-1 h-8 rounded-md items-center gap-2 p-2"
-            onClick={handleChatRoomRedirect}  
+            onClick={() => handleChatRoomRedirect(vet)}  
           >
             <svg
               viewBox="0 0 512 512"

@@ -110,6 +110,7 @@ const MiddleLayoutChatbox = () => {
   const [lastname, setLastname] = useState("");
   const [user, setUser] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(null);
 
   const [users, setUsers] = React.useState([]);
   const [vets, setVets] = React.useState([]);
@@ -136,11 +137,18 @@ const MiddleLayoutChatbox = () => {
 
   const chatAreaRef = useRef(null);
 
-  
-
   const isUser = selectedUser?.role === "USER"; // Check if the logged-in user is the vet (owner)
   const isVet = selectedUser?.role === "VET"; // Check if the logged-in user is the vet (owner)
   const isSeller = selectedUser?.role === "SELLER"; // Check if the logged-in user is the vet (owner)
+
+  useEffect(() => {
+    // Get the selected user from localStorage or other navigation method
+    const userFromStorage = localStorage.getItem("selectedUser");
+    if (userFromStorage) {
+      setSelectedUser(JSON.parse(userFromStorage)); // Parse and set the selected user
+      setRecipientId(selectedUser?.id);
+    }
+  }, []);
 
   useEffect(() => {
     try {
@@ -355,7 +363,7 @@ const MiddleLayoutChatbox = () => {
 
   const fetchUserData = async () => {
     const token = localStorage.getItem("authToken");
-    const userType = localStorage.getItem("userType"); 
+    const userType = localStorage.getItem("userType");
     try {
       // Construct the URL for the API request
       const url = `${process.env.REACT_APP_API_URL}/${userType}/whoami`;
@@ -377,6 +385,7 @@ const MiddleLayoutChatbox = () => {
 
       // Update the state with the fetched data
       setUser(data);
+      setLoggedInUser(data);
       setFirstname(data.firstname);
       setLastname(data.lastname);
       setSenderId(data.id);
@@ -515,14 +524,15 @@ const MiddleLayoutChatbox = () => {
     console.log("Timestamp:", JSON.stringify(message.timestamp));
     console.log("Message received:", message);
     if (
-      (message.senderId === user?.id && message.recipientId === selectedUser?.id) ||
-      (message.senderId === selectedUser?.id && message.recipientId === user?.id)  
-      
+      (message.senderId === user?.id &&
+        message.recipientId === selectedUser?.id) ||
+      (message.senderId === selectedUser?.id &&
+        message.recipientId === user?.id)
     ) {
       setMessages((prevMessages) => {
-        if(!prevMessages.some((msg) => msg.id === message.id)) {
+        if (!prevMessages.some((msg) => msg.id === message.id)) {
           return [...prevMessages, message];
-        } 
+        }
         return prevMessages;
       });
       // addMessage(message.senderId, message.content);
@@ -543,8 +553,7 @@ const MiddleLayoutChatbox = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);  // This will run whenever `messages` is updated
-  
+  }, [messages]); // This will run whenever `messages` is updated
 
   const connectToWebSocket = () => {
     const socket = new SockJS(`http://localhost:8080/ws`);
@@ -647,10 +656,10 @@ const MiddleLayoutChatbox = () => {
     // Add the sent message to the local message state and scroll down after update
     // setMessages((prevMessages) => {
     //   const updatedMessages = [...(prevMessages || []), chatMessage];
-      
+
     //   // Use setTimeout to ensure the DOM is updated before scrolling
     //   setTimeout(() => scrollToBottom(), 0);
-      
+
     //   return updatedMessages;
     // });
 
@@ -662,7 +671,40 @@ const MiddleLayoutChatbox = () => {
     setInputMessage("");
   };
 
-  
+  // Extract unique users based on conversations and sort by the latest message timestamp
+  const sortedUsers = [
+    ...new Set(
+      messages
+        .filter(
+          (msg) =>
+            msg.senderId === loggedInUser?.id ||
+            msg.recipientId === loggedInUser?.id
+        )
+        .map((msg) =>
+          msg.senderId === loggedInUser?.id ? msg.recipientId : msg.senderId
+        )
+    ),
+  ].sort((userA, userB) => {
+    const latestMessageA = messages
+      .filter(
+        (msg) =>
+          (msg.senderId === userA && msg.recipientId === loggedInUser?.id) ||
+          (msg.senderId === loggedInUser?.id && msg.recipientId === userA)
+      )
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
+
+    const latestMessageB = messages
+      .filter(
+        (msg) =>
+          (msg.senderId === userB && msg.recipientId === loggedInUser?.id) ||
+          (msg.senderId === loggedInUser?.id && msg.recipientId === userB)
+      )
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
+
+    return (
+      new Date(latestMessageB?.timestamp) - new Date(latestMessageA?.timestamp)
+    );
+  });
 
   // useEffect(() => {
   //   if (user && selectedUser && isConnected) {
@@ -684,36 +726,65 @@ const MiddleLayoutChatbox = () => {
               <h2 className="text-xl font-bold">Connected Users</h2>
               <ul id="userList">
                 {users.length > 0 ? (
-                  users.map((user) => (
-                    <li
-                      key={user.id}
-                      className={`mb-4 flex items-center cursor-pointer ${
-                        selectedUser?.id === user.id ? "bg-gray-200" : ""
-                      }`}
-                      onClick={() => handleUserClick(user)}
-                    >
-                      {/* Circle with user image and online status indicator */}
-                      <div className="relative">
-                        <img
-                          src={user.image || "default_avatar.png"} // Replace 'default_avatar.png' with your default avatar image
-                          alt={user.firstname}
-                          className="w-8 h-8 rounded-full"
-                        />
-                        <span
-                          className={`absolute right-0 bottom-0 block h-1.5 w-1.5 rounded-full ring-1 ring-white ${
-                            user.status === "online"
-                              ? "bg-green-400"
-                              : "bg-red-400"
-                          }`}
-                        ></span>
-                      </div>
-                      {/* User's Name and Email */}
-                      <div className="ml-3">
-                        <p className="font-semibold">{user.firstname}</p>
-                        {/* <p className="text-sm text-gray-500">{user.email}</p> */}
-                      </div>
-                    </li>
-                  ))
+                  users.map((user) => {
+                    const latestMessage = messages
+                      .filter(
+                        (msg) =>
+                          (msg.senderId === user.id &&
+                            msg.recipientId === selectedUser?.id) ||
+                          (msg.senderId === selectedUser?.id &&
+                            msg.recipientId === user.id)
+                      )
+                      .sort(
+                        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+                      )[0]; // Get the latest message
+
+                    const isMessageSeen = latestMessage?.seen; // Check if the latest message is seen
+                    const messageStyle = isMessageSeen
+                      ? "text-gray-500"
+                      : "font-bold"; // Set style based on seen/unseen
+
+                    return (
+                      <li
+                        key={user.id}
+                        className={`mb-4 flex items-center cursor-pointer ${
+                          selectedUser?.id === user.id ? "bg-gray-200" : ""
+                        }`}
+                        onClick={() => handleUserClick(user)}
+                      >
+                        {/* Circle with user image and online status indicator */}
+                        <div className="relative">
+                          <img
+                            src={user.image || "default_avatar.png"} // Replace 'default_avatar.png' with your default avatar image
+                            alt={user.firstname}
+                            className="w-8 h-8 rounded-full"
+                          />
+                          <span
+                            className={`absolute right-0 bottom-0 block h-1.5 w-1.5 rounded-full ring-1 ring-white ${
+                              user.status === "online"
+                                ? "bg-green-400"
+                                : "bg-red-400"
+                            }`}
+                          ></span>
+                        </div>
+                        {/* User's Name, Latest Message and Email */}
+                        <div className="ml-3">
+                          <p className="font-semibold">{user.firstname}</p>
+                          {/* Display the latest message */}
+                          {latestMessage && (
+                            <p className={`text-sm ${messageStyle}`}>
+                              {latestMessage.content} -{" "}
+                              <span className="text-xs">
+                                {new Date(
+                                  latestMessage.timestamp
+                                ).toLocaleTimeString()}
+                              </span>
+                            </p>
+                          )}
+                        </div>
+                      </li>
+                    );
+                  })
                 ) : (
                   <li>No users found</li>
                 )}
@@ -734,8 +805,8 @@ const MiddleLayoutChatbox = () => {
               <ul id="vetList">
                 {vets.length > 0 ? (
                   vets.map((vet) => (
-                    <li 
-                      key={vet.id} 
+                    <li
+                      key={vet.id}
                       className={`mb-4 flex items-center cursor-pointer ${
                         selectedUser?.id === vet.id ? "bg-gray-200" : ""
                       }`}
@@ -750,7 +821,9 @@ const MiddleLayoutChatbox = () => {
                         />
                         <span
                           className={`absolute right-0 bottom-0 block h-1.5 w-1.5 rounded-full ring-1 ring-white ${
-                            vet.status === "online" ? "bg-green-400" : "bg-red-400"
+                            vet.status === "online"
+                              ? "bg-green-400"
+                              : "bg-red-400"
                           }`}
                         ></span>
                       </div>
@@ -781,8 +854,8 @@ const MiddleLayoutChatbox = () => {
               <ul id="sellerList">
                 {sellers.length > 0 ? (
                   sellers.map((seller) => (
-                    <li 
-                      key={seller.id} 
+                    <li
+                      key={seller.id}
                       className={`mb-4 flex items-center cursor-pointer ${
                         selectedUser?.id === seller.id ? "bg-gray-200" : ""
                       }`}
@@ -878,31 +951,37 @@ const MiddleLayoutChatbox = () => {
             <>
               {isUser && (
                 <>
-
                   <div className="bg-base-100 p-4 border-b border-base-content">
                     <h2 className="text-xl font-bold font-serif">
-                      Chat with <p className="hover:scale-105 hover:text-primary hover:cursor-pointer"
-                                  onClick={() => {
-                                    window.location.href = `user/profile/${selectedUser.id}`;
-                                  }}
-                      
-                      > {selectedUser.firstname} {selectedUser.lastname}</p>
+                      Chat with{" "}
+                      <p
+                        className="hover:scale-105 hover:text-primary hover:cursor-pointer"
+                        onClick={() => {
+                          window.location.href = `user/profile/${selectedUser.id}`;
+                        }}
+                      >
+                        {" "}
+                        {selectedUser.firstname} {selectedUser.lastname}
+                      </p>
                     </h2>
                   </div>
-                  </>
+                </>
               )}
 
               {isVet && (
                 <>
-
                   <div className="bg-base-100 p-4 border-b border-base-content">
                     <h2 className="text-xl font-bold font-serif">
-                      Chat with <p className="hover:scale-105 hover:text-primary hover:cursor-pointer"
-                                  onClick={() => {
-                                    window.location.href = `vet/profile/${selectedUser.id}`;
-                                  }}
-                      
-                      > {selectedUser.firstname} {selectedUser.lastname}</p>
+                      Chat with{" "}
+                      <p
+                        className="hover:scale-105 hover:text-primary hover:cursor-pointer"
+                        onClick={() => {
+                          window.location.href = `vet/profile/${selectedUser.id}`;
+                        }}
+                      >
+                        {" "}
+                        {selectedUser.firstname} {selectedUser.lastname}
+                      </p>
                     </h2>
                   </div>
                 </>
@@ -910,15 +989,18 @@ const MiddleLayoutChatbox = () => {
 
               {isSeller && (
                 <>
-
                   <div className="bg-base-100 p-4 border-b border-base-content">
                     <h2 className="text-xl font-bold font-serif">
-                      Chat with <p className="hover:scale-105 hover:text-primary hover:cursor-pointer"
-                                  onClick={() => {
-                                    window.location.href = `seller/profile/${selectedUser.id}`;
-                                  }}
-                      
-                      > {selectedUser.name}</p>
+                      Chat with{" "}
+                      <p
+                        className="hover:scale-105 hover:text-primary hover:cursor-pointer"
+                        onClick={() => {
+                          window.location.href = `seller/profile/${selectedUser.id}`;
+                        }}
+                      >
+                        {" "}
+                        {selectedUser.name}
+                      </p>
                     </h2>
                   </div>
                 </>
