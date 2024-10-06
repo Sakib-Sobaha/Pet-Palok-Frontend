@@ -75,7 +75,7 @@ const SellerReviewContainer = ({sellerId}) => {
               <path d="M13,52H33a1,1,0,0,0,0-2H13a1,1,0,0,0,0,2Z" />
             </g>
           </svg>
-          View Reviews
+          View Reviews ({reviews?.length})
         </div>
         <div className="collapse-content">
           {reviews.length > 0 ? (

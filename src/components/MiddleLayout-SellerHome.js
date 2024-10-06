@@ -138,8 +138,8 @@ const MiddleLayoutSellerHome = () => {
     if (marketItems.length > 0) {
       // Map marketItems to the format needed for the histogram
       const histogramData = marketItems.map((item) => ({
-        name: item.name,
-        sales: item.sold,
+        name: item?.name,
+        sales: item?.sold,
       }));
 
       setSalesData(histogramData);
@@ -162,12 +162,58 @@ const MiddleLayoutSellerHome = () => {
         title="Store Stats"
         icon="https://cdn-icons-png.flaticon.com/512/167/167486.png"
       />{" "}
+      
       {salesData.length > 0 ? (
         <>
           <BarChart data={salesData} />
         </>
-      ):(<h1>no data</h1>)}
+      ) : (
+        <h1>no data</h1>
+      )}
       {/* <canvas id="histogramCanvas" width="800" height="400"></canvas> */}
+      <SectionDivider
+        title="Available Stock"
+        icon="https://cdn-icons-png.flaticon.com/512/5164/5164023.png"
+      />{" "}
+      <div className="grid grid-cols-3 gap-2">
+        {marketItems
+          .filter((item) => item?.totalAvailableCount <= 3) // Only keep items where totalAvailableCount <= 3
+          .map((item) => (
+            <div key={item?.id} className="card card-compact bg-base-300">
+              <figure>
+                <img
+                  src={item?.images[0]}
+                  alt={item?.name}
+                  className="rounded-lg h-48 w-full object-cover"
+                />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title text-md">{item?.name}</h2>
+
+                <div className="grid grid-cols-2 gap-y-1">
+                  <p className="">
+                    <strong>Quantity:</strong> {item?.quantity}
+                  </p>
+                  <p className="badge-error badge">
+                    <strong>Available:</strong> {item?.totalAvailableCount}
+                  </p>
+                  <p className="text-info">
+                    <strong>Sold:</strong> {item?.sold}
+                  </p>
+                  <p className=" font-bold badge badge-error"> Low On Stock</p>
+                </div>
+              </div>
+              <button
+                className="btn btn-primary rounded-lg"
+                onClick={() => {
+                  window.location.href = `/marketplace/item/${item?.id}`;
+                }}
+              >
+                View Item
+              </button>
+            </div>
+          ))}
+      </div>
       <SectionDivider
         title="Ratings and Reviews"
         icon="https://cdn-icons-png.freepik.com/256/12377/12377209.png?semt=ais_hybrid"
