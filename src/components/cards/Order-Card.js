@@ -36,6 +36,11 @@ const acceptOrderAPI = async (token, orderId) => {
     if (response.status === 401) {
       handleLogout(); // Token is likely expired, logout the user
     }
+    if (response.status === 424) {
+      alert("Cannot Accept Order, Not enough stock available");
+      console.log("Cannot Accept Order, Not enough stock available");
+      throw new Error("Cannot Accept Order, Not enough stock available");
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -48,7 +53,7 @@ const acceptOrderAPI = async (token, orderId) => {
     return data;
   } catch (error) {
     console.error("Failed to increment accept order:", error);
-    return null;
+    return null; // Returning null in case of failure
   }
 };
 
@@ -183,15 +188,14 @@ function OrderCard({ order_ }) {
   };
 
   const handleRejectOrder = () => {
-   console.log("Rejecting order");
-   handleStatusChange("Rejected");
+    console.log("Rejecting order");
+    handleStatusChange("Rejected");
     const token = localStorage.getItem("authToken");
 
     try {
       // call increment api for backend update
       changeOrderStatusAPI(token, order.id, "reject");
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Failed to reject order:", error);
     }
   };
@@ -199,56 +203,61 @@ function OrderCard({ order_ }) {
   const getButtonDetails = () => {
     console.log(order.status);
     switch (order.status?.toLowerCase()) {
-      
       case "pending":
         return {
           text: "Accept Order",
-          onClick: () => {
-            handleStatusChange("Accepted");
+          onClick: async () => {
             const token = localStorage.getItem("authToken");
             try {
-              // call increment api for backend update
-              acceptOrderAPI(token, order.id);
+              // call increment API for backend update
+              const response = await acceptOrderAPI(token, order.id);
+
+              // Only change the status if the order was successfully accepted
+              if (response) {
+                handleStatusChange("Accepted");
+              }
             } catch (error) {
               console.error("Failed to accept order:", error);
+              // Do not call handleStatusChange here as the acceptance failed
             }
           },
         };
+
       case "accepted":
         return {
           text: "Out for Delivery",
-          onClick: () => {handleStatusChange("Out for Delivery")
+          onClick: () => {
             const token = localStorage.getItem("authToken");
-            try{
+            try {
               changeOrderStatusAPI(token, order.id, "outForDelivery");
-            }
-            catch(error){
+            } catch (error) {
               console.error("Failed to change order status:", error);
             }
+            handleStatusChange("Out for Delivery");
           },
         };
       case "out_for_delivery":
         return {
           text: "Mark as Delivered",
-          onClick: () => {handleStatusChange("Delivered")
+          onClick: () => {
+            handleStatusChange("Delivered");
             const token = localStorage.getItem("authToken");
-            try{
+            try {
               changeOrderStatusAPI(token, order.id, "delivered");
-            }
-            catch(error){
+            } catch (error) {
               console.error("Failed to change order status:", error);
             }
           },
         };
-        case "out for delivery":
+      case "out for delivery":
         return {
           text: "Mark as Delivered",
-          onClick: () => {handleStatusChange("Delivered")
+          onClick: () => {
+            handleStatusChange("Delivered");
             const token = localStorage.getItem("authToken");
-            try{
+            try {
               changeOrderStatusAPI(token, order.id, "delivered");
-            }
-            catch(error){
+            } catch (error) {
               console.error("Failed to change order status:", error);
             }
           },
@@ -288,24 +297,24 @@ function OrderCard({ order_ }) {
     <div className="border border-content rounded-lg p-4 mb-4 bg-base-100">
       {text && (
         <button
-          className={`btn btn-primary rounded-md float-right ${order.status.toLowerCase() === "rejected" ? "btn-disabled" : ""}`}
+          className={`btn btn-primary rounded-md float-right ${
+            order.status.toLowerCase() === "rejected" ? "btn-disabled" : ""
+          }`}
           onClick={onClick}
         >
           {text}
         </button>
       )}
-      {
-        order.status.toLowerCase() === "pending" && (
-          <button
-           className="btn btn-error rounded-md float-right mr-2"
-            onClick={() => {
-              handleRejectOrder();
-            }}
-          >
-            Reject Order
-          </button>
-        )
-      }
+      {order.status.toLowerCase() === "pending" && (
+        <button
+          className="btn btn-error rounded-md float-right mr-2"
+          onClick={() => {
+            handleRejectOrder();
+          }}
+        >
+          Reject Order
+        </button>
+      )}
 
       <h2 className="text-xl font-bold mb-2">
         Order Details
