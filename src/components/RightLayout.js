@@ -2,11 +2,11 @@ import React from "react";
 
 const RightLayout = () => {
   const handleChatRoomRedirect = () => {
-    window.location.href = "http://localhost:3000/chatroom"; // Redirect to chatroom
+    window.location.href = "/chatroom"; // Redirect to chatroom
   };
 
   const handleGPTRedirect = () => {
-    window.location.href = "http://localhost:3000/gpt"; // Redirect to GPT
+    window.location.href = "/gpt"; // Redirect to GPT
   };
 
   const handlePricePredictorRedirect = () => {
