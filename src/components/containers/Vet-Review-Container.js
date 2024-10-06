@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
-import SingleReivew from "../reviews/Vet-singleReview";
+import SingleReview from "../reviews/Vet-singleReview";
 
 const handleLogout = () => {
   localStorage.removeItem("authToken");
   window.location.href = "/login"; // Redirect to the login page
 };
 
-const VetReviewContainer = ({vetId}) => {
-  const [reviews, setReviews] = useState([]); // Renamed state to 'reviews'
-  // const marketItemId = "66c85294cf5b6e5ee3204a79"; // Provided market item ID
-  const token = localStorage.getItem("authToken"); // Replace with actual token
-  const url = `${process.env.REACT_APP_API_URL}/appointment/review/getByVet/${vetId}`;
+const VetReviewContainer = ({ vetId }) => {
+  const [reviews, setReviews] = useState([]);
 
-  // Fetch reviews from API
+  const token = localStorage.getItem("authToken");
+
   const fetchData = async (url) => {
     const headers = new Headers({
       "Content-Type": "application/json",
@@ -45,12 +43,13 @@ const VetReviewContainer = ({vetId}) => {
     }
   };
 
-  // Fetch data on component mount
   useEffect(() => {
-    fetchData(url);
-  }, [url]);
+    if (vetId) {
+      const url = `${process.env.REACT_APP_API_URL}/appointment/review/getByVet/${vetId}`;
+      fetchData(url);
+    }
+  }, [vetId]);
 
-  
   return (
     <div className="w-full">
       <div className="collapse bg-accent">
@@ -75,12 +74,12 @@ const VetReviewContainer = ({vetId}) => {
               <path d="M13,52H33a1,1,0,0,0,0-2H13a1,1,0,0,0,0,2Z" />
             </g>
           </svg>
-          View Reviews
+          View Reviews ({reviews?.length})
         </div>
         <div className="collapse-content">
           {reviews.length > 0 ? (
             reviews.map((review) => (
-              <SingleReivew key={review.id} _review={review} />
+              <SingleReview key={review.id} _review={review} />
             ))
           ) : (
             <p>No reviews available.</p>

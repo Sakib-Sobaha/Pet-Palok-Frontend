@@ -355,9 +355,10 @@ const MiddleLayoutChatbox = () => {
 
   const fetchUserData = async () => {
     const token = localStorage.getItem("authToken");
+    const userType = localStorage.getItem("userType"); 
     try {
       // Construct the URL for the API request
-      const url = `${process.env.REACT_APP_API_URL}/user/whoami`;
+      const url = `${process.env.REACT_APP_API_URL}/${userType}/whoami`;
       console.log(url);
 
       // Get the Bearer token from local storage (or wherever you store it)
