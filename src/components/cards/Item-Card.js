@@ -198,7 +198,9 @@ function ItemCardNoButton({ _item, owner, onDelete }) {
               </>
             )}
             {userType === "seller" && (
-              <button className="btn btn-secondary rounded-none mb-1">
+              <button className="btn btn-secondary rounded-none mb-1"
+                onClick={handleVisitItem}
+              >
                 View Item
               </button>
             )}

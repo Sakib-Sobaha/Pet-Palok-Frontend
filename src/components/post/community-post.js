@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import React from "react";
-
+import Comment from "./community-post-comment";
 const timeAgo = (timestamp) => {
   const now = new Date();
   const then = new Date(timestamp);
@@ -33,11 +33,14 @@ const fetchData = async (url, token) => {
 };
 
 function CommunityPost({ _post }) {
+  const [comments, setComments] = useState([]);
   const [post, setPost] = useState(_post);
   const [author, setAuthor] = useState(null);
   const [visitor, setVisitor] = useState(null);
   const [loading, setLoading] = useState(true);
   const userType = localStorage.getItem("userType");
+  const [newComment, setNewComment] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   useEffect(() => {
     const fetchWhoAmI = async () => {
@@ -111,6 +114,54 @@ function CommunityPost({ _post }) {
       setPost(updatedPost);
     } catch (error) {
       console.error("Error updating react:", error);
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    const url = `${process.env.REACT_APP_API_URL}/communityPostComment/${post.id}`;
+    setLoading(true);
+    fetchData(url, token)
+      .then((data) => {
+        setComments(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setLoading(false);
+      });
+  }, [post]);
+
+  const handleNewCommentSubmit = async () => {
+    if (!newComment) return; // Do nothing if the comment is empty
+
+    const token = localStorage.getItem("authToken");
+    const commentData = {
+      text: newComment,
+      postId: post.id,
+      userType: localStorage.getItem("userType"),
+      anonymous: isAnonymous,
+    };
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/communityPostComment/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(commentData),
+        }
+      );
+      const newCommentResponse = await response.json();
+
+      // Update the comments list with the new comment
+      setComments((prevComments) => [...prevComments, newCommentResponse]);
+      setNewComment(""); // Clear input after submission
+    } catch (error) {
+      console.error("Error posting comment:", error);
     }
   };
 
@@ -208,7 +259,7 @@ function CommunityPost({ _post }) {
                     <path d="M20.24,21.66l-4.95-4.95A1,1,0,0,1,15,16V8h2v7.59l4.66,4.65Z" />
                   </g>
                 </svg>
-                <span className="mt-1">{timeAgo(post.timestamp)}</span>
+                <span className="mt-1">{timeAgo(post?.timestamp)}</span>
               </h1>
             </div>
 
@@ -287,31 +338,45 @@ function CommunityPost({ _post }) {
             </div>
           </div>
         </div>
+
         <details className="collapse bg-base-100 rounded-t">
           <summary className="collapse-title text-xl font-medium">
-            No Comments Yet
+            {comments?.length === 0 ? "No" : comments?.length} Comments
           </summary>
-          <div className="collapse-content">
-            <div className="flex gap-3">
-              <div className="form-control">
-                <label className="label cursor-pointer">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="checkbox checkbox-primary"
-                  />
-                  <span className="label-text ml-2">Anonymous</span>
-                </label>
-              </div>{" "}
+          {/* Comment submission */}
+          <div className="form-control w-full">
+            <div className="flex gap-3 m-1">
+              {/* <label className="label">
+                <span className="label-text ml-2">Your comment</span>
+              </label> */}
               <input
                 type="text"
-                placeholder="Write Comment Here"
-                className="input input-bordered input-primary w-full max-w-xs"
+                className="input input-bordered rounded-xl w-full"
+                placeholder="Write a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
               />
-              <button className="btn btn-primary">Comment</button>
+              <label className="cursor-pointer flex items-center">
+                <input
+                  type="checkbox"
+                  checked={isAnonymous}
+                  onChange={(e) => setIsAnonymous(e.target.checked)}
+                  className="checkbox checkbox-primary mr-2"
+                />
+                <span className="label-text">Post as anonymous</span>
+              </label>
+              <button
+                className="btn btn-primary"
+                onClick={handleNewCommentSubmit}
+                disabled={!newComment} // Disable if no comment is entered
+              >
+                Comment
+              </button>
             </div>
-            <p>content</p>
           </div>
+          {comments.map((comment) => (
+            <Comment key={comment.id} _comment={comment} />
+          ))}
         </details>
       </div>
     );

@@ -483,7 +483,7 @@ const SingleCommunityMiddleLayout = ({ _communityId }) => {
               </div>
 
               {/* <BarChart data={salesData} /> */}
-              <CommunityFeed _community={community} />
+              <CommunityFeed _community={community} _isMember={isMember} />
             </div>
           )}
         </div>
