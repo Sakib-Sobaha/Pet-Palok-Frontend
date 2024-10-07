@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Reply from "./community-post-reply";
 
 const timeAgo = (timestamp) => {
@@ -7,7 +6,6 @@ const timeAgo = (timestamp) => {
   const then = new Date(timestamp);
   const diffInMs = now - then;
 
-  // Convert milliseconds to minutes, hours, and days
   const diffInMinutes = Math.floor(diffInMs / 1000 / 60);
   const hours = Math.floor(diffInMinutes / 60);
   const minutes = diffInMinutes % 60;
@@ -51,8 +49,9 @@ function CommunityComment({ _comment }) {
   const [loading, setLoading] = useState(false);
   const [comment, setComment] = useState(_comment);
   const [commenter, setCommenter] = useState(null);
-  const [showReply, setShowReply] = useState(false); // State for toggling reply form
-  const [replyText, setReplyText] = useState(""); // State to store reply input text
+  const [showReply, setShowReply] = useState(false);
+  const [showReplies, setShowReplies] = useState(false);
+  const [replyText, setReplyText] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -64,7 +63,7 @@ function CommunityComment({ _comment }) {
     } else if (comment?.userType === "vet") {
       url = `${process.env.REACT_APP_API_URL}/vet/getVetById/${comment?.authorId}`;
     } else if (comment?.userType === "seller") {
-      url = `${process.env.REACT_APP_API_URL}/admin/getAdminById/${comment?.authorId}`;
+      url = `${process.env.REACT_APP_API_URL}/seller/getSellerById/${comment?.authorId}`;
     }
 
     fetchData(url, token)
@@ -85,6 +84,15 @@ function CommunityComment({ _comment }) {
     fetchData(url, token)
       .then((data) => {
         setReplies(data);
+
+        // sort by date
+        setReplies((prevReplies) =>
+          prevReplies.sort((a, b) => {
+            const dateA = new Date(a.timestamp);
+            const dateB = new Date(b.timestamp);
+            return  dateB- dateA;
+          })
+        );
         setLoading(false);
       })
       .catch((error) => {
@@ -93,25 +101,30 @@ function CommunityComment({ _comment }) {
       });
   }, [comment]);
 
-  // Handle reply submission
   const handleReplySubmit = async () => {
     const token = localStorage.getItem("authToken");
     const replyBody = {
       text: replyText,
-      postId: comment?.postId, // Assuming comment has a postId prop
+      postId: comment?.postId,
       userType: localStorage.getItem("userType"),
       anonymous: isAnonymous,
-      parent: comment?.id, // Set the current comment's id as the parent
+      parent: comment?.id,
     };
 
     try {
       const url = `${process.env.REACT_APP_API_URL}/communityPostComment/reply`;
       const newReply = await postReply(url, token, replyBody);
 
-      // Update replies state with the new reply
       setReplies((prevReplies) => [...prevReplies, newReply]);
-      setReplyText(""); // Clear the reply input
-      setShowReply(false); // Hide the reply form after submission
+      setReplies((prevReplies) =>
+        prevReplies.sort((a, b) => {
+          const dateA = new Date(a.timestamp);
+          const dateB = new Date(b.timestamp);
+          return  dateB- dateA;
+        })
+      );
+      setReplyText("");
+      setShowReply(false);
     } catch (error) {
       console.error("Error submitting reply:", error);
     }
@@ -153,12 +166,7 @@ function CommunityComment({ _comment }) {
         <div className="flex gap-3">
           <div className="avatar mt-0.5">
             {comment?.anonymous ? (
-              <div
-                className="ring-primary ring-offset-base-100 w-5 h-5 rounded-full ring ring-offset-2 hover:cursor-pointer hover:scale-105"
-                onClick={() => {
-                  // window.location.href = `/${comment?.userType}/profile/${commenter?.id}`;
-                }}
-              >
+              <div className="ring-primary ring-offset-base-100 w-5 h-5 rounded-full ring ring-offset-2 hover:cursor-pointer hover:scale-105">
                 <img
                   src={
                     "https://www.pngitem.com/pimgs/m/302-3023907_business-man-png-logo-transparent-png.png"
@@ -179,14 +187,7 @@ function CommunityComment({ _comment }) {
 
           {comment?.anonymous ? (
             <div className="">
-              <h2
-                className="font-semibold hover:text-secondary cursor-pointer"
-                onClick={() => {
-                  // window.location.href = `/${comment?.userType}/profile/${commenter?.id}`;
-                }}
-              >
-                Anonymous Member
-              </h2>
+              <h2 className="font-semibold">Anonymous Member</h2>
             </div>
           ) : (
             <div className="">
@@ -208,9 +209,17 @@ function CommunityComment({ _comment }) {
           <p className="mt-1 ml-4">{comment?.text}</p>
           <button
             className="btn btn-ghost italic mt-2 btn-xs"
-            onClick={() => setShowReply(!showReply)} // Toggle reply form visibility
+            onClick={() => setShowReply(!showReply)}
           >
             reply
+          </button>
+
+          {/* Toggle showReplies state instead of showReply */}
+          <button
+            className="btn btn-ghost italic mt-2 btn-xs"
+            onClick={() => setShowReplies(!showReplies)}
+          >
+            {showReplies ? "hide replies" : "show replies"} ({replies.length})
           </button>
         </div>
 
@@ -236,13 +245,10 @@ function CommunityComment({ _comment }) {
                   type="text"
                   className="input input-bordered w-full"
                   placeholder="Write a reply..."
-                  value={replyText} // Bind to state
-                  onChange={(e) => setReplyText(e.target.value)} // Update state on change
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
                 />
-                <button
-                  className="btn btn-primary"
-                  onClick={handleReplySubmit} // Submit reply
-                >
+                <button className="btn btn-primary" onClick={handleReplySubmit}>
                   Reply
                 </button>
               </div>
@@ -250,10 +256,11 @@ function CommunityComment({ _comment }) {
           </div>
         )}
 
-        {/* Nested Replies */}
-        {replies.map((reply) => (
-          <Reply key={reply.id} _comment={reply} setReplies={setReplies} />
-        ))}
+        {/* Only show replies when showReplies is true */}
+        {showReplies &&
+          replies.map((reply) => (
+            <Reply key={reply.id} _comment={reply} setReplies={setReplies} />
+          ))}
       </div>
     );
   }

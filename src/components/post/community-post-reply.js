@@ -62,7 +62,7 @@ function CommunityReply({ _comment, setReplies }) {
     } else if (comment?.userType === "vet") {
       url = `${process.env.REACT_APP_API_URL}/vet/getVetById/${comment?.authorId}`;
     } else if (comment?.userType === "seller") {
-      url = `${process.env.REACT_APP_API_URL}/admin/getAdminById/${comment?.authorId}`;
+      url = `${process.env.REACT_APP_API_URL}/seller/getSellerById/${comment?.authorId}`;
     }
 
     fetchData(url, token)
@@ -191,8 +191,9 @@ function CommunityReply({ _comment, setReplies }) {
                   }}
                 >
                   {comment?.userType === "seller"
-                    ? commenter?.name
+                    ? `${commenter?.name}`
                     : `${commenter?.firstname} ${commenter?.lastname}`}
+                    {/* {comment?.authorId} */}
                 </h2>
               </div>
             )}

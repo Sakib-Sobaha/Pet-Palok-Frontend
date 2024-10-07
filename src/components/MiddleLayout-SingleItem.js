@@ -282,7 +282,7 @@ const MiddleLayoutPetProfile = ({ _itemId }) => {
                   <div
                     className="font-bold hover:text-primary hover:scale-105 cursor-pointer"
                     onClick={() => {
-                      window.location.href = `/seller/profile/${store?.id}`;
+                      window.location.href = `/store/${store?.id}`;
                     }}
                   >
                     {store?.storeName}

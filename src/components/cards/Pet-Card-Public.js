@@ -64,7 +64,7 @@ function PetCard({ pet }) {
     );
   else
     return (
-      <div className="card card-compact bg-base-100 w-64 shadow-xl m-1 hover:scale-105 transition-transform duration-300 hover:shadow-lg">
+      <div className="card card-compact bg-base-100 shadow-xl m-1 hover:scale-105 transition-transform duration-300 hover:shadow-lg">
         <figure>
           <img
             src={image}

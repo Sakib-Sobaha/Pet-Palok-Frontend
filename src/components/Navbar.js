@@ -199,21 +199,36 @@ function Navbar() {
             </h1>
           </div>
         )}
-        {userType === "seller" &&
+      {userType === "seller" &&
         // show firstname and lastname
-        user?.name && ( 
+        user?.name && (
           <div className="flex-1 pr-4 justify-start">
-            <h1 className="text-lg font-bold">
-              {user?.name}
-            </h1>
+            <h1 className="text-lg font-bold">{user?.name}</h1>
           </div>
         )}
-
 
       {/* {notifications?.length} */}
 
       {/* notifications , cart, theme */}
       <div className="flex-1 pr-4 justify-end">
+        {localStorage.getItem("authToken") !== null && (
+          <div
+            onClick={() => {
+              window.location.href = "/chatroom";
+            }}
+          >
+            <svg
+              viewBox="0 0 48 48"
+              className="h-7 w-7 fill-current stroke-current hover:fill-primary hover:stroke-primary hover:scale-110 mr-4"
+              strokeWidth="2.5"
+            >
+              <title />
+              <g data-name="8-Email" id="_8-Email">
+                <path d="M45,7H3a3,3,0,0,0-3,3V38a3,3,0,0,0,3,3H45a3,3,0,0,0,3-3V10A3,3,0,0,0,45,7Zm-.64,2L24,24.74,3.64,9ZM2,37.59V10.26L17.41,22.17ZM3.41,39,19,23.41l4.38,3.39a1,1,0,0,0,1.22,0L29,23.41,44.59,39ZM46,37.59,30.59,22.17,46,10.26Z" />
+              </g>
+            </svg>
+          </div>
+        )}
         {localStorage.getItem("authToken") !== null && notifications && (
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} role="button" className="m-0 indicator">

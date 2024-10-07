@@ -83,6 +83,12 @@ const MiddleLayoutSellerHome = ({ sellerId }) => {
   const [marketItems, setMarketItems] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const handleChatRoomRedirect = (profileUser) => {
+    window.location.href = "http://localhost:3000/chatroom"; // Redirect to chatroom
+
+    localStorage.setItem("selectedUser", JSON.stringify(profileUser));
+  };
+
   const fetchMarketItems = async () => {
     const token = localStorage.getItem("authToken");
 
@@ -182,7 +188,10 @@ const MiddleLayoutSellerHome = ({ sellerId }) => {
             >
               View Profile
             </button>
-            <button className="btn btn-secondary btn-sm mt-2 mx-1">
+            <button
+              className="btn btn-secondary btn-sm mt-2 mx-1"
+              onClick={() => handleChatRoomRedirect(seller)}
+            >
               Send Message
             </button>
           </div>
@@ -202,9 +211,7 @@ const MiddleLayoutSellerHome = ({ sellerId }) => {
           <br />
           <ReviewContainer sellerId={sellerId} />
         </div>
-
         {/* <RatingChart sellerId={sellerId} /> */}
-
       </div>
     );
 };

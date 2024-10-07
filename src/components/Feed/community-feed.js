@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import CommunityPost from "../post/community-post";
 import CreatePost from "../modals/create-community-post";
 
@@ -9,6 +8,7 @@ function CommunityFeed({ _community, _isMember }) {
   const [isMember, setIsMember] = useState(_isMember);
   const [visitor, setVisitor] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [sortOption, setSortOption] = useState("mostRecent"); // State for sorting option
   const userType = localStorage.getItem("userType");
 
   useEffect(() => {
@@ -50,25 +50,31 @@ function CommunityFeed({ _community, _isMember }) {
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     const url = `${process.env.REACT_APP_API_URL}/communityPost/${community.id}`;
+
     fetchData(url, token)
       .then((data) => {
-        console.log(data);
-        setPosts(data);
+        // Sort posts based on the selected sort option
+        const sortedData = [...data].sort((a, b) => {
+          const dateA = new Date(a.timestamp); // Access $date
+          const dateB = new Date(b.timestamp);
+
+          // Sorting logic based on the selected option
+          if (sortOption === "mostRecent") {
+            return dateB - dateA; // Most recent first
+          } else {
+            return dateA - dateB; // Oldest first
+          }
+        });
+        setPosts(sortedData);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-  }, [community]);
+  }, [community, sortOption]); // Add sortOption as a dependency
 
-  // useEffect(() => {
-  //   if (userType === "user") {
-  //     setIsMember(community?.userList?.includes(visitor?.id));
-  //   } else if (userType === "seller") {
-  //     setIsMember(community?.sellerList?.includes(visitor?.id));
-  //   } else if (userType === "vet") {
-  //     setIsMember(community?.vetList?.includes(visitor?.id));
-  //   } else setIsMember(false);
-  // }, [community, visitor, userType, community?.userList, community?.sellerList, community?.vetList]);
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value); // Update sort option when user selects a different one
+  };
 
   if (loading) {
     return (
@@ -98,6 +104,7 @@ function CommunityFeed({ _community, _isMember }) {
         <div>
           <h1>{}</h1>
           <CreatePost element_id={"create_post_modal"} _community={community} />
+
           <button
             className="btn btn-primary w-32 m-1"
             onClick={() => {
@@ -106,6 +113,17 @@ function CommunityFeed({ _community, _isMember }) {
           >
             + Create Post
           </button>
+
+          {/* Sort dropdown */}
+          <select
+            className="select select-bordered select-primary w-40 m-1"
+            value={sortOption} // Bind select value to sortOption state
+            onChange={handleSortChange} // Handle sorting change
+          >
+            <option value="mostRecent">Recent first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+
           {posts.length === 0 ? (
             <p className="italic text-xl text-center">No posts found.</p>
           ) : (

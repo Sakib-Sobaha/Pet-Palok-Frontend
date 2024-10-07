@@ -748,7 +748,9 @@ const MiddleLayoutChatbox = () => {
                       <li
                         key={user.id}
                         className={`mb-4 flex items-center cursor-pointer ${
-                          selectedUser?.id === user.id ? "bg-base-200 p-1 rounded-lg" : ""
+                          selectedUser?.id === user.id
+                            ? "bg-base-200 p-1 rounded-lg"
+                            : ""
                         }`}
                         onClick={() => handleUserClick(user)}
                       >
@@ -808,7 +810,9 @@ const MiddleLayoutChatbox = () => {
                     <li
                       key={vet.id}
                       className={`mb-4 flex items-center cursor-pointer ${
-                        selectedUser?.id === vet.id ? "bg-base-200 p-1 rounded-xl" : ""
+                        selectedUser?.id === vet.id
+                          ? "bg-base-200 p-1 rounded-xl"
+                          : ""
                       }`}
                       onClick={() => handleVetClick(vet)}
                     >
@@ -857,7 +861,9 @@ const MiddleLayoutChatbox = () => {
                     <li
                       key={seller.id}
                       className={`mb-4 flex items-center cursor-pointer ${
-                        selectedUser?.id === seller.id ? "bg-base-200 rounded-xl p-1" : ""
+                        selectedUser?.id === seller.id
+                          ? "bg-base-200 rounded-xl p-1"
+                          : ""
                       }`}
                       onClick={() => handleSellerClick(seller)}
                     >
@@ -951,8 +957,12 @@ const MiddleLayoutChatbox = () => {
             <>
               {isUser && (
                 <>
-                  <div className="bg-base-100 p-4 border-b border-base-content">
-                    
+                  <div className="bg-base-100 p-4 border-b border-base-content flex">
+                    <div className="avatar">
+                      <div className="ring-secondary ring-offset-base-100 w-14 mr-4 rounded-full ring ring-offset-2">
+                        <img src={selectedUser?.image} />
+                      </div>
+                    </div>
                     <h2 className="text-xl font-bold font-serif">
                       Chat with{" "}
                       <p
@@ -971,7 +981,12 @@ const MiddleLayoutChatbox = () => {
 
               {isVet && (
                 <>
-                  <div className="bg-base-100 p-4 border-b border-base-content">
+                  <div className="bg-base-100 p-4 border-b border-base-content flex">
+                    <div className="avatar">
+                      <div className="ring-secondary ring-offset-base-100 w-14 mr-4 rounded-full ring ring-offset-2">
+                        <img src={selectedUser?.image} />
+                      </div>
+                    </div>
                     <h2 className="text-xl font-bold font-serif">
                       Chat with{" "}
                       <p
@@ -990,7 +1005,12 @@ const MiddleLayoutChatbox = () => {
 
               {isSeller && (
                 <>
-                  <div className="bg-base-100 p-4 border-b border-base-content">
+                  <div className="bg-base-100 p-4 border-b border-base-content flex">
+                    <div className="avatar">
+                      <div className="ring-secondary ring-offset-base-100 w-14 mr-4 rounded-full ring ring-offset-2">
+                        <img src={selectedUser?.image} />
+                      </div>
+                    </div>
                     <h2 className="text-xl font-bold font-serif">
                       Chat with{" "}
                       <p
@@ -1000,7 +1020,7 @@ const MiddleLayoutChatbox = () => {
                         }}
                       >
                         {" "}
-                        {selectedUser.name}
+                        {selectedUser.name}{" "}({selectedUser.storeName})
                       </p>
                     </h2>
                   </div>

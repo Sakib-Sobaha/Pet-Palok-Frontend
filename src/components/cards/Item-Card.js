@@ -152,7 +152,7 @@ function ItemCardNoButton({ _item, owner, onDelete }) {
     >
       {item && <AddToCart element_id={"add_to_cart"+item.id} _item={item} />}
       <div
-        className={`ml-2 card rounded-none bg-base-100 w-64 shadow-xl m-1 cursor-pointer hover:scale-105 transition-transform duration-300 hover:shadow-lg ${
+        className={`ml-2 card rounded-none bg-base-100 shadow-xl m-1 cursor-pointer hover:scale-105 transition-transform duration-300 hover:shadow-lg ${
           owner ? "h-96" : "h-80"
         }`}
       >
@@ -160,7 +160,7 @@ function ItemCardNoButton({ _item, owner, onDelete }) {
           <img
             src={item.images[0]}
             alt={item.name}
-            className="h-72 w-52 object-cover rounded-lg"
+            className="h-72 object-cover rounded-lg"
           />
         </figure>
         <div className="card-body p-1">

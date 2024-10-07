@@ -124,6 +124,13 @@ function CommunityPost({ _post }) {
     fetchData(url, token)
       .then((data) => {
         setComments(data);
+        setComments((prevComments) =>
+          prevComments.sort((a, b) => {
+            const dateA = new Date(a.timestamp);
+            const dateB = new Date(b.timestamp);
+            return dateB - dateA;
+          })
+        );
         setLoading(false);
       })
       .catch((error) => {
@@ -158,7 +165,16 @@ function CommunityPost({ _post }) {
       const newCommentResponse = await response.json();
 
       // Update the comments list with the new comment
+      // Add the new comment to the top of the list
+
       setComments((prevComments) => [...prevComments, newCommentResponse]);
+      setComments((prevComments) =>
+        prevComments.sort((a, b) => {
+          const dateA = new Date(a.timestamp);
+          const dateB = new Date(b.timestamp);
+          return dateB - dateA;
+        })
+      );
       setNewComment(""); // Clear input after submission
     } catch (error) {
       console.error("Error posting comment:", error);
