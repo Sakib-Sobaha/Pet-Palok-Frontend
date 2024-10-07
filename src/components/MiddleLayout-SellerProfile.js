@@ -115,7 +115,7 @@ const MiddleLayoutSellerProfile = ({ sellerId }) => {
   };
 
   const handleChatRoomRedirect = (profileUser) => {
-    window.location.href = "http://localhost:3000/chatroom"; // Redirect to chatroom
+    window.location.href = "/chatroom"; // Redirect to chatroom
 
     localStorage.setItem("selectedUser", JSON.stringify(profileUser));
 

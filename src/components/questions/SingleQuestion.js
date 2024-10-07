@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NestedAnswer from "./NestedAnswer";
+import { local } from "d3";
 
 const handleLogout = () => {
   localStorage.removeItem("authToken");
@@ -221,7 +222,7 @@ function SingleQuestion({ _comment }) {
     const replyData = {
       text: newReplyText,
       marketItemId: marketItemId,
-      userType: userType,
+      userType: localStorage.getItem("userType"),
       anonymous: isAnonymousReply === "Anonymous",
       parent: id, // This is the ID of the comment being replied to
     };

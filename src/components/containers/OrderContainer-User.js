@@ -83,7 +83,15 @@ function OrderContainer({ searchTerm, sortOption, filters }) {
   });
 
   // Sort orders based on sort option
-  const sortedOrders = filteredOrders.sort((a, b) => {
+  const sortedOrders1 = filteredOrders.sort((a, b) => {
+    
+    return new Date(b.orderedOn) - new Date(a.orderedOn);
+  
+  return 0;
+});
+
+  // Sort orders based on sort option
+  const sortedOrders = sortedOrders1.sort((a, b) => {
     if (sortOption === "orderDateOldToNew") {
       return new Date(a.orderedOn) - new Date(b.orderedOn);
     } else if (sortOption === "orderDateNewToOld") {

@@ -10,7 +10,7 @@ const RightLayout = () => {
   };
 
   const handlePricePredictorRedirect = () => {
-    window.location.href = "http://localhost:3000/pricePredictor"; // Redirect to PricePredictor
+    window.location.href = "/pricePredictor"; // Redirect to PricePredictor
   }
 
   return (
