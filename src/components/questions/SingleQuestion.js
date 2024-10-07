@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import NestedAnswer from "./NestedAnswer";
-import { local } from "d3";
 
 const handleLogout = () => {
   localStorage.removeItem("authToken");
