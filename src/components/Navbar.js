@@ -268,21 +268,22 @@ function Navbar() {
               >
                 Clear All{" "}
               </button>
-
-              {notifications
-                .sort((a, b) => {
-                  // Sort by unread status first, unread (true) should come first
-                  if (a.unread !== b.unread) {
-                    return a.unread ? -1 : 1;
-                  }
-                  // If both have the same unread status, sort by timestamp (newest first)
-                  return new Date(b.timestamp) - new Date(a.timestamp);
-                })
-                .map((notification) => (
-                  <li key={notification.id}>
-                    <Notification _notification={notification} />
-                  </li>
-                ))}
+              <div className="max-h-80 overflow-y-auto">
+                {notifications
+                  .sort((a, b) => {
+                    // Sort by unread status first, unread (true) should come first
+                    if (a.unread !== b.unread) {
+                      return a.unread ? -1 : 1;
+                    }
+                    // If both have the same unread status, sort by timestamp (newest first)
+                    return new Date(b.timestamp) - new Date(a.timestamp);
+                  })
+                  .map((notification) => (
+                    <li key={notification.id}>
+                      <Notification _notification={notification} />
+                    </li>
+                  ))}
+              </div>
               <button
                 className="btn p-0 rounded-none btn-sm btn-ghost italic"
                 onClick={markAllAsRead}
