@@ -1,3 +1,47 @@
+# About PetPalok
+PetPalok is a webapp based on pet related community. It has its own unique features like managing different types of profiles, a very own marketplace, chatting system, online video call based appointment system, price prediction etc. 
+
+![image](https://github.com/user-attachments/assets/dd8b2e79-6740-460d-b837-16727b4ff5e5)
+
+In the homepage we can find the login/signup option that takes to the login/signup page. One can login or create account as a USER, VET, SELLER or ADMIN
+![image](https://github.com/user-attachments/assets/04a56ebe-4a36-4546-96cc-771185e26323)
+
+Each type of user has his own dashboard showing different stats and information. 
+User Dashboard:
+
+![image](https://github.com/user-attachments/assets/76f8e6eb-722c-4759-993b-b6e21a51b208)
+A user can manage his profile information and photo gallery and the medical history of each pet.
+
+![image](https://github.com/user-attachments/assets/4f5a6621-6582-40ee-ac37-9df92cf6fa82)
+
+Pet Directory:
+A user of PetPalok can also view profiles of other pets owned by other people. There is also a filtering, sorting and searching option for easy access.
+
+![image](https://github.com/user-attachments/assets/3c818498-ec41-4810-89e8-c196a1e5e3e1)
+
+Marketplace:
+A marketplace for pet related goods where the sellers sell their products and the users buy them. There is a cart system to add product and checkout later.
+![image](https://github.com/user-attachments/assets/9404c2af-2351-4628-8ccd-e00513dbbd55)
+A Single MarketItem:
+
+![image](https://github.com/user-attachments/assets/16e76ae0-f346-446a-bc5a-270127f891fd)
+QnA:
+
+![image](https://github.com/user-attachments/assets/729ff254-d12a-431e-b2c5-648f271b19a7)
+Rating and Review System:
+
+![image](https://github.com/user-attachments/assets/ddde7150-5187-42b8-b4c7-6647d4bc1f99)
+Adding Item to Cart:
+
+![image](https://github.com/user-attachments/assets/95e35525-92d0-4447-8776-5df7249af64e)
+Cart:
+
+![image](https://github.com/user-attachments/assets/08dd2087-13f3-405b-88d0-3b76a8b27c1a)
+A Store Profile:
+
+![image](https://github.com/user-attachments/assets/38f8c41c-493d-465e-9359-bb0d715645c1)
+
+
 # Backend Repository
 [https://github.com/Sakib-Sobaha/Pet-Palok-Backend.git](https://github.com/Sakib-Sobaha/Pet-Palok-Backend.git)
 
