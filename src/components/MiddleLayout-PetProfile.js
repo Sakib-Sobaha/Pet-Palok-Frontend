@@ -64,7 +64,6 @@ const fetchData = async (token, petId) => {
   }
 };
 
-
 const MiddleLayoutPetProfile = ({ petId }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(true); // State to handle loading
@@ -72,6 +71,7 @@ const MiddleLayoutPetProfile = ({ petId }) => {
   const [timelineData, setTimelineData] = useState([]);
   const [ownerId, setOwnerId] = useState(null);
   const [visitor, setVisitor] = useState(null);
+  const [owner, setOwner] = useState(null);
 
   const userType = localStorage.getItem("userType");
 
@@ -142,9 +142,35 @@ const MiddleLayoutPetProfile = ({ petId }) => {
       }
     };
 
-    fetchTimelineData();      
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        const url = `${process.env.REACT_APP_API_URL}/user/getUserById/${ownerId}`;
+        const token = localStorage.getItem("authToken");
+
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+        setOwner(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTimelineData();
     fetchPet();
     fetchWhoAmI();
+    fetchUserData();
   }, [petId]);
 
   const toggleDescription = () => {
@@ -172,48 +198,62 @@ const MiddleLayoutPetProfile = ({ petId }) => {
 
       <div className="avatar float-right mb-5 mr-10 mt-2">
         <div className="ring-primary ring-offset-base-100 w-40 h-40 rounded-full aspect-square ring ring-offset-2">
-          <img src={pet.images[0]} alt="Pet" />
+          <img src={pet?.images[0]} alt="Pet" />
         </div>
       </div>
 
       {pet ? (
         <>
-          <h1 className="text-4xl font-bold m-3">{pet.name}</h1>
+          <h1 className="text-4xl font-bold m-3">{pet?.name}</h1>
+          {/* <div className="avatar flex">
+            <div className="ring-primary ring-offset-base-100 w-8 h-8 mt-2.5 ml-3 rounded-full aspect-square ring ring-offset-2">
+              <img src={owner?.image} alt="Pet" />
+            </div>
+            <h1
+              className="text-xl font-semibold m-3 hover:cursor-pointer hover:text-primary hover:m-3"
+              onClick={() => {
+                window.location.href = `/user/profile/${owner?.id}`;
+              }}
+            >
+              {owner?.firstname + " " + owner?.lastname}
+            </h1>
+          </div> */}
+
           <div className="text-lg m-3 grid-cols-3 grid mb-5">
             <p>
               <span className="font-bold">Age:</span>
-              {" " + calculateAge(pet.dob)}
+              {" " + calculateAge(pet?.dob)}
             </p>
             <p>
-              <span className="font-bold">Type:</span> {pet.type}
+              <span className="font-bold">Type:</span> {pet?.type}
             </p>
             <p>
-              <span className="font-bold">Breed:</span> {pet.breed}
+              <span className="font-bold">Breed:</span> {pet?.breed}
             </p>
             <p>
               <span className="font-bold">DOB:</span>{" "}
-              {new Date(pet.dob).toLocaleDateString(undefined, {
+              {new Date(pet?.dob).toLocaleDateString(undefined, {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
               })}
             </p>
             <p>
-              <span className="font-bold">Gender:</span> {pet.gender}
+              <span className="font-bold">Gender:</span> {pet?.gender}
             </p>
           </div>
 
           <div className="font-serif italic">
-            {pet.description ? (
-              isExpanded || pet.description.split(" ").length <= 30 ? (
-                pet.description
+            {pet?.description ? (
+              isExpanded || pet?.description.split(" ").length <= 30 ? (
+                pet?.description
               ) : (
-                `${pet.description.split(" ").slice(0, 30).join(" ")}...`
+                `${pet?.description.split(" ").slice(0, 30).join(" ")}...`
               )
             ) : (
               <p>No description available</p>
             )}
-            {pet.description && pet.description.split(" ").length > 30 && (
+            {pet?.description && pet?.description.split(" ").length > 30 && (
               <button onClick={toggleDescription} className="text-blue-600">
                 {isExpanded ? "See Less" : "See More"}
               </button>
@@ -227,7 +267,7 @@ const MiddleLayoutPetProfile = ({ petId }) => {
 
           {/* images */}
           <div className="carousel rounded-box h-96">
-            {pet.images.map((image, index) => (
+            {pet?.images.map((image, index) => (
               <div key={index} className="carousel-item">
                 <ViewImageModal
                   image={image}
@@ -246,16 +286,17 @@ const MiddleLayoutPetProfile = ({ petId }) => {
           </div>
           <UploadImageModal element_id="upload_image_pet" petId={petId} />
 
-          { /* add condition */}
+          {/* add condition */}
           {isOwner && (
             <>
-
-              <button className="btn btn-primary mt-5"
+              <button
+                className="btn btn-primary mt-5"
                 onClick={() => {
                   document.getElementById("upload_image_pet").showModal();
                 }}
-              >Upload Image</button>
-
+              >
+                Upload Image
+              </button>
             </>
           )}
         </>

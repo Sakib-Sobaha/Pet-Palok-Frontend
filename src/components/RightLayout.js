@@ -11,12 +11,16 @@ const RightLayout = () => {
 
   const handlePricePredictorRedirect = () => {
     window.location.href = "/pricePredictor"; // Redirect to PricePredictor
-  }
+  };
+
+  const handlePetDetectionRedirect = () => {
+    window.location.href = "/petDetection"; // Redirect to PetDetection
+  };
 
   return (
     <div className="flex-1 bg-base-100 p-4 min-h-screen h-full rounded-lg">
       {/* Your content for RightLayout */}
-      
+
       <div className="mb-1">
         <button
           className="btn btn-outline btn-secondary dark:bg-transparent"
@@ -28,7 +32,7 @@ const RightLayout = () => {
 
       <div className="mb-1">
         <button
-            className="btn btn-outline btn-secondary dark:bg-transparent"
+          className="btn btn-outline btn-secondary dark:bg-transparent"
           onClick={handleGPTRedirect} // Call the function on button click
         >
           Ask GPT
@@ -43,8 +47,15 @@ const RightLayout = () => {
           Price Predictor
         </button>
       </div>
-      
-      
+
+      <div className="mb-1">
+        <button
+          className="btn btn-outline btn-secondary dark:bg-transparent"
+          onClick={handlePetDetectionRedirect} // Call the function on button click
+        >
+          Pet Detection
+        </button>
+      </div>
     </div>
   );
 };

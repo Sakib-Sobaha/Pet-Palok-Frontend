@@ -225,7 +225,7 @@ const MiddleLayoutVetHome = () => {
           <div className="stat-value text-primary">{stats1?.uniquePets}</div>
           <div className="stat-desc text-primary">
             <strong className="text-xl">
-              {(stats1?.uniquePets / appointments?.length) * 100}%{" "}
+            {((stats1?.uniquePets / appointments?.length) * 100).toFixed(2)}%{" "}
             </strong>{" "}
             new pets visited
           </div>
@@ -243,10 +243,10 @@ const MiddleLayoutVetHome = () => {
           <div className="stat-title">Users Served</div>
           <div className="stat-desc">
             <strong className="text-xl">
-              {(stats1?.uniqueUsers / appointments?.length) * 100}%{" "}
+              {((stats1?.uniqueUsers / appointments?.length) * 100).toFixed(2)}%{" "}
             </strong>
             {""}
-            of new users
+             new users
           </div>
         </div>
       </div>

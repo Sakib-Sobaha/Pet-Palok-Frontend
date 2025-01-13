@@ -104,7 +104,7 @@ const DailyScheduleModal = ({
                   {hourlyAppointments.map((hourlySlot, index) => (
                     <tr key={index} className="hover:bg-base-200">
                       <td className="align-top">
-                        {index}:00 - {index + 1}:00
+                        {index}:00 - {index + 1}:00 (GMT)
                       </td>
                       <td className="align-top">
                         {hourlySlot.length > 0 ? (

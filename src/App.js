@@ -43,6 +43,7 @@ import PhotoUpload from "./pages/tests/photo-up-test.js";
 import Verify from "./pages/verify.js";
 import Store from "./pages/seller/store.js";
 import Community from "./pages/communities/single-community.js";
+import PetDetection from "./pages/ai/imagetopet.js";
 
 export default function App() {
   return (
@@ -90,6 +91,7 @@ export default function App() {
             <Route path="/chatbox" element={<ChatBox />} />
             <Route path="/chatroom" element={<ChatRoom />} />
             <Route path="/gpt" element={<AI />} />
+            <Route path="/petDetection" element={<PetDetection />} />
             <Route path="/pricePredictor" element={<PricePredictor />} />
 
             <Route path="/ws/**" render={() => null} />

@@ -2,7 +2,7 @@ import React from "react";
 
 function Timeline({ timelineData }) {
   return (
-    <ul className="timeline justify-center">
+    <ul className="timeline justify-center max-w-max overflow-x-auto m-2">
       {timelineData.length === 0 && (
         <li>
           <div className="timeline-start timeline-box text-xs">No data available</div>
