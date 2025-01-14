@@ -1,158 +1,133 @@
-import React, { useState } from "react";
-import Together from "together-ai";
+import React, { useState } from 'react';
 import { useFileUpload } from "../Supabase/image-uploader"; // Import custom hook for Supabase uploads
 
-const together = new Together({
-  apiKey: `${process.env.REACT_APP_TOGETHER_API_KEY}`,
-});
+export default function ImageUrlForm() {
+    const [formData, setFormData] = useState({
+        imageUrl: ''
+    });
 
-export default function MiddleLayoutTogetherAI() {
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const { uploadFiles } = useFileUpload(); // Custom hook for file upload
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState('');
+    const [file, setFile] = useState(null);
+    const [filePreview, setFilePreview] = useState(null); // State for image preview
+    const [loading, setLoading] = useState(false);
+    const { uploadFiles } = useFileUpload(); // Custom hook for file upload
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const newTextMessage = {
-      role: "user",
-      content: {
-        type: "text",
-        text: input,
-      },
+        // Generate a preview URL for the selected file
+        if (selectedFile) {
+            const previewUrl = URL.createObjectURL(selectedFile);
+            setFilePreview(previewUrl);
+        }
     };
 
-    setMessages((prev) => [...prev, newTextMessage]);
+    const closeModal = () => {
+        setModalOpen(false);
+    };
 
-    let fileUrl = null;
-    if (file) {
-      try {
-        const [uploadedFileUrl] = await uploadFiles([file]); // Upload the file and get the URL
-        fileUrl = uploadedFileUrl;
-        console.log("File uploaded to Supabase:", fileUrl);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
 
-        const newFileMessage = {
-          role: "user",
-          content: {
-            type: "image_url",
-            image_url: {
-              url: fileUrl, // Use Supabase-uploaded URL
-            },
-          },
-        };
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+            console.error("No auth token found in local storage.");
+            setLoading(false);
+            return;
+        }
 
-        setMessages((prev) => [...prev, newFileMessage]);
-      } catch (error) {
-        console.error("File upload failed:", error);
-        alert("Failed to upload the image. Please try again.");
-        setLoading(false);
-        return;
-      }
-    }
+        let fileUrl = null;
+        if (file) {
+            try {
+                const [uploadedFileUrl] = await uploadFiles([file]); // Upload the file and get the URL
+                fileUrl = uploadedFileUrl;
+                console.log("File uploaded to Supabase:", fileUrl);
 
-    try {
-      const userMessages = [newTextMessage];
-      if (fileUrl) {
-        userMessages.push({
-          role: "user",
-          content: {
-            type: "image_url",
-            image_url: { url: fileUrl },
-          },
-        });
-      }
+                // Update formData with the uploaded file URL
+                setFormData({
+                    imageUrl: fileUrl
+                });
+            } catch (error) {
+                console.error("File upload failed:", error);
+                setModalContent("Failed to upload the image. Please try again.");
+                setModalOpen(true);
+                setLoading(false);
+                return;
+            }
+        }
 
-      const response = await together.chat.completions.create({
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.REACT_APP_TOGETHER_API_KEY}`,
-        },
-        messages: userMessages,
-        model: "meta-llama/Llama-Vision-Free",
-        temperature: 0.7,
-        top_p: 0.7,
-        top_k: 50,
-        repetition_penalty: 1,
-        stream: true,
-      });
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/pet-predictor/predict`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ imageUrl: fileUrl })
+            });
 
-      let aiContent = "";
-      for await (const token of response) {
-        aiContent += token.choices[0]?.delta?.content || "";
-      }
+            if (!response.ok) {
+                throw new Error('Failed to fetch API');
+            }
 
-      const aiMessage = {
-        role: "assistant",
-        content: aiContent || "Sorry, I couldn't process that.",
-      };
+            const responseData = await response.json();
+            console.log('API Response:', responseData);
+            setModalContent(`Predicted pet: ${(responseData.prediction)} `);
+            setModalOpen(true);
+        } catch (error) {
+            console.error('API call failed:', error);
+            setModalContent('Failed to predict pet');
+            setModalOpen(true);
+        } finally {
+            setLoading(false);
+            setFile(null);
+            setFilePreview(null); // Clear the preview
+        }
+    };
 
-      setMessages((prev) => [...prev, aiMessage]);
-    } catch (error) {
-      console.error("Error fetching AI response:", error);
-    } finally {
-      setLoading(false);
-      setInput(""); // Clear input field
-      setFile(null); // Clear file selection
-    }
-  };
+    return (
+        <div className="container mx-auto p-4">
+            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="file-input file-input-bordered w-full col-span-2 font-serif"
+                />
 
-  return (
-    <div className="flex flex-col w-full max-w-md mx-auto py-4">
-      <div className="flex-1 overflow-y-auto mb-4">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`whitespace-pre-wrap my-2 p-4 rounded-lg ${
-              msg.role === "user"
-                ? "bg-blue-100 text-blue-800 shadow-md"
-                : "bg-white text-black shadow-lg"
-            }`}
-          >
-            {msg.role === "user" ? "User: " : "AI: "}
-            {msg.content.type === "text"
-              ? msg.content.text
-              : msg.content.image_url?.url && (
-                  <img
-                    src={msg.content.image_url.url}
-                    alt="Uploaded content"
-                    className="max-w-full max-h-40 mt-2"
-                  />
+                {/* Show image preview */}
+                {filePreview && (
+                    <div className="col-span-2 flex justify-center items-center">
+                        <img
+                            src={filePreview}
+                            alt="Preview"
+                            className="max-w-xs max-h-40 rounded-md shadow-md"
+                        />
+                    </div>
                 )}
-          </div>
-        ))}
-      </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
-        <input
-          type="text"
-          className="input input-bordered w-full"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type your message..."
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="file-input file-input-bordered w-full"
-        />
-        <button
-          type="submit"
-          className={`btn btn-outline btn-secondary ${
-            loading ? "loading" : ""
-          }`}
-          disabled={loading}
-        >
-          {loading ? "Processing..." : "Send"}
-        </button>
-      </form>
-    </div>
-  );
+                <button
+                    type="submit"
+                    className={`btn btn-primary col-span-2 ${loading ? "loading" : ""}`}
+                    disabled={loading}
+                >
+                    {loading ? "Processing..." : "Predict Pet"}
+                </button>
+            </form>
+
+            {isModalOpen && (
+                <div className="modal modal-open font-serif font-bold fill-success-content">
+                    <div className="modal-box flex flex-col justify-center items-center">
+                        <p>{modalContent}</p>
+                        <div className="modal-action">
+                            <button onClick={closeModal} className="btn">Close</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
